@@ -17,8 +17,9 @@ var game = new Phaser.Game(settings.width, settings.height, Phaser.AUTO, '', {
 		update: update,
 		render: render
 	});
-var isAttacking = false;
-var cursor, player, floor, buildings, target;
+var isAttacking = false; 
+var dmgLock = false; // TODO: Change to time related event / reference 
+var cursor, player, floor, buildings, target, attackAnimation;
 
 function preload() {
 	// Setup for responsive resizing
@@ -70,8 +71,10 @@ function create() {
 	buildings.enableBody = true; 
 	var building = buildings.create(650, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
 	building.body.immovable = true;
-	var building2 = buildings.create(1050, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
+	building.health = 100;
+	var building2 = buildings.create(1250, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
 	building2.body.immovable = true;
+	building2.health = 100;
 
 	createPlayer();
 }
@@ -80,8 +83,7 @@ function update() {
 	var isPlayerTouchingFloor = game.physics.arcade.collide(player, floor); // Collision check between the player and the floor
 	var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings
 
-	if(isPlayerTouchingBuildings) {  // If the player overlaps a building in the group set it as it's current target
-		console.log('Player collides with buildings');
+	if(isPlayerTouchingBuildings) {  // If the player overlaps a building in the group set it as it's current target		
 		var building = buildings.filter(function(building) { // Filter through the group to find the currently overlapping building
 			return building.body.touching.up === true 
 					|| building.body.touching.down === true 
@@ -90,6 +92,8 @@ function update() {
 		}).list[0];
 
 		checkAttack(building); // Function to set the player's target and take care of applying dmg to it if the player is attacking
+	} else {
+		target = null; // Clear the current target if out of the overlapping area
 	}
 
 	checkControls(isPlayerTouchingFloor);
@@ -97,8 +101,12 @@ function update() {
 
 function render() {    
 	// Sprite debug info
+	/*
     game.debug.spriteBounds(player); 
-    game.debug.spriteBounds(buildings);
+    for(var i = 0; i < buildings.children.length; i += 1) {
+    	game.debug.spriteBounds(buildings.children[i]);
+    } 
+    */   
 }
 
 function createFloor() {	
@@ -219,7 +227,7 @@ function checkControls(isPlayerTouchingFloor) {
         	player.loadTexture('troll_first_attack');
         }        
 
-        player.animations.play('test');
+        attackAnimation = player.animations.play('test');
     }
 }
 
@@ -229,6 +237,18 @@ function checkAttack(building) {
 	}
 	
 	if(isAttacking) { // Check if the player is currently attacking
-		console.log(target);
+		if(attackAnimation.frame === 9 && !dmgLock) { // TODO: Change the constant to a variable
+			dmgLock = true;
+			target.health -= 10;
+			console.log(target.health);
+			if(target.health === 0) {
+				buildings.remove(target);
+			}
+			if(target.health % 20 === 0) {
+				target.frame += 1;
+			}
+		} else if(attackAnimation.frame === 0) {
+			dmgLock = false;
+		}
 	}
 }
