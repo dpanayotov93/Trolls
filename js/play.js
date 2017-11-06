@@ -5,12 +5,8 @@ var platformsPositions = [];
 var cursor, player, platforms, buildings, target, attackAnimation;
 
 var statePlay = {
-	create: function() {
-		// Add the background
-		var background = game.add.sprite(0, 0, 'bg_village');
-		background.fixedToCamera = true;
-		game.log('Background: ', 'Created', 'green');
-				
+	create: function() {		
+		createBackground();
 		createPlatform();
 		createBuildings();
 		createPlayer();		
@@ -46,8 +42,14 @@ var statePlay = {
 	}
 }
 
+function createBackground() {
+	var background = game.add.sprite(0, 0, 'bg_village');
+	background.fixedToCamera = true;
+	game.log('Background: ', 'Created', 'green');
+}
+
 function createPlatform() {	
-	var platformsN = Math.floor(Math.random() * 5 + 1); // Number of platforms
+	var platformsN = Math.floor(Math.random() * 7 + 3); // Number of platforms
 	platforms = game.add.group(); // A group to hold the platform pieces
 	platforms.enableBody = true; // Enable physics for the group
 
@@ -95,12 +97,23 @@ function createBuildings() {
 		var start = platformsPositions[id][0];
 		var end = platformsPositions[id][1];
 		var buldingPosition = null;
-		var minDistance = buildings.children[buildings.children.length - 1] - settings.towerSize;
-		var maxDistance = buildings.children[buildings.children.length - 1] + settings.towerSize;
+		var minDistance; 
+		var maxDistance;
 
-		while((buldingPosition > minDistance && buldingPosition < maxDistance) || buldingPosition === null) {
-			buldingPosition = Math.floor((Math.random() * end) + start);
+		if(buildings.children.length > 0) {
+			minDistance = buildings.children[buildings.children.length - 1].position.x - settings.towerSize.w * 2;
+			maxDistance = buildings.children[buildings.children.length - 1].position.x + settings.towerSize.w * 2;
+
+			game.log('Last building position:', buildings.children[buildings.children.length - 1].position.x);
+			game.log('Min distance:', minDistance);
+			game.log('Max distance:', maxDistance);
+			
+			while((buldingPosition > minDistance && buldingPosition < maxDistance) || buldingPosition === null) {
+				buldingPosition = Math.floor((Math.random() * end) + start);
+			}
 		}
+
+		game.log('Bulding position:', buldingPosition);
 
 		var building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
 		building.body.immovable = true;
@@ -221,6 +234,9 @@ function checkAttack(building) {
 	if(isAttacking) { // Check if the player is currently attacking
 		if(attackAnimation.frame === 9 && !dmgLock) { // TODO: Change the constant to a variable
 			dmgLock = true;
+			if(target === undefined || target === 'undefined') {
+				debugger;
+			}
 			target.health -= 10;
 			console.log(target.health);
 			if(target.health === 0) {
