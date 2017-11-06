@@ -14,6 +14,10 @@ var settings = {
 	width: window.innerWidth < 480 ? 480 : window.innerWidth,
 	height: window.innerHeight - 32 < 320 ? 320 : window.innerHeight,
 	tileSize: 128,
+	buttonSize: {
+		h: 64,
+		w: 1024
+	},
 	playerSize: {
 		h: 264, //1056
 		w: 179 // 715 			
