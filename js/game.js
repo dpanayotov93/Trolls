@@ -17,9 +17,11 @@ var game = new Phaser.Game(settings.width, settings.height, Phaser.AUTO, '', {
 		update: update,
 		render: render
 	});
+var lastPlatformPosition = 0;
 var isAttacking = false; 
 var dmgLock = false; // TODO: Change to time related event / reference 
-var cursor, player, floor, buildings, target, attackAnimation;
+var platformsPositions = [];
+var cursor, player, platforms, buildings, target, attackAnimation;
 
 function preload() {
 	// Setup for responsive resizing
@@ -50,37 +52,32 @@ function preload() {
 	game.load.spritesheet('troll_first_attack', 'assets/sprites/troll_first/sprite_attack_small.png', settings.playerSize.h, settings.playerSize.w);
 	// Sprites - Objects
 	game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
+
+	game.log('Assets: ', 'Loaded', 'green');
 }
 
 function create() {
 	// Add the background
-	game.add.sprite(0, 0, 'bg_village');
+	var background = game.add.sprite(0, 0, 'bg_village');
+	background.fixedToCamera = true;
+	game.log('Background: ', 'Created', 'green');
 
 	// Set the physics
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	// Set the keyboard manager
-	cursors = game.input.keyboard.createCursorKeys();
+	cursors = game.input.keyboard.createCursorKeys();	
 
 	cursors.spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+	game.log('Keyboard: ', 'Created', 'green');
 
-	createFloor();
-
-	// Create the buildings
-	buildings = game.add.group();
-	buildings.enableBody = true; 
-	var building = buildings.create(650, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
-	building.body.immovable = true;
-	building.health = 100;
-	var building2 = buildings.create(1250, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
-	building2.body.immovable = true;
-	building2.health = 100;
-
+	createPlatform();
+	createBuildings();
 	createPlayer();
 }
 
 function update() {	
-	var isPlayerTouchingFloor = game.physics.arcade.collide(player, floor); // Collision check between the player and the floor
+	var isPlayerTouchingPlatform = game.physics.arcade.collide(player, platforms); // Collision check between the player and the platform
 	var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings
 
 	if(isPlayerTouchingBuildings) {  // If the player overlaps a building in the group set it as it's current target		
@@ -96,52 +93,97 @@ function update() {
 		target = null; // Clear the current target if out of the overlapping area
 	}
 
-	checkControls(isPlayerTouchingFloor);
+	checkControls(isPlayerTouchingPlatform);
 }
 
 function render() {    
 	// Sprite debug info
 	/*
     game.debug.spriteBounds(player); 
-    for(var i = 0; i < buildings.children.length; i += 1) {
-    	game.debug.spriteBounds(buildings.children[i]);
+          
+    for(var i = 0; i < platforms.children.length; i += 1) {
+    	game.debug.spriteBounds(platforms.children[i]);
     } 
-    */   
+	*/ 
 }
 
-function createFloor() {	
-	var midPiecesN = 10; // Number of pieces for testing purposes
-	var floorMid = []; // Array to hold the mid pieces
-	var floorStart;
-	var floorEnd;
+function createPlatform() {	
+	var platformsN = Math.floor(Math.random() * 5 + 1); // Number of platforms
+	platforms = game.add.group(); // A group to hold the platform pieces
+	platforms.enableBody = true; // Enable physics for the group
 
-	floor = game.add.group(); // A group to hold the floor pieces
-	floor.enableBody = true; // Enable physics for the group
+	for(var n = 0; n < platformsN; n += 1) {
+		createPlatformPiece(n);
+	}	
 
-	floorStart = floor.create(0, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
-	floorStart.body.immovable = true; // Make it immovable from collision
-	
+	game.world.setBounds(0, 0, lastPlatformPosition, game.height);
+	game.log('Platforms: ', 'Created (' + platformsN + ')', 'green');
+}
+
+function createPlatformPiece(n) {
+	var midPiecesN = Math.floor(Math.random() * 5 + 1); // Number of pieces for testing purposes
+	var holeSize = Math.floor(Math.random() * 2 + 2);
+	var platformStart = platforms.create(lastPlatformPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
+	var platformEndPosition, platformEnd;
+
+	platformStart.body.immovable = true; // Make it immovable from collision
+
 	// Loop for the mid pieces
 	for(var i = 0; i < midPiecesN; i += 1) {
-		var id = i + 1; // Start from 1 for the horizontal position calculation
-		floorMid[i] = floor.create(id * settings.tileSize, game.world.bounds.height - settings.tileSize, 'tile_bot_mid'); // Mid pieces
-		floorMid[i].body.immovable = true; // Make it immovable from collision
+		var id = i + 1 ; // Start from 1 for the horizontal position calculation
+		var platformMidPosition = id * settings.tileSize + lastPlatformPosition;
+		var platformMid = platforms.create(platformMidPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_mid'); // Mid pieces
+		platformMid.body.immovable = true; // Make it immovable from collision
 	}
 
-	floorEnd = floor.create((midPiecesN + 1 ) * settings.tileSize, game.world.bounds.height - settings.tileSize, 'tile_bot_end'); // End piece
-	floorEnd.body.immovable = true; // Make it immovable from collision	
+	platformEndPosition = (midPiecesN + 1 ) * settings.tileSize + lastPlatformPosition;
+	platformEnd = platforms.create(platformEndPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_end'); // End piece
+	platformEnd.body.immovable = true; // Make it immovable from collision	
+
+	platformsPositions[n] = [lastPlatformPosition, platformEndPosition];
+
+	lastPlatformPosition = platformEndPosition + (settings.tileSize * holeSize);
+}
+
+function createBuildings() {
+	var buildingsPerPlatform = Math.floor((Math.random() * 2) + 1);
+	var buildingsN = (platformsPositions.length - 1) * buildingsPerPlatform; 
+	buildings = game.add.group();
+	buildings.enableBody = true; 
+
+	for(var i = 1; i < buildingsN; i += 1) {
+		var id = Math.floor((i + 1) / 2) ;
+		var start = platformsPositions[id][0];
+		var end = platformsPositions[id][1];
+		var buldingPosition = null;
+		var minDistance = buildings.children[buildings.children.length - 1] - settings.towerSize;
+		var maxDistance = buildings.children[buildings.children.length - 1] + settings.towerSize;
+
+		while((buldingPosition > minDistance && buldingPosition < maxDistance) || buldingPosition === null) {
+			buldingPosition = Math.floor((Math.random() * end) + start);
+		}
+
+		var building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
+		building.body.immovable = true;
+		building.health = 100;		
+	}
+
+	game.log('Buildings: ', 'Created (' + buildingsN + ')', 'green');
 }
 
 function createPlayer() {
-	player = game.add.sprite(settings.tileSize, game.world.height - settings.playerSize.h * 1.15, 'troll_first_iddle'); // Create the player - 1.15 to start just above the floor
+	player = game.add.sprite(0, game.world.height - settings.playerSize.h * 1.15, 'troll_first_iddle'); // Create the player - 1.15 to start just above the platform
 	game.physics.arcade.enable(player); // Enable physics for the player
 	player.body.bounce.y = 0; // Vertical bounce force
     player.body.gravity.y = 2500; // Gravity force
     player.body.collideWorldBounds = true; // Enable collision with the world boundaries
-    player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true); // Create the iddle animation  
+    player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, true); // Create the iddle animation  
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+
+    game.log('Player: ', 'Created', 'green');
 }
 
-function checkControls(isPlayerTouchingFloor) {
+function checkControls(isPlayerTouchingPlatform) {
 	/* Controls */
     player.body.velocity.x = 0; // Reset the player velocity    
 
@@ -154,7 +196,7 @@ function checkControls(isPlayerTouchingFloor) {
     		player.scale.x *= -1;
     	}
 
-		if(isPlayerTouchingFloor) {
+		if(isPlayerTouchingPlatform) {
 	        if(player.key !== 'troll_first_walk') {
 	        	player.loadTexture('troll_first_walk');
 	        }
@@ -162,7 +204,7 @@ function checkControls(isPlayerTouchingFloor) {
 	        player.animations.play('test');
     	}
     } else if (cursors.right.isDown) {               
-        player.body.velocity.x = 350; //  Move to the right 
+        player.body.velocity.x = 500; //  Move to the right 
 
         if(player.scale.x === -1) {
         	player.scale.x *= -.7;
@@ -170,14 +212,14 @@ function checkControls(isPlayerTouchingFloor) {
     		player.scale.x *= -1;
     	}
 
-        if(isPlayerTouchingFloor) {
+        if(isPlayerTouchingPlatform) {
 	        if(player.key !== 'troll_first_walk') {
 	        	player.loadTexture('troll_first_walk');
 	        }
 
 	        player.animations.play('test');
     	}
-    } else if(isPlayerTouchingFloor && !isAttacking) {
+    } else if(isPlayerTouchingPlatform && !isAttacking) {
     	player.anchor.x = .5; // Set the X anchor to the middle of the sprite
     	if(player.scale.x > 0) {
     		player.scale.x = .7;
@@ -194,7 +236,7 @@ function checkControls(isPlayerTouchingFloor) {
     }
   
     //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down && isPlayerTouchingFloor) {	    	
+    if (cursors.up.isDown && player.body.touching.down && isPlayerTouchingPlatform) {	    	
         player.body.velocity.y = -750; // Move the player up
 
         if(player.scale.x > 0) {
@@ -235,7 +277,7 @@ function checkAttack(building) {
 	if(target !== building && building !== undefined) { // Check if new building is in range and that the returned object is not undefined
 		target = building;
 	}
-	
+
 	if(isAttacking) { // Check if the player is currently attacking
 		if(attackAnimation.frame === 9 && !dmgLock) { // TODO: Change the constant to a variable
 			dmgLock = true;
@@ -251,4 +293,9 @@ function checkAttack(building) {
 			dmgLock = false;
 		}
 	}
+}
+
+Phaser.Game.prototype.log = function(title, message, color) {
+	var color = color || '#333';
+	console.log('%c' + title + ' %c' + message, 'font-weight: 600; color: ' + color, 'font-style: italic; color: ' + color);
 }
