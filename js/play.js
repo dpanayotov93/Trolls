@@ -1,7 +1,9 @@
 var lastPlatformPosition = 0;
 var isAttacking = false; 
+var isJumping = false;
 var dmgLock = false; // TODO: Change to time related event / reference 
 var platformsPositions = [];
+var destroyedBuildingsN = 0;
 var cursor, player, platforms, buildings, target, attackAnimation;
 
 var statePlay = {
@@ -11,11 +13,17 @@ var statePlay = {
 		createBackground();
 		createPlatform();
 		createBuildings();
-		createPlayer();		
+		createPlayer();					
 	}, 
 	update: function() {
 		var isPlayerTouchingPlatform = game.physics.arcade.collide(player, platforms); // Collision check between the player and the platform
-		var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings
+		var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings		
+
+		if(player.position.y > 790) {
+			player.kill();
+			game.log('Calling state: ', 'End');
+			game.state.start('End');
+		}
 
 		if(isPlayerTouchingBuildings) {  // If the player overlaps a building in the group set it as it's current target		
 			var building = buildings.filter(function(building) { // Filter through the group to find the currently overlapping building
@@ -33,10 +41,11 @@ var statePlay = {
 		checkControls(isPlayerTouchingPlatform);		
 	},
 	render: function() {
-		game.debug.text('FPS: ' + game.time.fps, 2, 50, "#00ff00"); // Show FPS
-		game.debug.spriteCoords(player);
-		/*
-	    game.debug.spriteBounds(player); 
+		game.debug.text('FPS: ' + game.time.fps, 25, 25, "#00ff00"); // Show FPS
+		game.debug.body(player);		
+		game.debug.spriteBounds(player);		
+		/*	     
+	    game.debug.spriteCoords(player);
 	          
 	    for(var i = 0; i < platforms.children.length; i += 1) {
 	    	game.debug.spriteBounds(platforms.children[i]);
@@ -65,8 +74,8 @@ function createPlatform() {
 }
 
 function createPlatformPiece(n) {
-	var midPiecesN = Math.floor(Math.random() * 5 + 1); // Number of pieces for testing purposes
-	var holeSize = Math.floor(Math.random() * 2 + 2);
+	var midPiecesN = game.rnd.integerInRange(2, 5); // Number of pieces for testing purposes
+	var holeSize = game.rnd.integerInRange(3, 4);
 	var platformStart = platforms.create(lastPlatformPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
 	var platformEndPosition, platformEnd;
 
@@ -101,20 +110,7 @@ function createBuildings() {
 
 		for(var j = 0; j < buildingsPerPlatform; j +=1) {
 			var buldingPosition = game.rnd.integerInRange(start, end);
-			var building;
-
-			// if(buildings.children.length > 0) {
-
-			// 	var minDistance = buildings.children[buildings.children.length - 1].position.x - settings.towerSize.w * 2;
-			// 	var maxDistance = buildings.children[buildings.children.length - 1].position.x + settings.towerSize.w * 2;
-
-
-			// 	while((buldingPosition > minDistance && buldingPosition < maxDistance) || buldingPosition === null) {
-			// 		buldingPosition = game.rnd.integerInRange(start, end)
-			// 	}
-			// }
-
-			building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
+			var building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
 			building.body.immovable = true;
 			building.health = 100;	
 		}		
@@ -124,13 +120,14 @@ function createBuildings() {
 }
 
 function createPlayer() {
-	player = game.add.sprite(0, game.world.height - settings.playerSize.h * 1.15, 'troll_first_iddle'); // Create the player - 1.15 to start just above the platform
+	player = game.add.sprite(0, 0, 'troll_first_iddle'); // Create the player - 1.15 to start just above the platform
 	game.physics.arcade.enable(player); // Enable physics for the player
 	player.body.bounce.y = 0; // Vertical bounce force
     player.body.gravity.y = 2500; // Gravity force
     player.body.collideWorldBounds = true; // Enable collision with the world boundaries
     player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, true); // Create the iddle animation  
-    player.outOfBoundsKill = true;
+    player.outOfBoundsKill = true;            
+
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
     game.log('Player: ', 'Created', 'green');
@@ -172,8 +169,8 @@ function checkControls(isPlayerTouchingPlatform) {
 
 	        player.animations.play('test');
     	}
-    } else if(isPlayerTouchingPlatform && !isAttacking) {
-    	player.anchor.x = .5; // Set the X anchor to the middle of the sprite
+    } else if(isPlayerTouchingPlatform && !isAttacking) {		
+    	player.anchor.x = .5; // Set the X anchor to the middle of the sprite    	
     	if(player.scale.x > 0) {
     		player.scale.x = .7;
     	} else {
@@ -185,10 +182,16 @@ function checkControls(isPlayerTouchingPlatform) {
         	player.loadTexture('troll_first_iddle');
         }
 
-        player.animations.play('test');    
+        player.animations.play('test');               
+        if(!isJumping) {
+        	player.body.setSize(player._bounds.width - 60, player._bounds.height, 15, 0);	
+        }    
     }
   
     //  Allow the player to jump if they are touching the ground.
+    if(cursors.up.isUp) {
+    	isJumping = false; // Reset the boolen that marks the attacking state
+    }      
     if (cursors.up.isDown && player.body.touching.down && isPlayerTouchingPlatform) {	    	
         player.body.velocity.y = -750; // Move the player up
 
@@ -200,9 +203,11 @@ function checkControls(isPlayerTouchingPlatform) {
 
         if(player.key !== 'troll_first_jump') {
         	player.loadTexture('troll_first_jump');
-        }        
-
-        player.animations.play('test');        
+        }
+		
+        player.animations.play('test');       
+        isJumping = true; 
+        player.body.setSize(player._bounds.width - 120, player._bounds.height, 60, 0);		
     }
 
     /* Attacking */
@@ -241,6 +246,7 @@ function checkAttack(building) {
 			console.log(target.health);
 			if(target.health === 0) {
 				buildings.remove(target);
+				destroyedBuildingsN += 1;
 			}
 			if(target.health % 20 === 0) {
 				target.frame += 1;

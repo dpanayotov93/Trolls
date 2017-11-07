@@ -34,8 +34,9 @@ var game = new Phaser.Game(settings.width, settings.height, Phaser.CANVAS, '');
 game.state.add('Boot', stateBoot);
 game.state.add('Load', stateLoad);
 game.state.add('Menu', stateMenu);
+game.state.add('Controls', stateControls);
 game.state.add('Play', statePlay);
-// game.state.add('state-end', state-end);
+game.state.add('End', stateEnd);
 
 // Initiate from the boot state
 game.log('Calling state:', 'Boot');
