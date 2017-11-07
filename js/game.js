@@ -4,10 +4,10 @@ Phaser.Game.prototype.log = function(title, message, color) {
 	console.log('%c' + title + ' %c' + message, 'font-weight: 600; color: ' + color, 'font-style: italic; color: ' + color);
 };
 // Removing the Phaser header
-Phaser.Game.prototype.showDebugHeader = function() {
-	// Just a return statement to overwrite the default behaviour
-	return;
-};
+// Phaser.Game.prototype.showDebugHeader = function() {
+// 	// Just a return statement to overwrite the default behaviour
+// 	return;
+// };
 
 // Define the settings for the game
 var settings = {
@@ -28,7 +28,7 @@ var settings = {
 	}
 };
 // Create the game object
-var game = new Phaser.Game(settings.width, settings.height, Phaser.AUTO, '');
+var game = new Phaser.Game(settings.width, settings.height, Phaser.CANVAS, '');
 
 // State management
 game.state.add('Boot', stateBoot);

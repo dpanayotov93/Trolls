@@ -5,7 +5,9 @@ var platformsPositions = [];
 var cursor, player, platforms, buildings, target, attackAnimation;
 
 var statePlay = {
-	create: function() {		
+	create: function() {			
+		game.time.advancedTiming = true; // Set up FPS counter
+
 		createBackground();
 		createPlatform();
 		createBuildings();
@@ -31,7 +33,8 @@ var statePlay = {
 		checkControls(isPlayerTouchingPlatform);		
 	},
 	render: function() {
-		// Sprite debug info
+		game.debug.text('FPS: ' + game.time.fps, 2, 50, "#00ff00"); // Show FPS
+		game.debug.spriteCoords(player);
 		/*
 	    game.debug.spriteBounds(player); 
 	          
@@ -86,38 +89,35 @@ function createPlatformPiece(n) {
 	lastPlatformPosition = platformEndPosition + (settings.tileSize * holeSize);
 }
 
-function createBuildings() {
-	var buildingsPerPlatform = Math.floor((Math.random() * 2) + 1);
-	var buildingsN = (platformsPositions.length - 1) * buildingsPerPlatform; 
+function createBuildings() {	
+	var buildingsN = platformsPositions.length - 1; // * buildingsPerPlatform; 
 	buildings = game.add.group();
 	buildings.enableBody = true; 
 
-	for(var i = 1; i < buildingsN; i += 1) {
-		var id = Math.floor((i + 1) / 2) ;
-		var start = platformsPositions[id][0];
-		var end = platformsPositions[id][1];
-		var buldingPosition = null;
-		var minDistance; 
-		var maxDistance;
+	for(var i = 1; i <= buildingsN; i += 1) {
+		var buildingsPerPlatform = game.rnd.integerInRange(1, 3);
+		var start = platformsPositions[i][0];
+		var end = platformsPositions[i][1];
 
-		if(buildings.children.length > 0) {
-			minDistance = buildings.children[buildings.children.length - 1].position.x - settings.towerSize.w * 2;
-			maxDistance = buildings.children[buildings.children.length - 1].position.x + settings.towerSize.w * 2;
+		for(var j = 0; j < buildingsPerPlatform; j +=1) {
+			var buldingPosition = game.rnd.integerInRange(start, end);
+			var building;
 
-			game.log('Last building position:', buildings.children[buildings.children.length - 1].position.x);
-			game.log('Min distance:', minDistance);
-			game.log('Max distance:', maxDistance);
-			
-			while((buldingPosition > minDistance && buldingPosition < maxDistance) || buldingPosition === null) {
-				buldingPosition = Math.floor((Math.random() * end) + start);
-			}
-		}
+			// if(buildings.children.length > 0) {
 
-		game.log('Bulding position:', buldingPosition);
+			// 	var minDistance = buildings.children[buildings.children.length - 1].position.x - settings.towerSize.w * 2;
+			// 	var maxDistance = buildings.children[buildings.children.length - 1].position.x + settings.towerSize.w * 2;
 
-		var building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
-		building.body.immovable = true;
-		building.health = 100;		
+
+			// 	while((buldingPosition > minDistance && buldingPosition < maxDistance) || buldingPosition === null) {
+			// 		buldingPosition = game.rnd.integerInRange(start, end)
+			// 	}
+			// }
+
+			building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
+			building.body.immovable = true;
+			building.health = 100;	
+		}		
 	}
 
 	game.log('Buildings: ', 'Created (' + buildingsN + ')', 'green');

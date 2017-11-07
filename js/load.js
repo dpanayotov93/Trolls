@@ -32,6 +32,8 @@ var stateLoad = {
 		// Sprites - Objects
 		game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);
+		// Fonts
+		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
 
 		game.log('Assets: ', 'Loaded', 'green');		
 	},
