@@ -18,7 +18,7 @@ var statePlay = {
 		createEnemies();
 	}, 
 	update: function() {
-		var isPlayerTouchingPlatform = game.physics.arcade.collide(player, platforms); // Collision check between the player and the platform
+		var isPlayerTouchingPlatform = game.physics.arcade.collide(player.body, platforms); // Collision check between the player and the platform
 		var areEnemiesTouchingPlatform  = game.physics.arcade.collide(enemies, platforms); // Collision check between the enemies and the platforms
 		var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings			
 
@@ -45,12 +45,13 @@ var statePlay = {
 		updateAI();			
 	},
 	render: function() {
-		game.debug.text('FPS: ' + game.time.fps, 25, 25, "#00ff00"); // Show FPS
-		// game.debug.spriteBounds(player);		
-		/*	   
-		game.debug.body(player);	
+		game.debug.text('FPS: ' + game.time.fps, 25, 25, "#00ff00"); // Show FPS			
+							
+	    game.debug.body(player);
+	    /*	    
+	    game.debug.spriteBounds(player);
+	    
 	    game.debug.spriteCoords(player);
-	       
 	    for(var i = 0; i < enemies.children.length; i += 1) {
 	    	game.debug.spriteBounds(enemies.children[i]);
 	    } 
@@ -131,7 +132,7 @@ function createPlayer() {
     player.body.collideWorldBounds = true; // Enable collision with the world boundaries
     player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true); // Create the iddle animation  
     player.outOfBoundsKill = true;      
-    player.health = 100;      
+    player.health = 100;          
 
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
@@ -185,6 +186,7 @@ function createEnemies() {
 function checkControls(isPlayerTouchingPlatform) {
 	/* Controls */
     player.body.velocity.x = 0; // Reset the player velocity    
+    player.body.setSize(player._bounds.width - 150, player._bounds.height, 15, 0);
 
     if (cursors.left.isDown) {  
         player.body.velocity.x = -500; //  Move to the left
