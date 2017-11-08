@@ -46,15 +46,15 @@ var statePlay = {
 	},
 	render: function() {
 		game.debug.text('FPS: ' + game.time.fps, 25, 25, "#00ff00"); // Show FPS
-		game.debug.body(player);		
-		game.debug.spriteBounds(player);		
-		/*	     
+		// game.debug.spriteBounds(player);		
+		/*	   
+		game.debug.body(player);	
 	    game.debug.spriteCoords(player);
-	    */ 	   
+	       
 	    for(var i = 0; i < enemies.children.length; i += 1) {
 	    	game.debug.spriteBounds(enemies.children[i]);
 	    } 
-			
+		*/ 		
 	}
 }
 
@@ -124,12 +124,12 @@ function createBuildings() {
 }
 
 function createPlayer() {
-	player = game.add.sprite(0, 0, 'troll_first_iddle'); // Create the player
+	player = game.add.sprite(100, 25, 'troll_first_iddle'); // Create the player
 	game.physics.arcade.enable(player); // Enable physics for the player
 	player.body.bounce.y = 0; // Vertical bounce force
     player.body.gravity.y = 2500; // Gravity force
     player.body.collideWorldBounds = true; // Enable collision with the world boundaries
-    player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, true); // Create the iddle animation  
+    player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true); // Create the iddle animation  
     player.outOfBoundsKill = true;      
     player.health = 100;      
 
@@ -190,8 +190,8 @@ function checkControls(isPlayerTouchingPlatform) {
         player.body.velocity.x = -500; //  Move to the left
 		
         if(player.scale.x === 1) {
-        	player.scale.x *= -.7;
-    	} else if(player.scale.x === .7) {
+        	player.scale.x *= -1;
+    	} else if(player.scale.x === 1) {
     		player.scale.x *= -1;
     	}
 
@@ -206,8 +206,8 @@ function checkControls(isPlayerTouchingPlatform) {
         player.body.velocity.x = 500; //  Move to the right 
 
         if(player.scale.x === -1) {
-        	player.scale.x *= -.7;
-    	} else if(player.scale.x === -.7) {
+        	player.scale.x *= -1;
+    	} else if(player.scale.x === -1) {
     		player.scale.x *= -1;
     	}
 
@@ -220,11 +220,11 @@ function checkControls(isPlayerTouchingPlatform) {
     	}
     } else if(isPlayerTouchingPlatform && !isAttacking) {		
     	player.anchor.x = .5; // Set the X anchor to the middle of the sprite    	
-    	if(player.scale.x > 0) {
-    		player.scale.x = .7;
-    	} else {
-    		player.scale.x = -.7;
-    	}
+    	// if(player.scale.x > 0) {
+    	// 	player.scale.x = .7;
+    	// } else {
+    	// 	player.scale.x = -.7;
+    	// }
 
         // Play the iddle animation when not moving
         if(player.key !== 'troll_first_iddle') {
@@ -233,7 +233,7 @@ function checkControls(isPlayerTouchingPlatform) {
 
         player.animations.play('test');               
         if(!isJumping) {
-        	player.body.setSize(player._bounds.width - 60, player._bounds.height, 15, 0);	
+        	// player.body.setSize(player._bounds.width - 60, player._bounds.height, 15, 0);	
         }    
     }
   
@@ -256,7 +256,7 @@ function checkControls(isPlayerTouchingPlatform) {
 		
         player.animations.play('test');       
         isJumping = true; 
-        player.body.setSize(player._bounds.width - 120, player._bounds.height, 60, 0);		
+        // player.body.setSize(player._bounds.width - 120, player._bounds.height, 60, 0);		
     }
 
     /* Attacking */
@@ -308,6 +308,23 @@ function checkAttack(building) {
 
 function updateAI() {
 	enemies.forEach(function(enemy) {
+		var newDirectionToPlayer;
+
+		// Check if the player is located to the left or to the right of the enemy
+		if(enemy.position.x - player.position.x > 0) { 
+			newDirectionToPlayer = 0; // If enemy's X is higher than the player then the player is to the left
+		} else {
+			newDirectionToPlayer = 1; // If enemy's X is lower than the player then the player is to the right
+		}	
+			
+		if(enemy.directionToPlayer !== newDirectionToPlayer) {			
+    		enemy.anchor.x = .5; // Set the X anchor of the enemy to the center
+    		enemy.scale.x *= -1; // Flip the sprite horizontally
+    		enemy.nextToWhole = false; // If the player changes direction  then set the enemy to be no longer locked to "next to a hole" state
+    	}	
+
+    	enemy.directionToPlayer = newDirectionToPlayer; // Set the direction of the enemy towards the player
+
 		enemyInPlayerRangeCheck(enemy);
 
 		if(!enemy.isInPlayerRange) {
@@ -329,23 +346,6 @@ function enemyInPlayerRangeCheck(enemy) {
 
 function enenmyMove(enemy) {
 	// Move towards the player if not next to a whole between them	
-	var newDirectionToPlayer;
-
-	// Check if the player is located to the left or to the right of the enemy
-	if(enemy.position.x - player.position.x > 0) { 
-		newDirectionToPlayer = 0; // If enemy's X is higher than the player then the player is to the left
-	} else {
-		newDirectionToPlayer = 1; // If enemy's X is lower than the player then the player is to the right
-	}
-
-	if(enemy.directionToPlayer !== newDirectionToPlayer) {			
-    	enemy.anchor.x = .5; // Set the X anchor of the enemy to the center
-    	enemy.scale.x *= -1; // Flip the sprite horizontally
-		enemy.nextToWhole = false; // If the player changes direction  then set the enemy to be no longer locked to "next to a hole" state
-	}	
-			
-	enemy.directionToPlayer = newDirectionToPlayer; // Set the direction of the enemy towards the player
-
 	for(var i = 0; i < platformsPositions.length; i += 1) {				
 		if(Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < 5) { 
 			enemy.nextToWhole = true; // If the enemy is 5 pixels away from the hole lock him into a "next to a hole" state
@@ -383,6 +383,9 @@ function enenmyMove(enemy) {
 }
 
 function enemyAttack(enemy) {
-	game.log('Enemy:', 'Attacking', 'red');
+    if(enemy.key !== 'troll_first_attack') {
+    	enemy.loadTexture('troll_first_attack');
+    }
 
+    enemy.animations.play('test');
 }
