@@ -4,7 +4,8 @@ var isJumping = false;
 var dmgLock = false; // TODO: Change to time related event / reference 
 var platformsPositions = [];
 var destroyedBuildingsN = 0;
-var cursor, player, platforms, buildings, target, attackAnimation;
+var updateTime = 0;
+var cursor, player, platforms, buildings, enemies, target, attackAnimation;
 
 var statePlay = {
 	create: function() {			
@@ -13,11 +14,13 @@ var statePlay = {
 		createBackground();
 		createPlatform();
 		createBuildings();
-		createPlayer();					
+		createPlayer();
+		createEnemies();
 	}, 
 	update: function() {
 		var isPlayerTouchingPlatform = game.physics.arcade.collide(player, platforms); // Collision check between the player and the platform
-		var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings		
+		var areEnemiesTouchingPlatform  = game.physics.arcade.collide(enemies, platforms); // Collision check between the enemies and the platforms
+		var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings			
 
 		if(player.position.y > 790) {
 			player.kill();
@@ -37,8 +40,9 @@ var statePlay = {
 		} else {
 			target = null; // Clear the current target if out of the overlapping area
 		}
-
-		checkControls(isPlayerTouchingPlatform);		
+		
+		checkControls(isPlayerTouchingPlatform);
+		updateAI();			
 	},
 	render: function() {
 		game.debug.text('FPS: ' + game.time.fps, 25, 25, "#00ff00"); // Show FPS
@@ -46,11 +50,11 @@ var statePlay = {
 		game.debug.spriteBounds(player);		
 		/*	     
 	    game.debug.spriteCoords(player);
-	          
-	    for(var i = 0; i < platforms.children.length; i += 1) {
-	    	game.debug.spriteBounds(platforms.children[i]);
+	    */ 	   
+	    for(var i = 0; i < enemies.children.length; i += 1) {
+	    	game.debug.spriteBounds(enemies.children[i]);
 	    } 
-		*/ 		
+			
 	}
 }
 
@@ -75,7 +79,7 @@ function createPlatform() {
 
 function createPlatformPiece(n) {
 	var midPiecesN = game.rnd.integerInRange(2, 5); // Number of pieces for testing purposes
-	var holeSize = game.rnd.integerInRange(3, 4);
+	var holeSize = game.rnd.integerInRange(2, 3);
 	var platformStart = platforms.create(lastPlatformPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
 	var platformEndPosition, platformEnd;
 
@@ -99,14 +103,14 @@ function createPlatformPiece(n) {
 }
 
 function createBuildings() {	
-	var buildingsN = platformsPositions.length - 1; // * buildingsPerPlatform; 
 	buildings = game.add.group();
 	buildings.enableBody = true; 
 
-	for(var i = 1; i <= buildingsN; i += 1) {
+	for(var i = 0; i < platformsPositions.length - 1; i += 1) {
+		var id = i + 1;
 		var buildingsPerPlatform = game.rnd.integerInRange(1, 3);
-		var start = platformsPositions[i][0];
-		var end = platformsPositions[i][1];
+		var start = platformsPositions[id][0];
+		var end = platformsPositions[id][1];
 
 		for(var j = 0; j < buildingsPerPlatform; j +=1) {
 			var buldingPosition = game.rnd.integerInRange(start, end);
@@ -116,21 +120,66 @@ function createBuildings() {
 		}		
 	}
 
-	game.log('Buildings: ', 'Created (' + buildingsN + ')', 'green');
+	game.log('Buildings: ', 'Created (' + buildings.children.length + ')', 'green');
 }
 
 function createPlayer() {
-	player = game.add.sprite(0, 0, 'troll_first_iddle'); // Create the player - 1.15 to start just above the platform
+	player = game.add.sprite(0, 0, 'troll_first_iddle'); // Create the player
 	game.physics.arcade.enable(player); // Enable physics for the player
 	player.body.bounce.y = 0; // Vertical bounce force
     player.body.gravity.y = 2500; // Gravity force
     player.body.collideWorldBounds = true; // Enable collision with the world boundaries
     player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, true); // Create the iddle animation  
-    player.outOfBoundsKill = true;            
+    player.outOfBoundsKill = true;      
+    player.health = 100;      
 
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
-    game.log('Player: ', 'Created', 'green');
+    game.log('Player: ', 'Created', 'blue');
+}
+
+function createEnemies() {
+	var enemiesN = game.rnd.integerInRange();
+
+	enemies = game.add.group();
+	enemies.enableBody = true;
+	enemies.physicsBodyType = Phaser.Physics.ARCADE;
+
+	for(var i = 0; i < platformsPositions.length - 1; i += 1) {
+		var id = i + 1;
+		// TODO: Change to enemy factory
+		var enemiesPerPlatform = game.rnd.integerInRange(1, 3);
+		var start = platformsPositions[id][0];
+		var end = platformsPositions[id][1];	
+
+		for(var j = 0; j < enemiesPerPlatform; j += 1) {
+			var enemyPosition = game.rnd.integerInRange(start, end); // Placement position for the current enemy
+			var enemy = game.add.sprite(enemyPosition, 0, 'troll_first_iddle'); // // Create the enemy; TODO: Change to enemy sprites		
+			
+			enemies.add(enemy); // Add the current enenemy to the group
+			enemy.name = 'Enemy ' + i;
+			game.physics.arcade.enable(enemy); // Enable physics for the player
+			enemy.body.enable = true;
+			enemy.body.bounce.y = 0; // Vertical bounce force
+		    enemy.body.gravity.y = 2500; // Gravity force
+		    enemy.body.collideWorldBounds = true; // Enable collision with the world boundaries
+		    enemy.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, true); // Create the iddle animation  
+		    enemy.outOfBoundsKill = true;	
+		    enemy.nextToWhole = false; // Used for AI movement algorythm
+		    enemy.updateTime = 0;
+		    enemy.isInPlayerRange = false;	   
+		    enemy.anchor.x = .5;
+    		enemy.scale.x *= -1;
+
+		    if(enemy.position.x - player.position.x > 0) {
+		    	enemy.directionToPlayer = 0;
+			} else {
+				enemy.directionToPlayer = 1;
+			}
+		}
+	}
+
+	game.log('Enemies: ', 'Created (' + enemies.children.length + ')', 'red');
 }
 
 function checkControls(isPlayerTouchingPlatform) {
@@ -255,4 +304,85 @@ function checkAttack(building) {
 			dmgLock = false;
 		}
 	}
+}
+
+function updateAI() {
+	enemies.forEach(function(enemy) {
+		enemyInPlayerRangeCheck(enemy);
+
+		if(!enemy.isInPlayerRange) {
+			enenmyMove(enemy);
+		}
+	});
+}
+
+function enemyInPlayerRangeCheck(enemy) {	
+	var isEnemyTouchingPlayer  = game.physics.arcade.overlap(enemy, player);
+	if(isEnemyTouchingPlayer) {
+		enemy.isInPlayerRange = true;
+		enemy.body.velocity.setTo(0, 0); // If the enemy collides with the player set the enemy's X and Y velocity to 0
+		enemyAttack(enemy);
+	} else {
+		enemy.isInPlayerRange = false;
+	}
+}
+
+function enenmyMove(enemy) {
+	// Move towards the player if not next to a whole between them	
+	var newDirectionToPlayer;
+
+	// Check if the player is located to the left or to the right of the enemy
+	if(enemy.position.x - player.position.x > 0) { 
+		newDirectionToPlayer = 0; // If enemy's X is higher than the player then the player is to the left
+	} else {
+		newDirectionToPlayer = 1; // If enemy's X is lower than the player then the player is to the right
+	}
+
+	if(enemy.directionToPlayer !== newDirectionToPlayer) {			
+    	enemy.anchor.x = .5; // Set the X anchor of the enemy to the center
+    	enemy.scale.x *= -1; // Flip the sprite horizontally
+		enemy.nextToWhole = false; // If the player changes direction  then set the enemy to be no longer locked to "next to a hole" state
+	}	
+			
+	enemy.directionToPlayer = newDirectionToPlayer; // Set the direction of the enemy towards the player
+
+	for(var i = 0; i < platformsPositions.length; i += 1) {				
+		if(Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < 5) { 
+			enemy.nextToWhole = true; // If the enemy is 5 pixels away from the hole lock him into a "next to a hole" state
+		}			
+	}		
+
+	// Move the enemy towards the player if not next to a hole and if standing on the ground
+	if(!enemy.nextToWhole && enemy.body.touching.down) {
+		if (game.time.now > enemy.updateTime) {
+			enemy.updateTime = game.time.now + 500;	// Leave a threshold time for the reaction
+
+	        if(enemy.key !== 'troll_first_walk') {
+	        	enemy.loadTexture('troll_first_walk');
+	        }
+
+	        enemy.animations.play('test');
+
+
+			game.physics.arcade.moveToObject(enemy, player, 500); 			
+		}
+	} else {
+		if(enemy.body.touching.down) {
+			enemy.body.velocity.setTo(0, 0); // If next to a hole and touching the ground set the enemy's X and Y velocity to 0
+
+		    if(enemy.key !== 'troll_first_iddle') {
+		    	enemy.loadTexture('troll_first_iddle');
+		    }
+
+		    enemy.animations.play('test');				
+		} else {
+			enemy.body.velocity.setTo(0, enemy.body.velocity.y); // If next to a hole and not touching the ground set the enemy's X velocity to 0
+		}
+	}
+
+}
+
+function enemyAttack(enemy) {
+	game.log('Enemy:', 'Attacking', 'red');
+
 }

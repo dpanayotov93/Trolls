@@ -1,7 +1,11 @@
 // Custom logging function
 Phaser.Game.prototype.log = function(title, message, color) {
 	var color = color || '#333';
-	console.log('%c' + title + ' %c' + message, 'font-weight: 600; color: ' + color, 'font-style: italic; color: ' + color);
+	if(message) {
+		console.log('%c' + title + ' %c' + message, 'font-weight: 600; color: ' + color, 'font-style: italic; color: ' + color);
+	} else {
+		console.log('%c' + title,  'font-weight: 600; color: ' + color);
+	}
 };
 // Removing the Phaser header
 // Phaser.Game.prototype.showDebugHeader = function() {
