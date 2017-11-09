@@ -18,7 +18,7 @@ var statePlay = {
 		createEnemies();
 	}, 
 	update: function() {
-		var isPlayerTouchingPlatform = game.physics.arcade.collide(player.body, platforms); // Collision check between the player and the platform
+		var isPlayerTouchingPlatform = game.physics.arcade.collide(player, platforms); // Collision check between the player and the platform
 		var areEnemiesTouchingPlatform  = game.physics.arcade.collide(enemies, platforms); // Collision check between the enemies and the platforms
 		var isPlayerTouchingBuildings = game.physics.arcade.overlap(player, buildings); // Overlap check between the player and the buildings			
 
@@ -26,6 +26,13 @@ var statePlay = {
 			player.kill();
 			game.log('Calling state: ', 'End');
 			game.state.start('End');
+		}
+
+		for(var i = 0; i < enemies.children.length; i += 1) {
+			var enemy = enemies.children[i];
+			if(enemy.position.y > 790) {
+				enemy.kill();
+			}		
 		}
 
 		if(isPlayerTouchingBuildings) {  // If the player overlaps a building in the group set it as it's current target		
@@ -45,17 +52,19 @@ var statePlay = {
 		updateAI();			
 	},
 	render: function() {
-		game.debug.text('FPS: ' + game.time.fps, 25, 25, "#00ff00"); // Show FPS			
-							
-	    game.debug.body(player);
-	    /*	    
-	    game.debug.spriteBounds(player);
+		game.debug.text('FPS: ' + game.time.fps, 32, 32, "#00ff00"); // Show FPS						
+	    game.debug.spriteInfo(player, 32, 64);
+	    game.debug.spriteInputInfo(player, 512, 64);
+	    //game.debug.body(player);     
+	    // game.debug.spriteBounds(player);	     	 
+	    // game.debug.spriteCoords(player);	
 	    
-	    game.debug.spriteCoords(player);
+	    /*
 	    for(var i = 0; i < enemies.children.length; i += 1) {
-	    	game.debug.spriteBounds(enemies.children[i]);
-	    } 
-		*/ 		
+			var enemy = enemies.children[i];	
+	    	game.debug.body(enemy);
+	    }
+	    */
 	}
 }
 
@@ -131,10 +140,13 @@ function createPlayer() {
     player.body.gravity.y = 2500; // Gravity force
     player.body.collideWorldBounds = true; // Enable collision with the world boundaries
     player.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true); // Create the iddle animation  
-    player.outOfBoundsKill = true;      
-    player.health = 100;          
+    player.outOfBoundsKill = true; // A switch for just in case to kill the player if it goes out of bounds
+    player.maxHealth = 100; // Maximum player health
+    player.health = 100;
+    player.anchor.x = 0.5; // Set the X anchor point to the center of the body
+    player.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body    
 
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1); // Create a canera that follow the player;
 
     game.log('Player: ', 'Created', 'blue');
 }
@@ -172,6 +184,8 @@ function createEnemies() {
 		    enemy.anchor.x = .5;
     		enemy.scale.x *= -1;
 
+    		enemy.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body
+
 		    if(enemy.position.x - player.position.x > 0) {
 		    	enemy.directionToPlayer = 0;
 			} else {
@@ -186,16 +200,14 @@ function createEnemies() {
 function checkControls(isPlayerTouchingPlatform) {
 	/* Controls */
     player.body.velocity.x = 0; // Reset the player velocity    
-    player.body.setSize(player._bounds.width - 150, player._bounds.height, 15, 0);
+
 
     if (cursors.left.isDown) {  
         player.body.velocity.x = -500; //  Move to the left
 		
-        if(player.scale.x === 1) {
-        	player.scale.x *= -1;
-    	} else if(player.scale.x === 1) {
-    		player.scale.x *= -1;
-    	}
+		
+        player.scale.x = -1;
+
 
 		if(isPlayerTouchingPlatform) {
 	        if(player.key !== 'troll_first_walk') {
@@ -207,11 +219,8 @@ function checkControls(isPlayerTouchingPlatform) {
     } else if (cursors.right.isDown) {               
         player.body.velocity.x = 500; //  Move to the right 
 
-        if(player.scale.x === -1) {
-        	player.scale.x *= -1;
-    	} else if(player.scale.x === -1) {
-    		player.scale.x *= -1;
-    	}
+        
+        player.scale.x = 1;
 
         if(isPlayerTouchingPlatform) {
 	        if(player.key !== 'troll_first_walk') {
@@ -221,12 +230,7 @@ function checkControls(isPlayerTouchingPlatform) {
 	        player.animations.play('test');
     	}
     } else if(isPlayerTouchingPlatform && !isAttacking) {		
-    	player.anchor.x = .5; // Set the X anchor to the middle of the sprite    	
-    	// if(player.scale.x > 0) {
-    	// 	player.scale.x = .7;
-    	// } else {
-    	// 	player.scale.x = -.7;
-    	// }
+    	//player.anchor.x = .5; // Set the X anchor to the middle of the sprite    	
 
         // Play the iddle animation when not moving
         if(player.key !== 'troll_first_iddle') {
