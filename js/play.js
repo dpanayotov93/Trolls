@@ -54,7 +54,6 @@ var statePlay = {
 	render: function() {
 		game.debug.text('FPS: ' + game.time.fps, 32, 32, "#00ff00"); // Show FPS						
 	    game.debug.spriteInfo(player, 32, 64);
-	    game.debug.spriteInputInfo(player, 512, 64);
 	    //game.debug.body(player);     
 	    // game.debug.spriteBounds(player);	     	 
 	    // game.debug.spriteCoords(player);	
@@ -183,7 +182,7 @@ function createEnemies() {
 		    enemy.isInPlayerRange = false;	   
 		    enemy.anchor.x = .5;
     		enemy.scale.x *= -1;
-
+    		player.anchor.x = 0.5; // Set the X anchor point to the center of the body
     		enemy.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body
 
 		    if(enemy.position.x - player.position.x > 0) {
