@@ -1,6 +1,5 @@
 var lastPlatformPosition = 0;
 var isAttacking = false; 
-var isJumping = false;
 var dmgLock = false; // TODO: Change to time related event / reference 
 var platformsPositions = [];
 var destroyedBuildingsN = 0;
@@ -64,6 +63,7 @@ var statePlay = {
 	    	game.debug.body(enemy);
 	    }
 	    */
+	   
 	}
 }
 
@@ -167,6 +167,7 @@ function createEnemies() {
 		for(var j = 0; j < enemiesPerPlatform; j += 1) {
 			var enemyPosition = game.rnd.integerInRange(start, end); // Placement position for the current enemy
 			var enemy = game.add.sprite(enemyPosition, 0, 'troll_first_iddle'); // // Create the enemy; TODO: Change to enemy sprites		
+			var bitmapData; // Used for colorizing the sprite
 			
 			enemies.add(enemy); // Add the current enenemy to the group
 			enemy.name = 'Enemy ' + i;
@@ -182,8 +183,12 @@ function createEnemies() {
 		    enemy.isInPlayerRange = false;	   
 		    enemy.anchor.x = .5;
     		enemy.scale.x *= -1;
-    		player.anchor.x = 0.5; // Set the X anchor point to the center of the body
+    		enemy.anchor.x = 0.5; // Set the X anchor point to the center of the body
     		enemy.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body
+
+    		// Colorize the sprite
+		    var gray = game.add.filter('Gray');
+		    enemy.filters = [gray];
 
 		    if(enemy.position.x - player.position.x > 0) {
 		    	enemy.directionToPlayer = 0;
@@ -229,23 +234,15 @@ function checkControls(isPlayerTouchingPlatform) {
 	        player.animations.play('test');
     	}
     } else if(isPlayerTouchingPlatform && !isAttacking) {		
-    	//player.anchor.x = .5; // Set the X anchor to the middle of the sprite    	
-
         // Play the iddle animation when not moving
         if(player.key !== 'troll_first_iddle') {
         	player.loadTexture('troll_first_iddle');
         }
 
-        player.animations.play('test');               
-        if(!isJumping) {
-        	// player.body.setSize(player._bounds.width - 60, player._bounds.height, 15, 0);	
-        }    
+        player.animations.play('test');
     }
   
-    //  Allow the player to jump if they are touching the ground.
-    if(cursors.up.isUp) {
-    	isJumping = false; // Reset the boolen that marks the attacking state
-    }      
+    //  Allow the player to jump if they are touching the ground.   
     if (cursors.up.isDown && player.body.touching.down && isPlayerTouchingPlatform) {	    	
         player.body.velocity.y = -750; // Move the player up
 
@@ -260,8 +257,6 @@ function checkControls(isPlayerTouchingPlatform) {
         }
 		
         player.animations.play('test');       
-        isJumping = true; 
-        // player.body.setSize(player._bounds.width - 120, player._bounds.height, 60, 0);		
     }
 
     /* Attacking */

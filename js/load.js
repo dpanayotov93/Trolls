@@ -4,13 +4,13 @@ var stateLoad = {
 		var loadingLabel = game.add.text(80, 150, 'Loading...', {font: '30px Courier', fill: '#ffffff'});
 
 		// Setup for responsive resizing
-		game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
 		game.scale.pageAlignHorizontally = true;
-		game.scale.pageAlignVertically = true;
+		game.scale.pageAlignVertically = true;		 
+		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+		game.scale.refresh();
 		game.canvas.style.width = '100%';
 		game.canvas.style.height = '100%';
-		game.scale.refresh();
-
+		
 		/* Loading of assets */
 		// Images
 		game.load.image('bg_village', 'assets/backgrounds/village.jpg');
@@ -34,6 +34,8 @@ var stateLoad = {
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
+		// Scripts
+		game.load.script('Gray', 'js/filters/Gray.js');
 
 		game.log('Assets: ', 'Loaded', 'green');		
 	},
