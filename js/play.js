@@ -73,9 +73,17 @@ function createUI() {
 	ui.background = game.add.sprite(0, 0, 'bg_village');
 	ui.background.fixedToCamera = true;	
 
+	// Create the fullscreen button
+	ui.fullscreenIcon = game.add.sprite(game.width - 110, 16, 'icon_fullscreen');
+	ui.fullscreenIcon.scale.setTo(.15);	
+	ui.fullscreenLabel = game.add.bitmapText(game.width - 110, 96, 'yggdrasil', 'Fullscreen', 64);
+	ui.fullscreenLabel.scale.setTo(.25);	
+	ui.fullscreenIcon.fixedToCamera = true;	
+	ui.fullscreenLabel.fixedToCamera = true;	
+
 	// Create the healthbar
 	ui.healthIcon = game.add.sprite(16, 4, 'icon_health');
-	ui.healthIcon.scale.setTo(.15, .15);
+	ui.healthIcon.scale.setTo(.15);
 	ui.healthbarEmpty = game.add.sprite(80, 16, 'bar_empty');
 	ui.healthbarFull = game.add.sprite(80, 16, 'healthbar_full');
 	ui.healthIcon.fixedToCamera = true;	
@@ -84,7 +92,7 @@ function createUI() {
 
 	// Create the energybar
 	ui.energyIcon = game.add.sprite(16, 88, 'icon_energy');
-	ui.energyIcon.scale.setTo(0.15, 0.15);	
+	ui.energyIcon.scale.setTo(0.15);	
 	ui.energybarEmpty = game.add.sprite(80, 100, 'bar_empty');
 	ui.energybarFull = game.add.sprite(80, 100, 'energybar_full');
 	ui.energyIcon.fixedToCamera = true;	
@@ -98,7 +106,7 @@ function createUI() {
 	for(var i = 0; i < orbsN; i += 1) {		
 		ui.orbs[i] = game.add.sprite(116 * (i + 1), 60, 'icon_orb_empty');
 		ui.orbIcons[i] = game.add.sprite(116 * (i + 1), 60, 'icon_orb');
-		ui.orbs[i].scale.setTo(0.1, 0.1);
+		ui.orbs[i].scale.setTo(0.1);
 		ui.orbIcons[i].scale.setTo(0.1, 0.1);
 		ui.orbs[i].fixedToCamera = true;
 		ui.orbIcons[i].fixedToCamera = true;	

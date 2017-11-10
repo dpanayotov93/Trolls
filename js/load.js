@@ -15,6 +15,7 @@ var stateLoad = {
 		// Images - Bakckgrounds
 		game.load.image('bg_village', 'assets/backgrounds/village.jpg');
 		// Images - UI
+		game.load.image('icon_fullscreen', 'assets/ui/icon-fullscreen.png');
 		game.load.image('bar_empty', 'assets/ui/bar-empty.png');
 		game.load.image('healthbar_full', 'assets/ui/healthbar-full.png');		
 		game.load.image('energybar_full', 'assets/ui/energybar-full.png');
@@ -22,6 +23,8 @@ var stateLoad = {
 		game.load.image('icon_energy', 'assets/ui/icon-energy.png');
 		game.load.image('icon_orb', 'assets/ui/icon-orb.png');
 		game.load.image('icon_orb_empty', 'assets/ui/icon-orb-empty.png');
+		// Images - Objects
+		game.load.image('item_dead_pig', 'assets/objects/dead_pig.png');
 		// Tiles - Terrain
 		game.load.image('tile_bot_start', 'assets/tilesets/tile_bot_start.png');
 		game.load.image('tile_bot_mid', 'assets/tilesets/tile_bot_mid.png');
