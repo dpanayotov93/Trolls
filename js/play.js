@@ -88,7 +88,7 @@ function createPlatform() {
 
 function createPlatformPiece(n) {
 	var midPiecesN = game.rnd.integerInRange(2, 5); // Number of pieces for testing purposes
-	var holeSize = game.rnd.integerInRange(3, 4); // Number of empty spaces betweeb the platforms
+	var holeSize = game.rnd.integerInRange(3, 3); // Number of empty spaces betweeb the platforms
 	var platformStart = platforms.create(lastPlatformPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
 	var platformEndPosition, platformEnd;
 
@@ -183,7 +183,7 @@ function createEnemies() {
 		    enemy.isInPlayerRange = false;	   
     		enemy.scale.x *= -1;
     		enemy.anchor.x = .5; // Set the X anchor point to the center of the body
-    		enemy.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body
+    		enemy.body.setSize(settings.playerSize.w - 48, settings.playerSize.h * 2 / 3, 10, 0); // Update the sprite bounds to match the actual physical body
 
     		// Colorize the sprite
 		    var gray = game.add.filter('Gray');
@@ -333,20 +333,33 @@ function updateAI() {
 }
 
 function enemyInPlayerRangeCheck(enemy) {	
-	var isEnemyTouchingPlayer  = game.physics.arcade.overlap(enemy, player);
-	if(isEnemyTouchingPlayer) {
+	// var isEnemyTouchingPlayer  = game.physics.arcade.overlap(enemy, player);
+
+	if(Math.abs(enemy.position.x - player.position.x) < 150) {
+		enemy.isInPlayerRange = true;
+	} else {
+		enemy.isInPlayerRange = false;
+	}
+
+	if(enemy.isInPlayerRange) {
 		enemy.isInPlayerRange = true;
 		enemy.body.velocity.setTo(0, 0); // If the enemy collides with the player set the enemy's X and Y velocity to 0
 		enemyAttack(enemy);
-	} else {
-		enemy.isInPlayerRange = false;
 	}
 }
 
 function enenmyMove(enemy) {
-	// Move towards the player if not next to a whole between them	
-	for(var i = 0; i < platformsPositions.length; i += 1) {				
-		if(Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < 120) { 
+	// Move towards the player if not next to a whole between them		
+	for(var i = 0; i < platformsPositions.length; i += 1) {
+		var checkDist; // Used to determine the distance between the sprite nad the whole depending on the direction
+		
+		if(enemy.directionToPlayer === 0 ) {
+			checkDist = 120;
+		} else {
+			checkDist = 5;
+		}
+
+		if(Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < checkDist) { 
 			enemy.nextToWhole = true; // If the enemy is 5 pixels away from the hole lock him into a "next to a hole" state
 		}			
 	}		
