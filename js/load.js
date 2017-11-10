@@ -29,6 +29,11 @@ var stateLoad = {
 		game.load.spritesheet('troll_first_walk', 'assets/sprites/troll_first/sprite_walk_small.png', settings.playerSize.h, settings.playerSize.w);
 		game.load.spritesheet('troll_first_jump', 'assets/sprites/troll_first/sprite_jump_small.png', settings.playerSize.h, settings.playerSize.w);
 		game.load.spritesheet('troll_first_attack', 'assets/sprites/troll_first/sprite_attack_small.png', settings.playerSize.h, settings.playerSize.w);
+		// Sprites - Enemies
+		game.load.spritesheet('enemy_first_iddle', 'assets/sprites/enemy_test/sprite_iddle_small.png', settings.playerSize.h, settings.playerSize.w);
+		game.load.spritesheet('enemy_first_walk', 'assets/sprites/enemy_test/sprite_walk_small.png', settings.playerSize.h, settings.playerSize.w);
+		game.load.spritesheet('enemy_first_jump', 'assets/sprites/enemy_test/sprite_jump_small.png', settings.playerSize.h, settings.playerSize.w);
+		game.load.spritesheet('enemy_first_attack', 'assets/sprites/enemy_test/sprite_attack_small.png', settings.playerSize.h, settings.playerSize.w);		
 		// Sprites - Objects
 		game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);

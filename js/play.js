@@ -53,16 +53,16 @@ var statePlay = {
 	render: function() {
 		game.debug.text('FPS: ' + game.time.fps, 32, 32, "#00ff00"); // Show FPS						
 	    game.debug.spriteInfo(player, 32, 64);
-	    //game.debug.body(player);     
+	    game.debug.body(player);     
 	    // game.debug.spriteBounds(player);	     	 
 	    // game.debug.spriteCoords(player);	
 	    
-	    /*
+	    
 	    for(var i = 0; i < enemies.children.length; i += 1) {
 			var enemy = enemies.children[i];	
 	    	game.debug.body(enemy);
 	    }
-	    */
+	    /**/
 	   
 	}
 }
@@ -88,7 +88,7 @@ function createPlatform() {
 
 function createPlatformPiece(n) {
 	var midPiecesN = game.rnd.integerInRange(2, 5); // Number of pieces for testing purposes
-	var holeSize = game.rnd.integerInRange(2, 3);
+	var holeSize = game.rnd.integerInRange(3, 4); // Number of empty spaces betweeb the platforms
 	var platformStart = platforms.create(lastPlatformPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
 	var platformEndPosition, platformEnd;
 
@@ -166,7 +166,7 @@ function createEnemies() {
 
 		for(var j = 0; j < enemiesPerPlatform; j += 1) {
 			var enemyPosition = game.rnd.integerInRange(start, end); // Placement position for the current enemy
-			var enemy = game.add.sprite(enemyPosition, 0, 'troll_first_iddle'); // // Create the enemy; TODO: Change to enemy sprites		
+			var enemy = game.add.sprite(enemyPosition, 0, 'enemy_first_iddle'); // // Create the enemy; TODO: Change to enemy sprites		
 			var bitmapData; // Used for colorizing the sprite
 			
 			enemies.add(enemy); // Add the current enenemy to the group
@@ -181,9 +181,8 @@ function createEnemies() {
 		    enemy.nextToWhole = false; // Used for AI movement algorythm
 		    enemy.updateTime = 0;
 		    enemy.isInPlayerRange = false;	   
-		    enemy.anchor.x = .5;
     		enemy.scale.x *= -1;
-    		enemy.anchor.x = 0.5; // Set the X anchor point to the center of the body
+    		enemy.anchor.x = .5; // Set the X anchor point to the center of the body
     		enemy.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body
 
     		// Colorize the sprite
@@ -318,16 +317,16 @@ function updateAI() {
 		}	
 			
 		if(enemy.directionToPlayer !== newDirectionToPlayer) {			
-    		enemy.anchor.x = .5; // Set the X anchor of the enemy to the center
-    		enemy.scale.x *= -1; // Flip the sprite horizontally
+			enemy.scale.x *= -1; // Flip the sprite horizontally    		
+
     		enemy.nextToWhole = false; // If the player changes direction  then set the enemy to be no longer locked to "next to a hole" state
-    	}	
+    	}
 
     	enemy.directionToPlayer = newDirectionToPlayer; // Set the direction of the enemy towards the player
 
 		enemyInPlayerRangeCheck(enemy);
 
-		if(!enemy.isInPlayerRange) {
+		if(!enemy.isInPlayerRange) {			
 			enenmyMove(enemy);
 		}
 	});
@@ -347,7 +346,7 @@ function enemyInPlayerRangeCheck(enemy) {
 function enenmyMove(enemy) {
 	// Move towards the player if not next to a whole between them	
 	for(var i = 0; i < platformsPositions.length; i += 1) {				
-		if(Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < 5) { 
+		if(Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < 120) { 
 			enemy.nextToWhole = true; // If the enemy is 5 pixels away from the hole lock him into a "next to a hole" state
 		}			
 	}		
@@ -357,8 +356,8 @@ function enenmyMove(enemy) {
 		if (game.time.now > enemy.updateTime) {
 			enemy.updateTime = game.time.now + 500;	// Leave a threshold time for the reaction
 
-	        if(enemy.key !== 'troll_first_walk') {
-	        	enemy.loadTexture('troll_first_walk');
+	        if(enemy.key !== 'enemy_first_walk') {
+	        	enemy.loadTexture('enemy_first_walk');
 	        }
 
 	        enemy.animations.play('test');
@@ -370,8 +369,8 @@ function enenmyMove(enemy) {
 		if(enemy.body.touching.down) {
 			enemy.body.velocity.setTo(0, 0); // If next to a hole and touching the ground set the enemy's X and Y velocity to 0
 
-		    if(enemy.key !== 'troll_first_iddle') {
-		    	enemy.loadTexture('troll_first_iddle');
+		    if(enemy.key !== 'enemy_first_iddle') {
+		    	enemy.loadTexture('enemy_first_iddle');
 		    }
 
 		    enemy.animations.play('test');				
@@ -383,8 +382,8 @@ function enenmyMove(enemy) {
 }
 
 function enemyAttack(enemy) {
-    if(enemy.key !== 'troll_first_attack') {
-    	enemy.loadTexture('troll_first_attack');
+    if(enemy.key !== 'enemy_first_attack') {
+    	enemy.loadTexture('enemy_first_attack');
     }
 
     enemy.animations.play('test');
