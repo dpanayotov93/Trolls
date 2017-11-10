@@ -1,7 +1,9 @@
-var lastPlatformPosition = 0;
 var isAttacking = false; 
 var dmgLock = false; // TODO: Change to time related event / reference 
+var ui = {};
 var platformsPositions = [];
+var orbsN = 3;
+var lastPlatformPosition = 0;
 var destroyedBuildingsN = 0;
 var updateTime = 0;
 var cursor, player, platforms, buildings, enemies, target, attackAnimation;
@@ -10,7 +12,7 @@ var statePlay = {
 	create: function() {			
 		game.time.advancedTiming = true; // Set up FPS counter
 
-		createBackground();
+		createUI();
 		createPlatform();
 		createBuildings();
 		createPlayer();
@@ -51,26 +53,58 @@ var statePlay = {
 		updateAI();			
 	},
 	render: function() {
-		game.debug.text('FPS: ' + game.time.fps, 32, 32, "#00ff00"); // Show FPS						
-	    game.debug.spriteInfo(player, 32, 64);
-	    game.debug.body(player);     
+		game.debug.text('FPS: ' + game.time.fps, 880, 32, "#00ff00"); // Show FPS						
+	    game.debug.spriteInfo(player, 768, 64);
+	    // game.debug.body(player);     
 	    // game.debug.spriteBounds(player);	     	 
 	    // game.debug.spriteCoords(player);	
 	    
-	    
+	    /*
 	    for(var i = 0; i < enemies.children.length; i += 1) {
 			var enemy = enemies.children[i];	
 	    	game.debug.body(enemy);
 	    }
-	    /**/
-	   
+	    */	   
 	}
 }
 
-function createBackground() {
-	var background = game.add.sprite(0, 0, 'bg_village');
-	background.fixedToCamera = true;
-	game.log('Background: ', 'Created', 'green');
+function createUI() {
+	// Create the background
+	ui.background = game.add.sprite(0, 0, 'bg_village');
+	ui.background.fixedToCamera = true;	
+
+	// Create the healthbar
+	ui.healthIcon = game.add.sprite(16, 4, 'icon_health');
+	ui.healthIcon.scale.setTo(.15, .15);
+	ui.healthbarEmpty = game.add.sprite(80, 16, 'bar_empty');
+	ui.healthbarFull = game.add.sprite(80, 16, 'healthbar_full');
+	ui.healthIcon.fixedToCamera = true;	
+	ui.healthbarEmpty.fixedToCamera = true;	
+	ui.healthbarFull.fixedToCamera = true;	
+
+	// Create the energybar
+	ui.energyIcon = game.add.sprite(16, 88, 'icon_energy');
+	ui.energyIcon.scale.setTo(0.15, 0.15);	
+	ui.energybarEmpty = game.add.sprite(80, 100, 'bar_empty');
+	ui.energybarFull = game.add.sprite(80, 100, 'energybar_full');
+	ui.energyIcon.fixedToCamera = true;	
+	ui.energybarEmpty.fixedToCamera = true;	
+	ui.energybarFull.fixedToCamera = true;		
+
+	// Create shout charges	
+	ui.orbs = [];
+	ui.orbIcons = [];	
+
+	for(var i = 0; i < orbsN; i += 1) {		
+		ui.orbs[i] = game.add.sprite(116 * (i + 1), 60, 'icon_orb_empty');
+		ui.orbIcons[i] = game.add.sprite(116 * (i + 1), 60, 'icon_orb');
+		ui.orbs[i].scale.setTo(0.1, 0.1);
+		ui.orbIcons[i].scale.setTo(0.1, 0.1);
+		ui.orbs[i].fixedToCamera = true;
+		ui.orbIcons[i].fixedToCamera = true;	
+	}
+
+	game.log('UI: ', 'Created', 'green'); 
 }
 
 function createPlatform() {	
@@ -395,9 +429,20 @@ function enenmyMove(enemy) {
 }
 
 function enemyAttack(enemy) {
+	var attackAnimation;
+
     if(enemy.key !== 'enemy_first_attack') {
     	enemy.loadTexture('enemy_first_attack');
     }
 
-    enemy.animations.play('test');
+    attackAnimation = enemy.animations.play('test');
+
+    if(attackAnimation.frame === 9 && player.health > 0) {
+    	player.tint = 0x666666; // Tint the player to indicate damage
+    	player.health -= 1;
+		ui.healthbarCropArea = new Phaser.Rectangle(0, 0, ui.healthbarEmpty.width * player.health / 100, ui.healthbarFull.height);
+		ui.healthbarFull.crop(ui.healthbarCropArea);    	
+    } else if(attackAnimation.frame === 1) {
+    	player.tint = 0xffffff; // Reset the player tint
+    }
 }

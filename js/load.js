@@ -12,8 +12,16 @@ var stateLoad = {
 		game.canvas.style.height = '100%';
 		
 		/* Loading of assets */
-		// Images
+		// Images - Bakckgrounds
 		game.load.image('bg_village', 'assets/backgrounds/village.jpg');
+		// Images - UI
+		game.load.image('bar_empty', 'assets/ui/bar-empty.png');
+		game.load.image('healthbar_full', 'assets/ui/healthbar-full.png');		
+		game.load.image('energybar_full', 'assets/ui/energybar-full.png');
+		game.load.image('icon_health', 'assets/ui/icon-health.png');
+		game.load.image('icon_energy', 'assets/ui/icon-energy.png');
+		game.load.image('icon_orb', 'assets/ui/icon-orb.png');
+		game.load.image('icon_orb_empty', 'assets/ui/icon-orb-empty.png');
 		// Tiles - Terrain
 		game.load.image('tile_bot_start', 'assets/tilesets/tile_bot_start.png');
 		game.load.image('tile_bot_mid', 'assets/tilesets/tile_bot_mid.png');
@@ -23,7 +31,7 @@ var stateLoad = {
 		game.load.image('tile_float_end', 'assets/tilesets/tile_float_end.png');
 		game.load.image('tile_mid_start', 'assets/tilesets/tile_mid_start.png');
 		game.load.image('tile_mid_mid', 'assets/tilesets/tile_mid_mid.png');
-		game.load.image('tile_mid_end', 'assets/tilesets/tile_mid_end.png');	
+		game.load.image('tile_mid_end', 'assets/tilesets/tile_mid_end.png');			
 		// Sprites - Player
 		game.load.spritesheet('troll_first_iddle', 'assets/sprites/troll_first/sprite_iddle_small.png', settings.playerSize.h, settings.playerSize.w);
 		game.load.spritesheet('troll_first_walk', 'assets/sprites/troll_first/sprite_walk_small.png', settings.playerSize.h, settings.playerSize.w);
