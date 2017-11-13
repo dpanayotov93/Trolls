@@ -13,6 +13,7 @@ var stateMenu = {
 		cursors = game.input.keyboard.createCursorKeys();	
 
 		cursors.spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
 		game.log('Keyboard: ', 'Created', 'green');		
 	},
 	start: function() {
