@@ -1,10 +1,12 @@
 class Player {
-	constructor() {
-		this.damage = 20;
+	constructor() {		
 		this.gameObject = null;
 		this.target = null;
 		this.moving = false;
 		this.attacking = false;
+		this.health = 100;
+		this.energy = 100;
+		this.damage = 20;
 		this.targetsQueue = [];
 		this.targets = [];
 		this.touching = {
@@ -31,7 +33,6 @@ class Player {
 		this.gameObject.body.collideWorldBounds = true; // Enable collision with the world boundaries	    
 		this.gameObject.outOfBoundsKill = true; // A switch for just in case to kill the player if it goes out of bounds
 		this.gameObject.maxHealth = 100; // Maximum player health
-		this.gameObject.health = 100;
 		this.gameObject.anchor.x = 0.5; // Set the X anchor point to the center of the body
 		this.gameObject.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body    			    
 		this.gameObject.body.stopVelocityOnCollide = false;
@@ -41,6 +42,9 @@ class Player {
 		this.animations.attack = this.gameObject.animations.add('attack', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, false); // Create the attacl animation  
 		this.animations.attack.onComplete.add(function() {
 			game.player.attack();
+			game.player.energy -= 10;
+			ui.energybarCropArea = new Phaser.Rectangle(0, 0, ui.energybarEmpty.width * game.player.energy / 100, ui.energybarFull.height);
+			ui.energybarFull.crop(ui.energybarCropArea);			
 		});
 		this.gameObject.body.onMoveComplete = new Phaser.Signal();
 		this.gameObject.body.onMoveComplete.add(function(e) {
@@ -69,7 +73,7 @@ class Player {
 	updateControls() {
 		this.gameObject.body.velocity.x = 0; // Reset the player velocity    		
 
-		if (this.attacking) {
+		if (this.attacking && this.energy > 0) {
 			if (player.scale.x > 0) {
 				this.gameObject.scale.x = 1;
 			} else {

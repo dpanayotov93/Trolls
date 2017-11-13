@@ -298,10 +298,10 @@ function enemyAttack(enemy) {
 
 	attackAnimation = enemy.animations.play('test');
 
-	if (attackAnimation.frame === 9 && player.health > 0) {
+	if (attackAnimation.frame === 9 && game.player.health > 0) {
 		player.tint = 0x666666; // Tint the player to indicate damage
-		player.health -= 1;
-		ui.healthbarCropArea = new Phaser.Rectangle(0, 0, ui.healthbarEmpty.width * player.health / 100, ui.healthbarFull.height);
+		game.player.health -= 1;
+		ui.healthbarCropArea = new Phaser.Rectangle(0, 0, ui.healthbarEmpty.width * game.player.health / 100, ui.healthbarFull.height);
 		ui.healthbarFull.crop(ui.healthbarCropArea);
 	} else if (attackAnimation.frame === 1) {
 		player.tint = 0xffffff; // Reset the player tint
