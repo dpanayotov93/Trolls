@@ -1,9 +1,7 @@
 var ui = {};
-var platformsPositions = [];
 var orbsN = 3;
-var lastPlatformPosition = 0;
 var destroyedBuildingsN = 0;
-var cursor, player, platforms, buildings, enemies;
+var cursor, buildings, enemies;
 
 var statePlay = {
 	create: function() {
@@ -23,7 +21,7 @@ var statePlay = {
 		createEnemies();
 	},
 	update: function() {
-		var areEnemiesTouchingPlatform = game.physics.arcade.collide(enemies, platforms); // Collision check between the enemies and the platforms		
+		var areEnemiesTouchingPlatform = game.physics.arcade.collide(enemies, game.level.platforms.gameObjects); // Collision check between the enemies and the platforms		
 
 		game.player.update();
 
@@ -96,11 +94,11 @@ function createBuildings() {
 	buildings = game.add.group();
 	buildings.enableBody = true;
 
-	for (var i = 0; i < platformsPositions.length - 1; i += 1) {
+	for (var i = 0; i < game.level.platforms.positions.length - 1; i += 1) {
 		var id = i + 1;
 		var buildingsPerPlatform = game.rnd.integerInRange(1, 3);
-		var start = platformsPositions[id][0];
-		var end = platformsPositions[id][1];
+		var start = game.level.platforms.positions[id][0];
+		var end = game.level.platforms.positions[id][1];
 
 		for (var j = 0; j < buildingsPerPlatform; j += 1) {
 			var buldingPosition = game.rnd.integerInRange(start, end);
@@ -121,12 +119,12 @@ function createEnemies() {
 	enemies.enableBody = true;
 	enemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-	for (var i = 0; i < platformsPositions.length - 1; i += 1) {
+	for (var i = 0; i < game.level.platforms.positions.length - 1; i += 1) {
 		var id = i + 1;
 		// TODO: Change to enemy factory
 		var enemiesPerPlatform = game.rnd.integerInRange(1, 3);
-		var start = platformsPositions[id][0];
-		var end = platformsPositions[id][1];
+		var start = game.level.platforms.positions[id][0];
+		var end = game.level.platforms.positions[id][1];
 
 		for (var j = 0; j < enemiesPerPlatform; j += 1) {
 			var enemyPosition = game.rnd.integerInRange(start, end); // Placement position for the current enemy
@@ -210,7 +208,7 @@ function enemyInPlayerRangeCheck(enemy) {
 
 function enenmyMove(enemy) {
 	// Move towards the player if not next to a whole between them		
-	for (var i = 0; i < platformsPositions.length; i += 1) {
+	for (var i = 0; i < game.level.platforms.positions.length; i += 1) {
 		var checkDist; // Used to determine the distance between the sprite nad the whole depending on the direction
 
 		if (enemy.directionToPlayer === 0) {
@@ -219,7 +217,7 @@ function enenmyMove(enemy) {
 			checkDist = 5;
 		}
 
-		if (Math.abs(enemy.position.x - platformsPositions[i][enemy.directionToPlayer]) < checkDist) {
+		if (Math.abs(enemy.position.x - game.level.platforms.positions[i][enemy.directionToPlayer]) < checkDist) {
 			enemy.nextToWhole = true; // If the enemy is 5 pixels away from the hole lock him into a "next to a hole" state
 		}
 	}
