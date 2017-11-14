@@ -5,8 +5,8 @@ var stateControls = {
 		var movementLabel = game.add.bitmapText(settings.width / 2 - 320, 300, 'yggdrasil', 'Left/Right arrow keys: Move', 48);
 		var jumpLabel = game.add.bitmapText(settings.width / 2 - 220, 400, 'yggdrasil', 'UP arrow key: Jump', 48);
 		var attackLabel = game.add.bitmapText(settings.width / 2 - 170, 500, 'yggdrasil', 'Space: Attack', 48);
-		var backButton = game.add.button(game.world.centerX - settings.buttonSize.w / 2, 600, 'button', this.back, this, 0, 1, 2);		
-		var startLabel = game.add.bitmapText(game.world.centerX - 60, 608, 'yggdrasil', 'Back', 46);
+		var backButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 600, 'button', this.back, this, 0, 1, 2);		
+		var startLabel = game.add.bitmapText(settings.width / 2 - 60, 608, 'yggdrasil', 'Back', 46);
 
 		// Change the mouse when over a button
 		backButton.events.onInputOver.add(function(){

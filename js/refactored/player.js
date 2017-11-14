@@ -251,11 +251,11 @@ class Player {
 		let colorBlend = {
 			step: 0
 		};
-		// create the tween on this object and tween its step property to 100   
-		let colorTween = game.add.tween(colorBlend).to({
+		let colorTween = game.add.tween(colorBlend).to({ // Create the tween on this object and tween its step property to 100   
 			step: 100
 		}, 500);
-		// run the interpolateColor function every time the tween updates, feeding it the updated value of our tween each time, and set the result as our tint    
+
+		// Run the interpolateColor function every time the tween updates, feeding it the updated value of our tween each time, and set the result as our tint    		
 		colorTween.onUpdateCallback(function() {
 			game.player.gameObject.tint = Phaser.Color.interpolateColor(startColor, endColor, 100, colorBlend.step);
 		}); 
@@ -263,6 +263,7 @@ class Player {
 		this.gameObject.tint = startColor;
 		colorTween.start();
 
+		// Reverse the effect
 		colorBlend = {
 			step: 0
 		};

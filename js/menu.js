@@ -1,11 +1,11 @@
 var stateMenu = {
 	create: function() {		
 		var background = game.add.sprite(0, 0, 'bg_village'); // Add the background
-		var titleLabel = game.add.bitmapText(game.world.centerX - 110, 150, 'yggdrasil', 'TROLLS', 64);
-		var startButton = game.add.button(game.world.centerX - settings.buttonSize.w / 2, 250, 'button', this.start, this, 0, 1, 2);		
-		var startLabel = game.add.bitmapText(game.world.centerX - 64, 256, 'yggdrasil', 'Start', 46);
-		var controlsButton = game.add.button(game.world.centerX - settings.buttonSize.w / 2, 350, 'button', this.showControls, this, 0, 1, 2);		
-		var controlsLabel = game.add.bitmapText(game.world.centerX - 96, 356, 'yggdrasil', 'Controls', 46);		
+		var titleLabel = game.add.bitmapText(settings.width / 2 - 110, 150, 'yggdrasil', 'TROLLS', 64);
+		var startButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 250, 'button', this.start, this, 0, 1, 2);		
+		var startLabel = game.add.bitmapText(settings.width / 2 - 64, 256, 'yggdrasil', 'Start', 46);
+		var controlsButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 350, 'button', this.showControls, this, 0, 1, 2);		
+		var controlsLabel = game.add.bitmapText(settings.width / 2 - 96, 356, 'yggdrasil', 'Controls', 46);		
 
 		// Change the mouse when over a button
 		startButton.events.onInputOver.add(function(){
