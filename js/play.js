@@ -65,7 +65,6 @@ function createBuildings() {
 }
 
 function createEnemies() {
-	var enemiesN = game.rnd.integerInRange();
 
 	enemies = game.add.group();
 	enemies.enableBody = true;
@@ -74,24 +73,30 @@ function createEnemies() {
 	for (var i = 0; i < game.level.platforms.positions.length - 1; i += 1) {
 		var id = i + 1;
 		// TODO: Change to enemy factory
-		var enemiesPerPlatform = game.rnd.integerInRange(1, 3);
+		var enemiesPerPlatform = 1; //game.rnd.integerInRange(1, 3);
 		var start = game.level.platforms.positions[id][0];
 		var end = game.level.platforms.positions[id][1];
 
 		for (var j = 0; j < enemiesPerPlatform; j += 1) {
 			var enemyPosition = game.rnd.integerInRange(start, end); // Placement position for the current enemy
 			var enemy = game.add.sprite(enemyPosition, 0, 'enemy_first_iddle'); // // Create the enemy; TODO: Change to enemy sprites		
+			var attackAnimationEnemy;
 			var bitmapData; // Used for colorizing the sprite
 
 			enemies.add(enemy); // Add the current enenemy to the group
 			enemy.name = 'Enemy ' + i;
 			enemy.health = 100;
+			enemy.damage = 5;
 			game.physics.arcade.enable(enemy); // Enable physics for the player
 			enemy.body.enable = true;
 			enemy.body.bounce.y = 0; // Vertical bounce force
 			enemy.body.gravity.y = 2500; // Gravity force
 			enemy.body.collideWorldBounds = true; // Enable collision with the world boundaries
 			enemy.animations.add('test', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, true); // Create the iddle animation  
+			attackAnimationEnemy = enemy.animations.add('attack', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12.5, false); // Create the attack animation  
+			attackAnimationEnemy.onComplete.add(function() {
+				game.player.recieveDmg(enemy.damage);	
+			});				
 			enemy.outOfBoundsKill = true;
 			enemy.nextToWhole = false; // Used for AI movement algorythm
 			enemy.updateTime = 0;
@@ -207,13 +212,7 @@ function enemyAttack(enemy) {
 		enemy.loadTexture('enemy_first_attack');
 	}
 
-	attackAnimation = enemy.animations.play('test');
-
-	if (attackAnimation.frame === 9 && game.player.health > 0) {
-		game.player.recieveDmg(1);
-	} else if (attackAnimation.frame === 1) {
-		game.player.tint(0xffffff); // Reset the player tint
-	}
+	attackAnimation = enemy.animations.play('attack');
 }
 
 function resetEnemyTint() {

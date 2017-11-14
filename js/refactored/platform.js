@@ -8,7 +8,7 @@ class Platform {
 			},
 			holes: {
 				min: 3,
-				max: 4
+				max: 3 // TODO: Make it a higher number when sprinting is implemented
 			}
 		}
 		this.midPiecesCount = {

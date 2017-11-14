@@ -1,5 +1,5 @@
 class Player {
-	constructor() {		
+	constructor() {
 		this.gameObject = null;
 		this.target = null;
 		this.moving = false;
@@ -16,6 +16,9 @@ class Player {
 		this.animations = {
 			attack: null
 		};
+		this.timings = {
+			resetTint: .5
+		}
 		this.score = {
 			buildings: 0,
 			enemies: 0
@@ -42,7 +45,7 @@ class Player {
 		this.animations.attack = this.gameObject.animations.add('attack', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, false); // Create the attacl animation  
 		this.animations.attack.onComplete.add(function() {
 			game.player.attack();
-			game.player.energy -= 10;		
+			game.player.energy -= 10;
 		});
 		this.gameObject.body.onMoveComplete = new Phaser.Signal();
 		this.gameObject.body.onMoveComplete.add(function(e) {
@@ -60,6 +63,9 @@ class Player {
 
 		// Create a canera that follow the player;
 		game.camera.follow(this.gameObject, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+
+		// Tint the player to a bit darker color
+		this.gameObject.tint = -13027015;
 	}
 
 	update() {
@@ -169,7 +175,7 @@ class Player {
 	}
 
 	recieveDmg(dmg) {
-		this.tint(0x666666);
+		this.flash();
 		this.health -= dmg;
 	}
 
@@ -239,7 +245,37 @@ class Player {
 		}
 	}
 
-	tint(tint) {
-		this.gameObject.tint = tint; // Tint the player to indicate damage / effect
+	flash() {
+		let startColor = 0x333333;
+		let endColor = 0xffffff;
+		let colorBlend = {
+			step: 0
+		};
+		// create the tween on this object and tween its step property to 100   
+		let colorTween = game.add.tween(colorBlend).to({
+			step: 100
+		}, 500);
+		// run the interpolateColor function every time the tween updates, feeding it the updated value of our tween each time, and set the result as our tint    
+		colorTween.onUpdateCallback(function() {
+			game.player.gameObject.tint = Phaser.Color.interpolateColor(startColor, endColor, 100, colorBlend.step);
+		}); 
+		
+		this.gameObject.tint = startColor;
+		colorTween.start();
+
+		colorBlend = {
+			step: 0
+		};
+
+		colorTween = game.add.tween(colorBlend).to({
+			step: 100
+		}, 500);
+
+		colorTween.onUpdateCallback(function() {
+			game.player.gameObject.tint = Phaser.Color.interpolateColor(endColor, startColor, 100, colorBlend.step);
+		}); 
+		
+		this.gameObject.tint = endColor;
+		colorTween.start();				
 	}
 }
