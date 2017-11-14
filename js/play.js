@@ -148,10 +148,6 @@ function createEnemies() {
 			enemy.anchor.x = .5; // Set the X anchor point to the center of the body
 			enemy.body.setSize(settings.playerSize.w - 48, settings.playerSize.h * 2 / 3, 10, 0); // Update the sprite bounds to match the actual physical body
 
-			// Colorize the sprite
-			var gray = game.add.filter('Gray');
-			enemy.filters = [gray];
-
 			if (enemy.position.x - player.position.x > 0) {
 				enemy.directionToPlayer = 0;
 			} else {

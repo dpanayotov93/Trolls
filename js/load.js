@@ -50,8 +50,6 @@ var stateLoad = {
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
-		// Scripts
-		game.load.script('Gray', 'js/filters/Gray.js');
 
 		game.log('Assets: ', 'Loaded', 'green');		
 	},
