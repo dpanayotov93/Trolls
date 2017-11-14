@@ -173,7 +173,7 @@ class Player {
 	checkCollisions() {
 		var hasBuildingIntersections;
 		var hasUEnemyIntersections;
-		this.touching.platforms = game.physics.arcade.collide(this.gameObject, platforms); // Collision check between the player and the platform		
+		this.touching.platforms = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects); // Collision check between the player and the platform		
 
 		for (var i = 0; i < buildings.children.length; i += 1) {
 			var building = buildings.children[i];
@@ -232,7 +232,7 @@ class Player {
 		if (this.gameObject.position.y > game.world.bottom - this.gameObject.height * 1.75) { // TODO: Why 1.75 works?
 			this.gameObject.kill();
 			game.log('Calling state: ', 'End');
-			game.state.start('End');
+			// game.state.start('End');
 		}
 	}
 }

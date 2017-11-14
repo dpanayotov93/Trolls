@@ -10,7 +10,10 @@ var statePlay = {
 		game.time.advancedTiming = true; // Set up FPS counter
 
 		createUI();
-		createPlatform();
+
+		game.level = new Level();
+		game.level.init();
+		
 		createBuildings();
 
 		game.player = new Player();
@@ -87,44 +90,6 @@ function createUI() {
 	}
 
 	game.log('UI: ', 'Created', 'green');
-}
-
-function createPlatform() {
-	var platformsN = Math.floor(Math.random() * 7 + 3); // Number of platforms
-	platforms = game.add.group(); // A group to hold the platform pieces
-	platforms.enableBody = true; // Enable physics for the group
-
-	for (var n = 0; n < platformsN; n += 1) {
-		createPlatformPiece(n);
-	}
-
-	game.world.setBounds(0, 0, lastPlatformPosition, game.height);
-	game.log('Platforms: ', 'Created (' + platformsN + ')', 'green');
-}
-
-function createPlatformPiece(n) {
-	var midPiecesN = game.rnd.integerInRange(2, 5); // Number of pieces for testing purposes
-	var holeSize = game.rnd.integerInRange(3, 3); // Number of empty spaces betweeb the platforms
-	var platformStart = platforms.create(lastPlatformPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_start'); // Start piece
-	var platformEndPosition, platformEnd;
-
-	platformStart.body.immovable = true; // Make it immovable from collision
-
-	// Loop for the mid pieces
-	for (var i = 0; i < midPiecesN; i += 1) {
-		var id = i + 1; // Start from 1 for the horizontal position calculation
-		var platformMidPosition = id * settings.tileSize + lastPlatformPosition;
-		var platformMid = platforms.create(platformMidPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_mid'); // Mid pieces
-		platformMid.body.immovable = true; // Make it immovable from collision
-	}
-
-	platformEndPosition = (midPiecesN + 1) * settings.tileSize + lastPlatformPosition;
-	platformEnd = platforms.create(platformEndPosition, game.world.bounds.height - settings.tileSize, 'tile_bot_end'); // End piece
-	platformEnd.body.immovable = true; // Make it immovable from collision	
-
-	platformsPositions[n] = [lastPlatformPosition, platformEndPosition];
-
-	lastPlatformPosition = platformEndPosition + (settings.tileSize * holeSize);
 }
 
 function createBuildings() {
