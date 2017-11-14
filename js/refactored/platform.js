@@ -39,7 +39,7 @@ class Platform {
 		this.endPiece = game.level.platforms.gameObjects.create(this.position.end, game.world.bounds.height - settings.tileSize, 'tile_bot_end');
 		this.endPiece.body.immovable = true; // Immovable from collision
 	
-		game.level.platforms.positions[this._id] = [this.position.start, this.position.end + settings.tileSize];
+		game.level.platforms.positions[this._id] = [this.position.start, this.position.end];
 		game.level.platforms.lastPlatformPosition = this.position.end + (settings.tileSize * this.holePieces.chosen);
 	}
 }

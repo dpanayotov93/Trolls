@@ -1,13 +1,11 @@
-var ui = {};
-var orbsN = 3;
-var destroyedBuildingsN = 0;
 var cursor, buildings, enemies;
 
 var statePlay = {
 	create: function() {
 		game.time.advancedTiming = true; // Set up FPS counter
 
-		createUI();
+		game.ui = new UI();
+		game.ui.init();
 
 		game.level = new Level();
 		game.level.init();
@@ -15,8 +13,7 @@ var statePlay = {
 		createBuildings();
 
 		game.player = new Player();
-		game.player.setup(300, 25);
-		player = game.player.gameObject; // Remove this when done refactoring	
+		game.player.init(300, 25);			
 
 		createEnemies();
 	},
@@ -24,12 +21,14 @@ var statePlay = {
 		var areEnemiesTouchingPlatform = game.physics.arcade.collide(enemies, game.level.platforms.gameObjects); // Collision check between the enemies and the platforms		
 
 		game.player.update();
+		game.ui.update();		
 
 		updateAI();
 	},
 	render: function() {
-		game.debug.text('FPS: ' + game.time.fps, 880, 32, "#00ff00"); // Show FPS						
-		game.debug.spriteInfo(player, 768, 64);
+		game.debug.text('DEBUG INFO', 860, 24, "#ff9800");			
+		game.debug.text('FPS: ' + game.time.fps, 880, 48, "#00ff00"); // Show FPS						
+		game.debug.spriteInfo(game.player.gameObject, 768, 64);
 		// game.debug.body(player);
 		// game.debug.spriteBounds(player);
 		// game.debug.spriteCoords(player);	
@@ -41,53 +40,6 @@ var statePlay = {
 	    }
 	    */
 	}
-}
-
-function createUI() {
-	// Create the background
-	ui.background = game.add.sprite(0, 0, 'bg_village');
-	ui.background.fixedToCamera = true;
-
-	// Create the fullscreen button
-	ui.fullscreenIcon = game.add.sprite(game.width - 110, 16, 'icon_fullscreen');
-	ui.fullscreenIcon.scale.setTo(.15);
-	ui.fullscreenLabel = game.add.bitmapText(game.width - 110, 96, 'yggdrasil', 'Fullscreen', 64);
-	ui.fullscreenLabel.scale.setTo(.25);
-	ui.fullscreenIcon.fixedToCamera = true;
-	ui.fullscreenLabel.fixedToCamera = true;
-
-	// Create the healthbar
-	ui.healthIcon = game.add.sprite(16, 4, 'icon_health');
-	ui.healthIcon.scale.setTo(.15);
-	ui.healthbarEmpty = game.add.sprite(80, 16, 'bar_empty');
-	ui.healthbarFull = game.add.sprite(80, 16, 'healthbar_full');
-	ui.healthIcon.fixedToCamera = true;
-	ui.healthbarEmpty.fixedToCamera = true;
-	ui.healthbarFull.fixedToCamera = true;
-
-	// Create the energybar
-	ui.energyIcon = game.add.sprite(16, 88, 'icon_energy');
-	ui.energyIcon.scale.setTo(0.15);
-	ui.energybarEmpty = game.add.sprite(80, 100, 'bar_empty');
-	ui.energybarFull = game.add.sprite(80, 100, 'energybar_full');
-	ui.energyIcon.fixedToCamera = true;
-	ui.energybarEmpty.fixedToCamera = true;
-	ui.energybarFull.fixedToCamera = true;
-
-	// Create shout charges	
-	ui.orbs = [];
-	ui.orbIcons = [];
-
-	for (var i = 0; i < orbsN; i += 1) {
-		ui.orbs[i] = game.add.sprite(116 * (i + 1), 60, 'icon_orb_empty');
-		ui.orbIcons[i] = game.add.sprite(116 * (i + 1), 60, 'icon_orb');
-		ui.orbs[i].scale.setTo(0.1);
-		ui.orbIcons[i].scale.setTo(0.1, 0.1);
-		ui.orbs[i].fixedToCamera = true;
-		ui.orbIcons[i].fixedToCamera = true;
-	}
-
-	game.log('UI: ', 'Created', 'green');
 }
 
 function createBuildings() {
@@ -148,7 +100,7 @@ function createEnemies() {
 			enemy.anchor.x = .5; // Set the X anchor point to the center of the body
 			enemy.body.setSize(settings.playerSize.w - 48, settings.playerSize.h * 2 / 3, 10, 0); // Update the sprite bounds to match the actual physical body
 
-			if (enemy.position.x - player.position.x > 0) {
+			if (enemy.position.x - game.player.gameObject.position.x > 0) {
 				enemy.directionToPlayer = 0;
 			} else {
 				enemy.directionToPlayer = 1;
@@ -164,7 +116,7 @@ function updateAI() {
 		var newDirectionToPlayer;
 
 		// Check if the player is located to the left or to the right of the enemy
-		if (enemy.position.x - player.position.x > 0) {
+		if (enemy.position.x - game.player.gameObject.position.x > 0) {
 			newDirectionToPlayer = 0; // If enemy's X is higher than the player then the player is to the left
 		} else {
 			newDirectionToPlayer = 1; // If enemy's X is lower than the player then the player is to the right
@@ -189,7 +141,7 @@ function updateAI() {
 function enemyInPlayerRangeCheck(enemy) {
 	// var isEnemyTouchingPlayer  = game.physics.arcade.overlap(enemy, player);
 
-	if (Math.abs(enemy.position.x - player.position.x) < 150) {
+	if (Math.abs(enemy.position.x - game.player.gameObject.position.x) < 150) {
 		enemy.isInPlayerRange = true;
 	} else {
 		enemy.isInPlayerRange = false;
@@ -230,7 +182,7 @@ function enenmyMove(enemy) {
 			enemy.animations.play('test');
 
 
-			game.physics.arcade.moveToObject(enemy, player, 500);
+			game.physics.arcade.moveToObject(enemy, game.player.gameObject, 500);
 		}
 	} else {
 		if (enemy.body.touching.down) {
@@ -258,12 +210,9 @@ function enemyAttack(enemy) {
 	attackAnimation = enemy.animations.play('test');
 
 	if (attackAnimation.frame === 9 && game.player.health > 0) {
-		player.tint = 0x666666; // Tint the player to indicate damage
-		game.player.health -= 1;
-		ui.healthbarCropArea = new Phaser.Rectangle(0, 0, ui.healthbarEmpty.width * game.player.health / 100, ui.healthbarFull.height);
-		ui.healthbarFull.crop(ui.healthbarCropArea);
+		game.player.recieveDmg(1);
 	} else if (attackAnimation.frame === 1) {
-		player.tint = 0xffffff; // Reset the player tint
+		game.player.tint(0xffffff); // Reset the player tint
 	}
 }
 

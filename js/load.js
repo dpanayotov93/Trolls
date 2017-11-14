@@ -15,7 +15,7 @@ var stateLoad = {
 		// Images - Bakckgrounds
 		game.load.image('bg_village', 'assets/backgrounds/village.jpg');
 		// Images - UI
-		game.load.image('icon_fullscreen', 'assets/ui/icon-fullscreen.png');
+		game.load.image('icon_options', 'assets/ui/icon-options.png');
 		game.load.image('bar_empty', 'assets/ui/bar-empty.png');
 		game.load.image('healthbar_full', 'assets/ui/healthbar-full.png');		
 		game.load.image('energybar_full', 'assets/ui/energybar-full.png');

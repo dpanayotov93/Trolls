@@ -19,10 +19,10 @@ class Player {
 		this.score = {
 			buildings: 0,
 			enemies: 0
-		}
+		};
 	}
 
-	setup(x, y) {
+	init(x, y) {
 		// Create the sprite
 		this.gameObject = game.add.sprite(x, y, 'troll_first_iddle'); // Create the player
 		game.physics.arcade.enable(this.gameObject); // Enable physics for the player		
@@ -42,9 +42,7 @@ class Player {
 		this.animations.attack = this.gameObject.animations.add('attack', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, false); // Create the attacl animation  
 		this.animations.attack.onComplete.add(function() {
 			game.player.attack();
-			game.player.energy -= 10;
-			ui.energybarCropArea = new Phaser.Rectangle(0, 0, ui.energybarEmpty.width * game.player.energy / 100, ui.energybarFull.height);
-			ui.energybarFull.crop(ui.energybarCropArea);			
+			game.player.energy -= 10;		
 		});
 		this.gameObject.body.onMoveComplete = new Phaser.Signal();
 		this.gameObject.body.onMoveComplete.add(function(e) {
@@ -74,13 +72,13 @@ class Player {
 		this.gameObject.body.velocity.x = 0; // Reset the player velocity    		
 
 		if (this.attacking && this.energy > 0) {
-			if (player.scale.x > 0) {
+			if (this.gameObject.scale.x > 0) {
 				this.gameObject.scale.x = 1;
 			} else {
 				this.gameObject.scale.x = -1;
 			}
 
-			if (player.key !== 'troll_first_attack') {
+			if (this.gameObject.key !== 'troll_first_attack') {
 				this.gameObject.loadTexture('troll_first_attack');
 			}
 
@@ -170,6 +168,11 @@ class Player {
 		}
 	}
 
+	recieveDmg(dmg) {
+		this.tint(0x666666);
+		this.health -= dmg;
+	}
+
 	checkCollisions() {
 		var hasBuildingIntersections;
 		var hasUEnemyIntersections;
@@ -232,7 +235,11 @@ class Player {
 		if (this.gameObject.position.y > game.world.bottom - this.gameObject.height * 1.75) { // TODO: Why 1.75 works?
 			this.gameObject.kill();
 			game.log('Calling state: ', 'End');
-			// game.state.start('End');
+			game.state.start('End');
 		}
+	}
+
+	tint(tint) {
+		this.gameObject.tint = tint; // Tint the player to indicate damage / effect
 	}
 }

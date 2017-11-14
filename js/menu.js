@@ -7,7 +7,19 @@ var stateMenu = {
 		var controlsButton = game.add.button(game.world.centerX - settings.buttonSize.w / 2, 350, 'button', this.showControls, this, 0, 1, 2);		
 		var controlsLabel = game.add.bitmapText(game.world.centerX - 96, 356, 'yggdrasil', 'Controls', 46);		
 
-		game.log('Background: ', 'Created', 'green');
+		// Change the mouse when over a button
+		startButton.events.onInputOver.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
+		}, this);
+		startButton.events.onInputOut.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
+		}, this);	
+		controlsButton.events.onInputOver.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
+		}, this);
+		controlsButton.events.onInputOut.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
+		}, this);					
 
 		// Set the keyboard manager
 		cursors = game.input.keyboard.createCursorKeys();	
