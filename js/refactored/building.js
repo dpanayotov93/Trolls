@@ -12,20 +12,22 @@ class Building {
 	create() {
 		this.gameObject.name = 'Building ' + this._id;
 		this.gameObject.instance = this;
-		this.gameObject.health = 100; // TODO: Move this to the class object when the enemy class is done
 		this.gameObject.body.immovable = true;
 	}
 
 	update() {
 		let nextFrame = this.health.max / this.health.current - 1;
-		this.gameObject.frame = nextFrame;
-	}
-
-	recieveDmg(dmg) {
-		this.health.current -= dmg;
 
 		if(this.health.current <= 0) {
 			this.kill();
+		}		
+		
+		this.gameObject.frame = nextFrame;		
+	}
+
+	recieveDmg(dmg) {
+		if(this.health.current > 0) {
+			this.health.current -= dmg;
 		}
 	}
 
