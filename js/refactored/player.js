@@ -146,34 +146,28 @@ class Player {
 	attack() {
 		if (this.targets.length > 0) {
 			for (let i = 0; i < this.targets.length; i += 1) {
-				let target = this.targets[i];
-				target.health -= this.damage;
-				game.log(target.name + ' health:', target.health);
+				let target = this.targets[i];							
 
 				console.warn(target.name);
 				if (target.name.indexOf('Building') !== -1) {
+					target.instance.recieveDmg(this.damage);
 					target.frame += 1;
 				} else if (target.name.indexOf('Enemy') !== -1) {
+					target.health -= this.damage;
 					target.tint = 0x666666;
 				}
 
-				if (target.health <= 0) {
-					let index = this.targets.indexOf(target);
+				game.log(target.name + ' health:', target.health);
 
-					this.targets.splice(index, 1);
-					game.log('Killed: ', target.name);
-					if (target.name.indexOf('Building') !== -1) {
-						let index = game.level.buildings.gameObjects.children.indexOf(target);
-
-						game.level.buildings.gameObjects.remove(target);
-						game.level.buildings.list.splice(index, 1);
-						this.score.buildings += 1;
-					} else if (target.name.indexOf('Enemy') !== -1) {
+				if (target.name.indexOf('Enemy') !== -1) {
+					if (target.health <= 0) {
+						let index = this.targets.indexOf(target);
+						this.targets.splice(index, 1);				    
 						enemies.remove(target);
-						this.score.enemies += 1;
+						
+						this.score.enemies += 1;					
+						target.destroy();
 					}
-
-					target.destroy();
 				}
 			}
 		}

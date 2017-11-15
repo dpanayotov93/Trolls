@@ -58,4 +58,11 @@ class Level {
 
 		game.log('Buildings: ', 'Created (' + this.buildings.gameObjects.length + ')', 'green');
 	}
+
+	update() {
+		for(let i = 0; i < this.buildings.list.length; i += 1) {
+			let building = this.buildings.list[i];
+			building.update();
+		}
+	}
 }

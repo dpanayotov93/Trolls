@@ -19,7 +19,8 @@ var statePlay = {
 		var areEnemiesTouchingPlatform = game.physics.arcade.collide(enemies, game.level.platforms.gameObjects); // Collision check between the enemies and the platforms		
 
 		game.player.update();
-		game.ui.update();		
+		game.level.update();
+		game.ui.update();
 
 		updateAI();
 	},
