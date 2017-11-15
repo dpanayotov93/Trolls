@@ -157,8 +157,10 @@ class Player {
 	}
 
 	recieveDmg(dmg) {
-		this.flash();
-		this.health.current -= dmg;
+		if(this.health.current > 0) {
+			this.flash();
+			this.health.current -= dmg;
+		}
 	}
 
 	// TODO: Rework the target selection

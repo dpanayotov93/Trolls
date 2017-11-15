@@ -16,6 +16,10 @@ class Enemy {
 		this.animations = {
 			attack: null
 		};
+		this.info = {
+			health: null,
+			target: null
+		};
 	}
 
 	create() {
@@ -42,7 +46,11 @@ class Enemy {
 	}
 
 	update() {
-		let newDirectionToPlayer = 0;		 		
+		let newDirectionToPlayer = 0;
+
+		if(this.info.health !== null) {
+			this.info.health.position.x = this.info.target - 17;	
+		}
 
 		if(this.health.current <= 0) {
 			this.kill();
@@ -141,16 +149,9 @@ class Enemy {
 
 	recieveDmg(dmg) {
 		if(this.health.current > 0) {
+			this.flash();
 			this.health.current -= dmg;
 		}	
-	}
-
-	tint(tint) {
-		this.gameObject.tint = tint;
-	}
-
-	resetTint() {
-		this.gameObject.tint = 0xffffff;
 	}
 
 	kill() {
@@ -160,9 +161,46 @@ class Enemy {
 		game.level.enemies.list.splice(index, 1);
 			
 		index = game.player.targets.indexOf(this.gameObject);		
-		game.player.targets.splice(index, 1);	
+		game.player.targets.splice(index, 1);
 
+		this.info.health.destroy();
 		this.gameObject.destroy();
 		game.player.score.enemies += 1;			
 	}
+
+	flash() {
+		let enemy = this.gameObject;
+		let startColor = 0x333333;
+		let endColor = 0xffffff;
+		let colorBlend = {
+			step: 0
+		};
+		let colorTween = game.add.tween(colorBlend).to({ // Create the tween on this object and tween its step property to 100   
+			step: 100
+		}, 500);
+
+		// Run the interpolateColor function every time the tween updates, feeding it the updated value of our tween each time, and set the result as our tint    		
+		colorTween.onUpdateCallback(function() {
+			enemy.tint = Phaser.Color.interpolateColor(startColor, endColor, 100, colorBlend.step);
+		}); 
+		
+		this.gameObject.tint = startColor;
+		colorTween.start();
+
+		// Reverse the effect
+		colorBlend = {
+			step: 0
+		};
+
+		colorTween = game.add.tween(colorBlend).to({
+			step: 100
+		}, 500);
+
+		colorTween.onUpdateCallback(function() {
+			enemy.tint = Phaser.Color.interpolateColor(endColor, startColor, 100, colorBlend.step);
+		}); 
+		
+		this.gameObject.tint = endColor;
+		colorTween.start();				
+	}	
 }

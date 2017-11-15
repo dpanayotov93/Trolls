@@ -7,6 +7,9 @@ class Building {
 			max: 100,
 			current: 100
 		};
+		this.info = {
+			health: null
+		};		
 	}
 
 	create() {
@@ -41,7 +44,8 @@ class Building {
 		index = game.player.targets.indexOf(this.gameObject);		
 		game.player.targets.splice(index, 1);	
 
-		this.gameObject.destroy();
+		this.info.health.destroy();
+		this.gameObject.destroy();		
 		game.player.score.buildings += 1;					
 	}
 }
