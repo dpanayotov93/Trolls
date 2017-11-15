@@ -181,12 +181,10 @@ class Player {
 				}	
 
 				if (hitTest) {
-					building.tint = 0x00ff00;
 					if (!this.targetsQueue.contains(building)) {
 						this.targetsQueue.push(building);
 					}
 				} else {
-					building.tint = 0xffffff;
 					if (this.targets.contains(building)) {
 						let index = this.targets.indexOf(building);
 						this.targets.splice(building);
@@ -210,12 +208,10 @@ class Player {
 				}				
 				
 				if (hitTest) {
-					enemy.instance.tint(0x00ff00);
 					if (!this.targetsQueue.contains(enemy)) {
 						this.targetsQueue.push(enemy);
 					}
 				} else {
-					enemy.instance.resetTint();
 					if (this.targets.contains(enemy)) {
 						let index = this.targets.indexOf(enemy);
 						this.targets.splice(enemy);
