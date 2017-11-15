@@ -66,8 +66,8 @@ class UI {
 
 	updateBars() {
 		let cropArea = {
-			health: new Phaser.Rectangle(0, 0, this.health.bar.empty.width * game.player.health / 100, this.health.bar.full.height),
-			energy: new Phaser.Rectangle(0, 0, this.energy.bar.empty.width * game.player.energy / 100, this.energy.bar.full.height)
+			health: new Phaser.Rectangle(0, 0, this.health.bar.empty.width * game.player.health.current / 100, this.health.bar.full.height),
+			energy: new Phaser.Rectangle(0, 0, this.energy.bar.empty.width * game.player.energy.current / 100, this.energy.bar.full.height)
 		};
 
 		this.health.bar.full.crop(cropArea.health);		
@@ -75,8 +75,8 @@ class UI {
 	}
 
 	regenEnergy() {
-		if(game.player && game.player.energy < 100) // TODO: Change the constant to variable
-		game.player.energy += 1;
+		if(game.player && game.player.energy.current < 100) // TODO: Change the constant to variable
+		game.player.energy.current += 1;
 	}
 
 	followCamera() {

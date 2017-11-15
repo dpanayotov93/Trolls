@@ -4,8 +4,14 @@ class Player {
 		this.target = null;
 		this.moving = false;
 		this.attacking = false;
-		this.health = 100;
-		this.energy = 100;
+		this.health = {
+			max: 100,
+			current: 100
+		};
+		this.energy = {
+			max: 100,
+			current: 100
+		};
 		this.damage = 20;
 		this.targetsQueue = [];
 		this.targets = [];
@@ -45,7 +51,7 @@ class Player {
 		this.animations.attack = this.gameObject.animations.add('attack', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, false); // Create the attacl animation  
 		this.animations.attack.onComplete.add(function() {
 			game.player.attack();
-			game.player.energy -= 10;
+			game.player.energy.current -= 10;
 		});
 		this.gameObject.body.onMoveComplete = new Phaser.Signal();
 		this.gameObject.body.onMoveComplete.add(function(e) {
@@ -77,7 +83,7 @@ class Player {
 	updateControls() {
 		this.gameObject.body.velocity.x = 0; // Reset the player velocity    		
 
-		if (this.attacking && this.energy > 0) {
+		if (this.attacking && this.energy.current > 0) {
 			if (this.gameObject.scale.x > 0) {
 				this.gameObject.scale.x = 1;
 			} else {
@@ -164,7 +170,7 @@ class Player {
 						let index = this.targets.indexOf(target);
 						this.targets.splice(index, 1);				    
 						enemies.remove(target);
-						
+
 						this.score.enemies += 1;					
 						target.destroy();
 					}
@@ -175,7 +181,7 @@ class Player {
 
 	recieveDmg(dmg) {
 		this.flash();
-		this.health -= dmg;
+		this.health.current -= dmg;
 	}
 
 	checkCollisions() {
