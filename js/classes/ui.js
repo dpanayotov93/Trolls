@@ -48,10 +48,16 @@ class UI {
 
 		// Change the mouse when over a button
 		this.options.icon.events.onInputOver.add(function(){
-			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
 		}, this);
+		this.options.icon.events.onInputDown.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
+		}, this);	
+		this.options.icon.events.onInputUp.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
+		}, this);				
 		this.options.icon.events.onInputOut.add(function(){
-			game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";
 		}, this);		
 
 		// Timed energy regeneration

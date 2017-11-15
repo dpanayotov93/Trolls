@@ -145,6 +145,10 @@ class Enemy {
 		}	
 	}
 
+	tint(tint) {
+		this.gameObject.tint = tint;
+	}
+
 	resetTint() {
 		this.gameObject.tint = 0xffffff;
 	}

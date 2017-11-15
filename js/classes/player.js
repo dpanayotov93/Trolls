@@ -161,9 +161,8 @@ class Player {
 		this.health.current -= dmg;
 	}
 
+	// TODO: Rework the target selection
 	checkCollisions() {
-		let hasBuildingIntersections;
-		let hasUEnemyIntersections;
 		this.touchingPlatforms = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects); // Collision check between the player and the platform		
 
 		for (let i = 0; i < game.level.buildings.gameObjects.children.length - 1; i += 1) {
@@ -172,13 +171,22 @@ class Player {
 			let intersect = this.overlaps(building);
 
 			if (intersect) {
-				hasBuildingIntersections = true;
+				let hitArea = this.gameObject.position.x + (this.gameObject.getBounds().width / 2 * this.gameObject.scale.x);
+				let hitTest = false;
+				
+				if(this.gameObject.scale.x > 0 && this.gameObject.position.x < building.position.x) {
+					hitTest = hitArea > building.position.x;
+				} else if(this.gameObject.position.x > building.position.x) {
+					hitTest = hitArea < building.position.x + settings.towerSize.w;
+				}	
 
-				if (this.gameObject.position.x + (game.player.gameObject.getBounds().width / 4 * this.gameObject.scale.x) > building.position.x) {
+				if (hitTest) {
+					building.tint = 0x00ff00;
 					if (!this.targetsQueue.contains(building)) {
 						this.targetsQueue.push(building);
 					}
 				} else {
+					building.tint = 0xffffff;
 					if (this.targets.contains(building)) {
 						let index = this.targets.indexOf(building);
 						this.targets.splice(building);
@@ -192,13 +200,22 @@ class Player {
 			let intersect = this.overlaps(enemy);
 
 			if (intersect) {
-				hasUEnemyIntersections = true;
+				let hitArea = this.gameObject.position.x + (this.gameObject.getBounds().width / 2 * this.gameObject.scale.x);
+				let hitTest = false;
 
-				if (this.gameObject.position.x + (game.player.gameObject.getBounds().width / 4 * this.gameObject.scale.x) > enemy.position.x) {
+				if(this.gameObject.scale.x > 0 && this.gameObject.position.x < enemy.position.x) {
+					hitTest = hitArea > enemy.position.x;
+				} else if(this.gameObject.position.x > enemy.position.x) {
+					hitTest = hitArea < enemy.position.x  + settings.playerSize.w;
+				}				
+				
+				if (hitTest) {
+					enemy.instance.tint(0x00ff00);
 					if (!this.targetsQueue.contains(enemy)) {
 						this.targetsQueue.push(enemy);
 					}
 				} else {
+					enemy.instance.resetTint();
 					if (this.targets.contains(enemy)) {
 						let index = this.targets.indexOf(enemy);
 						this.targets.splice(enemy);
@@ -206,10 +223,6 @@ class Player {
 				}
 			}
 		}
-
-		// Reset the values
-		hasUEnemyIntersections = false;
-		hasBuildingIntersections = false;
 	}
 
 	overlaps(object) {
