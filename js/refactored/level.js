@@ -13,7 +13,7 @@ class Level {
 			gameObjects: game.add.group()
 		};
 		this.enemies = {
-			count: 0,
+			count: [0], // Initial 0 as the starting platform will be empty
 			list: [],
 			gameObjects: game.add.group()
 		};
@@ -22,7 +22,7 @@ class Level {
 	init() {
 		this.addPlatforms();
 		this.addBuildings();
-		// this.addEnemies();
+		this.addEnemies();
 	}
 
 	addPlatforms() {
@@ -59,10 +59,37 @@ class Level {
 		game.log('Buildings: ', 'Created (' + this.buildings.gameObjects.length + ')', 'green');
 	}
 
+	addEnemies() {
+		this.enemies.gameObjects.enableBody = true;
+		this.enemies.physicsBodyType = Phaser.Physics.ARCADE;
+
+		for(let i = 0; i < this.platforms.positions.length - 1; i += 1) {
+			let id = i + 1; // Increment by 1 to skip the first platform - It will stay empty as a starting one
+			let minCurPossiblePos = game.level.platforms.positions[id][0];
+			let maxCurPossiblePos = game.level.platforms.positions[id][1];
+
+			this.enemies.count[id] = 1; //game.rnd.integerInRange(1, 3);
+
+			for(let j = 0; j < this.enemies.count[id]; j += 1) {
+				let position = game.rnd.integerInRange(minCurPossiblePos, maxCurPossiblePos);
+				let enemy = new Enemy(j, position);
+				enemy.create();
+				this.enemies.list.push(enemy);
+			}
+
+			game.log('Buildings: ', 'Created (' + this.enemies.gameObjects.length + ')', 'green');
+		}
+	}
+
 	update() {
 		for(let i = 0; i < this.buildings.list.length; i += 1) {
 			let building = this.buildings.list[i];
 			building.update();
 		}
+
+		for(let i = 0; i < this.enemies.list.length; i += 1) {
+			let enemy = this.enemies.list[i];
+			enemy.update();
+		}		
 	}
 }

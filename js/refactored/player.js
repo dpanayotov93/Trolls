@@ -4,6 +4,10 @@ class Player {
 		this.target = null;
 		this.moving = false;
 		this.attacking = false;
+		this.touchingPlatforms = false;
+		this.damage = 20;
+		this.targetsQueue = [];
+		this.targets = [];				
 		this.health = {
 			max: 100,
 			current: 100
@@ -11,14 +15,7 @@ class Player {
 		this.energy = {
 			max: 100,
 			current: 100
-		};
-		this.damage = 20;
-		this.targetsQueue = [];
-		this.targets = [];
-		this.touching = {
-			platforms: false,
-			buildings: false
-		};
+		};		
 		this.animations = {
 			attack: null
 		};
@@ -96,12 +93,11 @@ class Player {
 
 			this.gameObject.animations.play('attack');
 		} else {
-			resetEnemyTint(); // TODO: Move this after refactoring to the Game object
 			if (game.keyboard.left.isDown) { // Left arrow key
 				this.gameObject.body.moveTo(1000, 500, 180);
 				this.gameObject.scale.x = -1; // Flip the sprite horizontally 
 
-				if (this.touching.platforms) {
+				if (this.touchingPlatforms) {
 					// If the player is touching the ground set the sprite to the walking one
 					if (this.gameObject.key !== 'troll_first_walk') {
 						this.gameObject.loadTexture('troll_first_walk');
@@ -113,14 +109,14 @@ class Player {
 				this.gameObject.body.moveTo(1000, 500, 0);
 				this.gameObject.scale.x = 1;
 
-				if (this.touching.platforms) {
+				if (this.touchingPlatforms) {
 					if (this.gameObject.key !== 'troll_first_walk') {
 						this.gameObject.loadTexture('troll_first_walk');
 					}
 
 					this.gameObject.animations.play('test');
 				}
-			} else if (this.touching.platforms && !this.attacking) {
+			} else if (this.touchingPlatforms && !this.attacking) {
 				// Play the iddle animation when not moving	   
 				if (this.gameObject.key !== 'troll_first_iddle') {
 					this.gameObject.loadTexture('troll_first_iddle');
@@ -129,7 +125,7 @@ class Player {
 				this.gameObject.animations.play('test');
 			}
 
-			if (game.keyboard.up.isDown && this.gameObject.body.touching.down && this.touching.platforms) {
+			if (game.keyboard.up.isDown && this.gameObject.body.touching.down && this.touchingPlatforms) {
 				//  Allow the player to jump if they are touching the ground.   
 				this.gameObject.body.moveTo(1000, 750, -90);
 
@@ -152,29 +148,10 @@ class Player {
 	attack() {
 		if (this.targets.length > 0) {
 			for (let i = 0; i < this.targets.length; i += 1) {
-				let target = this.targets[i];							
+				let target = this.targets[i];
 
-				console.warn(target.name);
-				if (target.name.indexOf('Building') !== -1) {
-					target.instance.recieveDmg(this.damage);
-					target.frame += 1;
-				} else if (target.name.indexOf('Enemy') !== -1) {
-					target.health -= this.damage;
-					target.tint = 0x666666;
-				}
-
-				game.log(target.name + ' health:', target.health);
-
-				if (target.name.indexOf('Enemy') !== -1) {
-					if (target.health <= 0) {
-						let index = this.targets.indexOf(target);
-						this.targets.splice(index, 1);				    
-						enemies.remove(target);
-
-						this.score.enemies += 1;					
-						target.destroy();
-					}
-				}
+				target.instance.recieveDmg(this.damage);
+				game.log(target.name + ' health:', target.instance.health.current);
 			}
 		}
 	}
@@ -187,7 +164,7 @@ class Player {
 	checkCollisions() {
 		let hasBuildingIntersections;
 		let hasUEnemyIntersections;
-		this.touching.platforms = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects); // Collision check between the player and the platform		
+		this.touchingPlatforms = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects); // Collision check between the player and the platform		
 
 		for (let i = 0; i < game.level.buildings.gameObjects.children.length - 1; i += 1) {
 			let building = game.level.buildings.gameObjects.children[i];
@@ -210,8 +187,8 @@ class Player {
 			}
 		}
 
-		for (let i = 0; i < enemies.children.length; i += 1) {
-			let enemy = enemies.children[i];
+		for (let i = 0; i < game.level.enemies.gameObjects.children.length; i += 1) {
+			let enemy = game.level.enemies.gameObjects.children[i];
 			let intersect = this.overlaps(enemy);
 
 			if (intersect) {

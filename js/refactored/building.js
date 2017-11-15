@@ -16,10 +16,11 @@ class Building {
 	}
 
 	update() {
-		let nextFrame = this.health.max / this.health.current - 1;
+		let nextFrame = (this.health.max - this.health.current) / game.player.damage;
 
 		if(this.health.current <= 0) {
 			this.kill();
+			return;
 		}		
 		
 		this.gameObject.frame = nextFrame;		
