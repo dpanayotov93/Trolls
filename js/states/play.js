@@ -1,6 +1,4 @@
-var buildings, enemies;
-
-var statePlay = {
+let statePlay = {
 	create: function() {
 		game.time.advancedTiming = true; // Set up FPS counter
 
