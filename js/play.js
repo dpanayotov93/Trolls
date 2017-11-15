@@ -1,4 +1,4 @@
-var cursor, buildings, enemies;
+var buildings, enemies;
 
 var statePlay = {
 	create: function() {
@@ -9,8 +9,6 @@ var statePlay = {
 
 		game.level = new Level();
 		game.level.init();
-		
-		createBuildings();
 
 		game.player = new Player();
 		game.player.init(300, 25);			
@@ -40,28 +38,6 @@ var statePlay = {
 	    }
 	    */
 	}
-}
-
-function createBuildings() {
-	buildings = game.add.group();
-	buildings.enableBody = true;
-
-	for (var i = 0; i < game.level.platforms.positions.length - 1; i += 1) {
-		var id = i + 1;
-		var buildingsPerPlatform = game.rnd.integerInRange(1, 3);
-		var start = game.level.platforms.positions[id][0];
-		var end = game.level.platforms.positions[id][1];
-
-		for (var j = 0; j < buildingsPerPlatform; j += 1) {
-			var buldingPosition = game.rnd.integerInRange(start, end);
-			var building = buildings.create(buldingPosition, game.world.height - settings.towerSize.h * 1.9, 'tower_first');
-			building.body.immovable = true;
-			building.name = 'Building ' + j;
-			building.health = 100;
-		}
-	}
-
-	game.log('Buildings: ', 'Created (' + buildings.children.length + ')', 'green');
 }
 
 function createEnemies() {

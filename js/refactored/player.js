@@ -54,10 +54,10 @@ class Player {
 		});
 
 		// Custom keyboard hotkeys
-		cursors.spacebar.onUp.add(function() {
+		game.keyboard.spacebar.onUp.add(function() {
 			game.player.attacking = false;
 		});
-		cursors.spacebar.onDown.add(function() {
+		game.keyboard.spacebar.onDown.add(function() {
 			game.player.attacking = true;
 		});
 
@@ -91,7 +91,7 @@ class Player {
 			this.gameObject.animations.play('attack');
 		} else {
 			resetEnemyTint(); // TODO: Move this after refactoring to the Game object
-			if (cursors.left.isDown) { // Left arrow key
+			if (game.keyboard.left.isDown) { // Left arrow key
 				this.gameObject.body.moveTo(1000, 500, 180);
 				this.gameObject.scale.x = -1; // Flip the sprite horizontally 
 
@@ -103,7 +103,7 @@ class Player {
 
 					this.gameObject.animations.play('test');
 				}
-			} else if (cursors.right.isDown) { // Right arrow key      
+			} else if (game.keyboard.right.isDown) { // Right arrow key      
 				this.gameObject.body.moveTo(1000, 500, 0);
 				this.gameObject.scale.x = 1;
 
@@ -123,7 +123,7 @@ class Player {
 				this.gameObject.animations.play('test');
 			}
 
-			if (cursors.up.isDown && this.gameObject.body.touching.down && this.touching.platforms) {
+			if (game.keyboard.up.isDown && this.gameObject.body.touching.down && this.touching.platforms) {
 				//  Allow the player to jump if they are touching the ground.   
 				this.gameObject.body.moveTo(1000, 750, -90);
 
@@ -145,23 +145,28 @@ class Player {
 
 	attack() {
 		if (this.targets.length > 0) {
-			for (var i = 0; i < this.targets.length; i += 1) {
-				var target = this.targets[i];
+			for (let i = 0; i < this.targets.length; i += 1) {
+				let target = this.targets[i];
 				target.health -= this.damage;
 				game.log(target.name + ' health:', target.health);
 
+				console.warn(target.name);
 				if (target.name.indexOf('Building') !== -1) {
 					target.frame += 1;
 				} else if (target.name.indexOf('Enemy') !== -1) {
 					target.tint = 0x666666;
 				}
 
-				if (target.health === 0) {
-					var index = this.targets.indexOf(target);
+				if (target.health <= 0) {
+					let index = this.targets.indexOf(target);
+
 					this.targets.splice(index, 1);
 					game.log('Killed: ', target.name);
 					if (target.name.indexOf('Building') !== -1) {
-						buildings.remove(target);
+						let index = game.level.buildings.gameObjects.children.indexOf(target);
+
+						game.level.buildings.gameObjects.remove(target);
+						game.level.buildings.list.splice(index, 1);
 						this.score.buildings += 1;
 					} else if (target.name.indexOf('Enemy') !== -1) {
 						enemies.remove(target);
@@ -180,13 +185,14 @@ class Player {
 	}
 
 	checkCollisions() {
-		var hasBuildingIntersections;
-		var hasUEnemyIntersections;
+		let hasBuildingIntersections;
+		let hasUEnemyIntersections;
 		this.touching.platforms = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects); // Collision check between the player and the platform		
 
-		for (var i = 0; i < buildings.children.length; i += 1) {
-			var building = buildings.children[i];
-			var intersect = this.overlaps(building);
+		for (let i = 0; i < game.level.buildings.gameObjects.children.length - 1; i += 1) {
+			let building = game.level.buildings.gameObjects.children[i];
+			if(building === undefined) debugger;
+			let intersect = this.overlaps(building);
 
 			if (intersect) {
 				hasBuildingIntersections = true;
@@ -197,16 +203,16 @@ class Player {
 					}
 				} else {
 					if (this.targets.contains(building)) {
-						var index = this.targets.indexOf(building);
+						let index = this.targets.indexOf(building);
 						this.targets.splice(building);
 					}
 				}
 			}
 		}
 
-		for (var i = 0; i < enemies.children.length; i += 1) {
-			var enemy = enemies.children[i];
-			var intersect = this.overlaps(enemy);
+		for (let i = 0; i < enemies.children.length; i += 1) {
+			let enemy = enemies.children[i];
+			let intersect = this.overlaps(enemy);
 
 			if (intersect) {
 				hasUEnemyIntersections = true;
@@ -217,7 +223,7 @@ class Player {
 					}
 				} else {
 					if (this.targets.contains(enemy)) {
-						var index = this.targets.indexOf(enemy);
+						let index = this.targets.indexOf(enemy);
 						this.targets.splice(enemy);
 					}
 				}
@@ -230,9 +236,10 @@ class Player {
 	}
 
 	overlaps(object) {
-		var boundsThis = this.gameObject.getBounds();
-		var boundsObject = object.getBounds();
-		var isOverlapping = Phaser.Rectangle.intersects(boundsThis, boundsObject);
+		let boundsThis = this.gameObject.getBounds();
+		if(object === undefined) debugger;
+		let boundsObject = object.getBounds();
+		let isOverlapping = Phaser.Rectangle.intersects(boundsThis, boundsObject);
 
 		return isOverlapping;
 	}

@@ -28,7 +28,7 @@ class Platform {
 
 	create() {		
 		this.startPiece.body.immovable = true; // Immovable from collision
-		for(var i = 0; i < this.midPiecesCount.chosen; i += 1) {
+		for(let i = 0; i < this.midPiecesCount.chosen; i += 1) {
 			let id = i + 1;
 			let midPiecePosition = id * settings.tileSize + this.position.start;
 

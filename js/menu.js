@@ -1,11 +1,11 @@
-var stateMenu = {
+let stateMenu = {
 	create: function() {		
-		var background = game.add.sprite(0, 0, 'bg_village'); // Add the background
-		var titleLabel = game.add.bitmapText(settings.width / 2 - 110, 150, 'yggdrasil', 'TROLLS', 64);
-		var startButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 250, 'button', this.start, this, 0, 1, 2);		
-		var startLabel = game.add.bitmapText(settings.width / 2 - 64, 256, 'yggdrasil', 'Start', 46);
-		var controlsButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 350, 'button', this.showControls, this, 0, 1, 2);		
-		var controlsLabel = game.add.bitmapText(settings.width / 2 - 96, 356, 'yggdrasil', 'Controls', 46);		
+		let background = game.add.sprite(0, 0, 'bg_village'); // Add the background
+		let titleLabel = game.add.bitmapText(settings.width / 2 - 110, 150, 'yggdrasil', 'TROLLS', 64);
+		let startButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 250, 'button', this.start, this, 0, 1, 2);		
+		let startLabel = game.add.bitmapText(settings.width / 2 - 64, 256, 'yggdrasil', 'Start', 46);
+		let controlsButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 350, 'button', this.showControls, this, 0, 1, 2);		
+		let controlsLabel = game.add.bitmapText(settings.width / 2 - 96, 356, 'yggdrasil', 'Controls', 46);		
 
 		// Change the mouse when over a button
 		startButton.events.onInputOver.add(function(){
@@ -22,9 +22,9 @@ var stateMenu = {
 		}, this);					
 
 		// Set the keyboard manager
-		cursors = game.input.keyboard.createCursorKeys();	
+		game.keyboard = game.input.keyboard.createCursorKeys();	
 
-		cursors.spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		game.keyboard.spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 		game.log('Keyboard: ', 'Created', 'green');		
 	},

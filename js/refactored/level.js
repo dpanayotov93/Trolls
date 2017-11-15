@@ -8,7 +8,7 @@ class Level {
 			gameObjects: game.add.group()
 		};
 		this.buildings = {
-			count: 0,
+			count: [0], // Initial 0 as the starting platform will be empty
 			list: [],
 			gameObjects: game.add.group()
 		};
@@ -21,7 +21,7 @@ class Level {
 
 	init() {
 		this.addPlatforms();
-		// this.addBuildings()
+		this.addBuildings();
 		// this.addEnemies();
 	}
 
@@ -36,5 +36,26 @@ class Level {
 
 		game.world.setBounds(0, 0, this.platforms.lastPlatformPosition, game.height);
 		game.log('Platforms: ', 'Created (' + this.platforms.count + ')', 'green');
+	}
+
+	addBuildings() {
+		this.buildings.gameObjects.enableBody = true;
+		
+		for(let i = 0; i < this.platforms.positions.length - 1; i += 1) {
+			let id = i + 1; // Increment by 1 to skip the first platform - It will stay empty as a starting one
+			let minCurPossiblePos = game.level.platforms.positions[id][0];
+			let maxCurPossiblePos = game.level.platforms.positions[id][1];
+
+			this.buildings.count[id] = game.rnd.integerInRange(1, 3);			
+
+			for(let j = 0; j < this.buildings.count[id]; j += 1) {
+				let position = game.rnd.integerInRange(minCurPossiblePos, maxCurPossiblePos);
+				let building = new Building(j, position);
+				building.create();
+				this.buildings.list.push(building);
+			}		
+		}
+
+		game.log('Buildings: ', 'Created (' + this.buildings.gameObjects.length + ')', 'green');
 	}
 }
