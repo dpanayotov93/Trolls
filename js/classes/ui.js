@@ -37,28 +37,30 @@ class UI {
 				}
 			]
 		};
+		this.controls = {
+			gameObjects: game.add.group(),
+			move: {				
+				background: null,
+				slider: null
+			},
+			jump: null,
+			attack: null
+		};
 		this.timings = {
 			regen: .5
 		};		
 	}
 
-	init() {
+	init() {	
+		if(game.test) Phaser.Device.desktop = false;
+		if(Phaser.Device.desktop) {
+			this.addMouse();			
+		} else {
+			this.addControls();		
+		}
+		
 		this.followCamera();
-		this.resize();
-
-		// Change the mouse when over a button
-		this.options.icon.events.onInputOver.add(function(){
-			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
-		}, this);
-		this.options.icon.events.onInputDown.add(function(){
-			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
-		}, this);	
-		this.options.icon.events.onInputUp.add(function(){
-			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
-		}, this);				
-		this.options.icon.events.onInputOut.add(function(){
-			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";
-		}, this);		
+		this.resize();	
 
 		// Timed energy regeneration
 		game.time.events.loop(Phaser.Timer.SECOND * this.timings.regen, this.regenEnergy, this);
@@ -103,6 +105,13 @@ class UI {
 			this.charges.icon[i].empty.fixedToCamera = true;
 			this.charges.icon[i].full.fixedToCamera = true;	
 		}
+
+		if(!Phaser.Device.desktop) {
+			this.controls.move.background.fixedToCamera = true;
+			this.controls.move.slider.fixedToCamera = true;
+			this.controls.jump.fixedToCamera = true;
+			this.controls.attack.fixedToCamera = true;
+		}		
 	}
 
 	resize() {
@@ -118,5 +127,84 @@ class UI {
 			this.charges.icon[i].empty.scale.setTo(.1);
 			this.charges.icon[i].full.scale.setTo(.1);
 		}		
+
+		if(!Phaser.Device.desktop) {
+			this.controls.move.slider.scale.setTo(.15);
+			this.controls.jump.scale.setTo(.15);
+			this.controls.attack.scale.setTo(.15);
+		}
+	}
+
+	addMouse() {
+		this.options.icon.events.onInputOver.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
+		}, this);
+		this.options.icon.events.onInputDown.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
+		}, this);	
+		this.options.icon.events.onInputUp.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
+		}, this);				
+		this.options.icon.events.onInputOut.add(function(){
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";
+		}, this);			
+	}
+
+	addControls() {
+		game.controler = {
+			move: {}
+		};
+		this.controls.move.background = this.controls.gameObjects.create(30, game.height - 75, 'bar_empty');						
+		this.controls.move.slider = this.controls.gameObjects.create(168.5, game.height - 85, 'icon_move');
+		this.controls.jump = this.controls.gameObjects.create(game.width - 250, game.height - 85, 'icon_jump');
+		this.controls.attack = this.controls.gameObjects.create(game.width - 100, game.height - 85, 'icon_attack');
+
+		// Events
+		this.controls.move.slider.inputEnabled = true;
+		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(40, game.height - 85, 335, 100));
+		this.controls.move.slider.input.setDragLock(true, false); // Allow only horizontal drag
+		this.controls.move.slider.enableBody = true;
+		game.physics.arcade.enable(this.controls.move.slider);
+
+		this.controls.move.slider.events.onDragUpdate.add(function(e) {
+			if(e.position.x > 168.5) {
+				game.controler.move.right = true;
+				game.controler.move.left = false;
+			} else if(e.position.x < 168.5) {
+				game.controler.move.left = true;
+				game.controler.move.right = false;
+			} else {
+				game.controler.move.right = false;
+				game.controler.move.left = false;	
+			}
+		}, this);	
+
+		this.controls.move.slider.events.onDragStop.add(function(e) {			
+			e.position.x = 168.5;
+
+			console.warn(e.position.x);
+			game.controler.move.right = false;
+			game.controler.move.left = false;					
+		}, this);					 
+		
+		this.controls.jump.inputEnabled = true;
+		this.controls.jump.events.onInputDown.add(function() {
+			game.controler.jump = true;
+		}, this);
+		this.controls.jump.events.onInputUp.add(function() {
+			game.controler.jump = false;
+		}, this);		
+
+		this.controls.attack.inputEnabled = true;
+		this.controls.attack.events.onInputDown.add(function() {
+			game.controler.attack = true;
+		}, this);
+		this.controls.attack.events.onInputUp.add(function() {
+			game.controler.attack = false;
+		}, this);		
+	}
+
+	showControls() {
+		game.world.bringToTop(this.controls.gameObjects);
 	}
 }

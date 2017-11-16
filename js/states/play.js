@@ -1,5 +1,6 @@
 let statePlay = {
 	create: function() {
+		game.test = true; // TODO: REMOVE LATER!!!
 		game.time.advancedTiming = true; // Set up FPS counter
 
 		game.ui = new UI();
@@ -10,6 +11,10 @@ let statePlay = {
 
 		game.player = new Player();
 		game.player.init(300, 25);
+
+		if(!Phaser.Device.desktop) {
+			game.ui.showControls();
+		}
 	},
 	update: function() {				
 		game.player.update();
@@ -53,7 +58,7 @@ let statePlay = {
 			}
 		}		
 
-		game.debug.text('FPS: ' + game.time.fps, 880, 48, "#00ff00"); // Show FPS						
+		game.debug.text('FPS: ' + game.time.fps, 10, 20, "#00ff00"); // Show FPS						
 		
 		/*
 		game.debug.text('DEBUG INFO', 860, 24, "#ff9800");			

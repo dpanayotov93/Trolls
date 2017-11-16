@@ -23,6 +23,9 @@ var stateLoad = {
 		game.load.image('icon_energy', 'assets/ui/icon-energy.png');
 		game.load.image('icon_orb', 'assets/ui/icon-orb.png');
 		game.load.image('icon_orb_empty', 'assets/ui/icon-orb-empty.png');
+		game.load.image('icon_move', 'assets/ui/move.png');
+		game.load.image('icon_jump', 'assets/ui/jump.png');
+		game.load.image('icon_attack', 'assets/ui/attack.png');
 		// Images - Objects
 		game.load.image('item_dead_pig', 'assets/objects/dead_pig.png');
 		// Tiles - Terrain

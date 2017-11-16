@@ -80,7 +80,7 @@ class Player {
 	updateControls() {
 		this.gameObject.body.velocity.x = 0; // Reset the player velocity    		
 
-		if (this.attacking && this.energy.current > 0) {
+		if ((this.attacking  || game.controler.attack) && this.energy.current > 0) {
 			if (this.gameObject.scale.x > 0) {
 				this.gameObject.scale.x = 1;
 			} else {
@@ -93,7 +93,7 @@ class Player {
 
 			this.gameObject.animations.play('attack');
 		} else {
-			if (game.keyboard.left.isDown) { // Left arrow key
+			if (game.keyboard.left.isDown || game.controler.move.left) { // Left arrow key
 				this.gameObject.body.moveTo(1000, 500, 180);
 				this.gameObject.scale.x = -1; // Flip the sprite horizontally 
 
@@ -105,7 +105,7 @@ class Player {
 
 					this.gameObject.animations.play('test');
 				}
-			} else if (game.keyboard.right.isDown) { // Right arrow key      
+			} else if (game.keyboard.right.isDown || game.controler.move.right) { // Right arrow key      
 				this.gameObject.body.moveTo(1000, 500, 0);
 				this.gameObject.scale.x = 1;
 
@@ -125,7 +125,7 @@ class Player {
 				this.gameObject.animations.play('test');
 			}
 
-			if (game.keyboard.up.isDown && this.gameObject.body.touching.down && this.touchingPlatforms) {
+			if ((game.keyboard.up.isDown || game.controler.jump) && this.gameObject.body.touching.down && this.touchingPlatforms) {
 				//  Allow the player to jump if they are touching the ground.   
 				this.gameObject.body.moveTo(1000, 750, -90);
 
