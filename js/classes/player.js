@@ -95,7 +95,7 @@ class Player {
 		} else {
 			if (game.keyboard.left.isDown || game.controler.move.left) { // Left arrow key
 				this.gameObject.body.moveTo(1000, 500, 180);
-				this.gameObject.scale.x = -1; // Flip the sprite horizontally 
+				this.gameObject.scale.x = Math.abs(this.gameObject.scale.x) * -1; // Flip the sprite horizontally 
 
 				if (this.touchingPlatforms) {
 					// If the player is touching the ground set the sprite to the walking one
@@ -107,7 +107,7 @@ class Player {
 				}
 			} else if (game.keyboard.right.isDown || game.controler.move.right) { // Right arrow key      
 				this.gameObject.body.moveTo(1000, 500, 0);
-				this.gameObject.scale.x = 1;
+				this.gameObject.scale.x = Math.abs(this.gameObject.scale.x);
 
 				if (this.touchingPlatforms) {
 					if (this.gameObject.key !== 'troll_first_walk') {
@@ -130,11 +130,11 @@ class Player {
 				this.gameObject.body.moveTo(1000, 750, -90);
 
 				// Flip the sprite horizontally if it's looking in the wrong direction
-				if (this.gameObject.scale.x > 0) {
-					this.gameObject.scale.x = 1;
-				} else {
-					this.gameObject.scale.x = -1;
-				}
+				// if (this.gameObject.scale.x > 0) {
+				// 	this.gameObject.scale.x = 1;
+				// } else {
+				// 	this.gameObject.scale.x = -1;
+				// }
 
 				if (this.gameObject.key !== 'troll_first_jump') {
 					this.gameObject.loadTexture('troll_first_jump');

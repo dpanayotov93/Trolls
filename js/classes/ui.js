@@ -221,6 +221,19 @@ class UI {
 		game.level.platforms.gameObjects.forEach(function(item) {
 			item.scale.setTo(item.scale.x, item.scale.y * .5);
 			item.position.y += item.height;
-		});		
+		});	
+		
+		game.level.buildings.gameObjects.forEach(function(item) {
+			item.scale.setTo(item.scale.x * .75, item.scale.y * .5);
+			item.position.y += item.height * 1.75;
+		});				
+
+		game.level.enemies.gameObjects.forEach(function(item) {
+			item.scale.setTo(item.scale.x * .5, item.scale.y * .5);
+			item.position.y += item.height;
+		});			
+
+		game.player.gameObject.scale.setTo(game.player.gameObject.scale.x * .5, game.player.gameObject.scale.y * .5);
+		game.player.gameObject.position.y += game.player.gameObject.height;
 	}
 }
