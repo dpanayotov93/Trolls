@@ -10,7 +10,7 @@ let statePlay = {
 		game.level.init();
 
 		game.player = new Player();
-		game.player.init(300, 25);
+		game.player.init(300, 0);
 
 		if(!Phaser.Device.desktop) {
 			game.ui.showControls();
