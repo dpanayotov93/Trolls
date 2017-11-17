@@ -154,37 +154,43 @@ class UI {
 		game.controler = {
 			move: {}
 		};
+
 		this.controls.move.background = this.controls.gameObjects.create(30, game.height - 75, 'bar_empty');						
-		this.controls.move.slider = this.controls.gameObjects.create(168.5, game.height - 85, 'icon_move');
-		this.controls.jump = this.controls.gameObjects.create(game.width - 250, game.height - 85, 'icon_jump');
+		this.controls.move.slider = this.controls.gameObjects.create(207.5, game.height - 85, 'icon_move');
+		this.controls.jump = this.controls.gameObjects.create(game.width - 100, game.height - 185, 'icon_jump');
 		this.controls.attack = this.controls.gameObjects.create(game.width - 100, game.height - 85, 'icon_attack');
 
-		// Events
+		// Events		
 		this.controls.move.slider.inputEnabled = true;
-		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(40, game.height - 85, 335, 100));
+		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(40, game.height - 85, 400, 100));
 		this.controls.move.slider.input.setDragLock(true, false); // Allow only horizontal drag
-		this.controls.move.slider.enableBody = true;
-		game.physics.arcade.enable(this.controls.move.slider);
+		this.controls.move.slider.anchor.setTo(.5, 0);		
+
+		this.controls.move.slider.events.onInputOver.add(function(e) {
+			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
+		}, this);
+		this.controls.move.slider.events.onInputOut.add(function(e) {
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";
+		}, this);		
 
 		this.controls.move.slider.events.onDragUpdate.add(function(e) {
-			if(e.position.x > 168.5) {
-				game.controler.move.right = true;
+			if(e.cameraOffset.x > 207.5) {
 				game.controler.move.left = false;
-			} else if(e.position.x < 168.5) {
+				game.controler.move.right = true;
+			} else if(e.cameraOffset.x < 207.5) {
 				game.controler.move.left = true;
 				game.controler.move.right = false;
 			} else {
-				game.controler.move.right = false;
 				game.controler.move.left = false;	
+				game.controler.move.right = false;
 			}
 		}, this);	
 
 		this.controls.move.slider.events.onDragStop.add(function(e) {			
-			e.position.x = 168.5;
-
-			console.warn(e.position.x);
+			e.cameraOffset.x = 207.5;
 			game.controler.move.right = false;
-			game.controler.move.left = false;					
+			game.controler.move.left = false;
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";			
 		}, this);					 
 		
 		this.controls.jump.inputEnabled = true;
