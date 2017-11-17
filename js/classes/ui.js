@@ -2,7 +2,7 @@ class UI {
 	constructor() {
 		this.background = game.add.sprite(0, 0, 'bg_village');
 		this.options = {
-			icon: game.add.button(game.width - 110, 16, 'icon_options', null, this),		//game.add.sprite(game.width - 110, 16, 'icon_options'),
+			icon: game.add.button(game.width - 110, 16, 'icon_options', this.fullscreen, this),		//game.add.sprite(game.width - 110, 16, 'icon_options'),
 			label: game.add.bitmapText(game.width - 100, 96, 'yggdrasil', 'Options', 64)
 		};
 		this.health = {
@@ -235,5 +235,10 @@ class UI {
 
 		game.player.gameObject.scale.setTo(game.player.gameObject.scale.x * .5, game.player.gameObject.scale.y * .5);
 		game.player.gameObject.position.y += game.player.gameObject.height;
+	}
+
+	fullscreen() {
+		console.warn('Going fullscreen');
+		game.scale.startFullScreen();
 	}
 }
