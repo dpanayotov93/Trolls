@@ -216,5 +216,11 @@ class UI {
 
 	showControls() {
 		game.world.bringToTop(this.controls.gameObjects);
+
+
+		game.level.platforms.gameObjects.forEach(function(item) {
+			item.scale.setTo(item.scale.x, item.scale.y * .5);
+			item.position.y += item.height;
+		});		
 	}
 }
