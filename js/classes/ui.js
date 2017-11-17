@@ -41,7 +41,11 @@ class UI {
 			gameObjects: game.add.group(),
 			move: {				
 				background: null,
-				slider: null
+				slider: null,
+				position: {
+					x: null,
+					y: null
+				}
 			},
 			attack: null
 		};
@@ -153,8 +157,8 @@ class UI {
 		};
 
 		this.controls.move.background = this.controls.gameObjects.create(30, game.height - 75, 'bar_empty');						
-		this.controls.move.slider = this.controls.gameObjects.create(207.5, game.height - 85, 'icon_move');
-		this.controls.attack = this.controls.gameObjects.create(game.width - 100, game.height - 85, 'icon_attack');
+		this.controls.move.slider = this.controls.gameObjects.create(207.5, game.height - game.cache.getImage('icon_move').height * .15, 'icon_move');
+		this.controls.attack = this.controls.gameObjects.create(game.width - 100, game.height - game.cache.getImage('icon_attack').height * .15, 'icon_attack');
 
 		// Events		
 		this.controls.move.slider.inputEnabled = true;
@@ -172,7 +176,7 @@ class UI {
 			if(e.cameraOffset.x > 207.5) {
 				game.controler.move.left = false;
 				game.controler.move.right = true;
-				if(e.cameraOffset.y < 860) {
+				if(e.cameraOffset.y < game.height - game.cache.getImage('icon_move').height * .15 - 40) {
 					game.controler.jump = true;
 				} else {
 					game.controler.jump = false;
@@ -180,7 +184,7 @@ class UI {
 			} else if(e.cameraOffset.x < 207.5) {
 				game.controler.move.left = true;
 				game.controler.move.right = false;
-				if(e.cameraOffset.y < 860) {
+				if(e.cameraOffset.y < game.height - game.cache.getImage('icon_move').height * .15 - 40) {
 					game.controler.jump = true;
 				} else {
 					game.controler.jump = false;
@@ -194,7 +198,7 @@ class UI {
 
 		this.controls.move.slider.events.onDragStop.add(function(e) {			
 			e.cameraOffset.x = 207.5;
-			e.cameraOffset.y = 899;
+			e.cameraOffset.y = game.height - game.cache.getImage('icon_move').height * .15;
 			game.controler.move.right = false;
 			game.controler.move.left = false;
 			game.controler.jump = false;
