@@ -133,6 +133,7 @@ class UI {
 		if(!Phaser.Device.desktop) {
 			this.controls.move.slider.scale.setTo(.15);
 			this.controls.attack.scale.setTo(.15);
+			this.fullscreen();
 		}
 	}
 
