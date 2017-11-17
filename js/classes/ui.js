@@ -43,7 +43,6 @@ class UI {
 				background: null,
 				slider: null
 			},
-			jump: null,
 			attack: null
 		};
 		this.timings = {
@@ -109,7 +108,6 @@ class UI {
 		if(!Phaser.Device.desktop) {
 			this.controls.move.background.fixedToCamera = true;
 			this.controls.move.slider.fixedToCamera = true;
-			this.controls.jump.fixedToCamera = true;
 			this.controls.attack.fixedToCamera = true;
 		}		
 	}
@@ -130,7 +128,6 @@ class UI {
 
 		if(!Phaser.Device.desktop) {
 			this.controls.move.slider.scale.setTo(.15);
-			this.controls.jump.scale.setTo(.15);
 			this.controls.attack.scale.setTo(.15);
 		}
 	}
@@ -157,13 +154,11 @@ class UI {
 
 		this.controls.move.background = this.controls.gameObjects.create(30, game.height - 75, 'bar_empty');						
 		this.controls.move.slider = this.controls.gameObjects.create(207.5, game.height - 85, 'icon_move');
-		this.controls.jump = this.controls.gameObjects.create(game.width - 100, game.height - 185, 'icon_jump');
 		this.controls.attack = this.controls.gameObjects.create(game.width - 100, game.height - 85, 'icon_attack');
 
 		// Events		
 		this.controls.move.slider.inputEnabled = true;
-		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(40, game.height - 85, 400, 100));
-		this.controls.move.slider.input.setDragLock(true, false); // Allow only horizontal drag
+		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(40, game.height - 185, 400, 177));
 		this.controls.move.slider.anchor.setTo(.5, 0);		
 
 		this.controls.move.slider.events.onInputOver.add(function(e) {
@@ -177,29 +172,34 @@ class UI {
 			if(e.cameraOffset.x > 207.5) {
 				game.controler.move.left = false;
 				game.controler.move.right = true;
+				if(e.cameraOffset.y < 860) {
+					game.controler.jump = true;
+				} else {
+					game.controler.jump = false;
+				}
 			} else if(e.cameraOffset.x < 207.5) {
 				game.controler.move.left = true;
 				game.controler.move.right = false;
+				if(e.cameraOffset.y < 860) {
+					game.controler.jump = true;
+				} else {
+					game.controler.jump = false;
+				}
 			} else {
 				game.controler.move.left = false;	
 				game.controler.move.right = false;
+				game.controler.jump = false;
 			}
 		}, this);	
 
 		this.controls.move.slider.events.onDragStop.add(function(e) {			
 			e.cameraOffset.x = 207.5;
+			e.cameraOffset.y = 899;
 			game.controler.move.right = false;
 			game.controler.move.left = false;
-			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";			
-		}, this);					 
-		
-		this.controls.jump.inputEnabled = true;
-		this.controls.jump.events.onInputDown.add(function() {
-			game.controler.jump = true;
-		}, this);
-		this.controls.jump.events.onInputUp.add(function() {
 			game.controler.jump = false;
-		}, this);		
+			game.canvas.style.cursor = "url(assets/ui/cursor.png), default";			
+		}, this);					 		
 
 		this.controls.attack.inputEnabled = true;
 		this.controls.attack.events.onInputDown.add(function() {
