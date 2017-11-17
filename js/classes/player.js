@@ -81,11 +81,11 @@ class Player {
 		this.gameObject.body.velocity.x = 0; // Reset the player velocity    		
 
 		if ((this.attacking  || game.controler.attack) && this.energy.current > 0) {
-			if (this.gameObject.scale.x > 0) {
-				this.gameObject.scale.x = 1;
-			} else {
-				this.gameObject.scale.x = -1;
-			}
+			// if (this.gameObject.scale.x > 0) {
+			// 	this.gameObject.scale.x = 1;
+			// } else {
+			// 	this.gameObject.scale.x = -1;
+			// }
 
 			if (this.gameObject.key !== 'troll_first_attack') {
 				this.gameObject.loadTexture('troll_first_attack');

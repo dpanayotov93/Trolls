@@ -236,6 +236,24 @@ class UI {
 
 		game.player.gameObject.scale.setTo(game.player.gameObject.scale.x * .5, game.player.gameObject.scale.y * .5);
 		game.player.gameObject.position.y += game.player.gameObject.height;
+
+		this.options.icon.scale.setTo(this.options.icon.scale.x * .5, this.options.icon.scale.y * .5);
+		this.options.label.scale.setTo(this.options.label.scale.x * .5, this.options.label.scale.y * .5);
+
+		this.health.icon.scale.setTo(this.health.icon.scale.x * .5, this.health.icon.scale.y * .5);
+		this.health.bar.empty.scale.setTo(this.health.bar.empty.scale.x * .5, this.health.bar.full.scale.y * .5);
+		this.health.bar.full.scale.setTo(this.health.bar.full.scale.x * .5, this.health.bar.full.scale.y * .5);
+
+		this.energy.icon.scale.setTo(this.energy.icon.scale.x * .5, this.energy.icon.scale.y * .5);
+		this.energy.bar.empty.scale.setTo(this.energy.bar.empty.scale.x * .5, this.energy.bar.full.scale.y * .5);
+		this.energy.bar.full.scale.setTo(this.energy.bar.full.scale.x * .5, this.energy.bar.full.scale.y * .5);		
+
+		for(let i = 0; i < this.charges.icon.length; i += 1) {
+			this.charges.icon[i].empty.scale.setTo(this.charges.icon[i].empty.scale.x * .5, this.charges.icon[i].empty.scale.y * .5);
+			this.charges.icon[i].full.scale.setTo(this.charges.icon[i].full.scale.x * .5, this.charges.icon[i].full.scale.y * .5);					
+		}		
+
+		this.controls.attack.scale.setTo(this.controls.attack.scale.x * .5, this.controls.attack.scale.y * .5);
 	}
 
 	fullscreen() {
