@@ -1,39 +1,42 @@
 class UI {
 	constructor() {
+		this.positions = 4,
 		this.background = game.add.sprite(0, 0, 'bg_village');
 		this.options = {
-			icon: game.add.button(game.width - 110, 16, 'icon_options', this.fullscreen, this),		//game.add.sprite(game.width - 110, 16, 'icon_options'),
-			label: game.add.bitmapText(game.width - 100, 96, 'yggdrasil', 'Options', 64)
+			icon: game.add.button(game.width - Math.pow(this.positions, 2.5), this.positions, 'icon_options', null, this),
+			label: game.add.bitmapText(game.width - Math.pow(this.positions, 2.5), Math.pow(this.positions, 2.125), 'yggdrasil', 'Options', 16)
 		};
-		this.health = {
-			icon: game.add.sprite(16, 4, 'icon_health'),
-			label: null,
+		this.health = {		
 			bar: {
-				empty: game.add.sprite(80, 16, 'bar_empty'),
-				full: game.add.sprite(80, 16, 'healthbar_full')
-			}
+				empty: game.add.sprite(this.positions, this.positions, 'bar_empty'),
+				full: game.add.sprite(this.positions, this.positions, 'healthbar_full')
+			},
+			label: null
 		};
 		this.energy = {
-			icon: game.add.sprite(16, 88, 'icon_energy'),
 			label: null,
 			bar: {
-				empty: game.add.sprite(80, 100, 'bar_empty'),
-				full: game.add.sprite(80, 100, 'energybar_full')
+				empty: game.add.sprite(this.positions, Math.pow(this.positions, 2.25), 'bar_empty'),
+				full: game.add.sprite(this.positions, Math.pow(this.positions, 2.25), 'energybar_full')
 			}
 		};
 		this.charges = {
 			icon: [
 				{
-					empty: game.add.sprite(116 * 1, 60, 'icon_orb_empty'),
-					full: game.add.sprite(116 * 1, 60, 'icon_orb')
+					empty: game.add.sprite(0, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
+					full: game.add.sprite(0, Math.pow(this.positions,  2.8), 'icon_orb')
 				},
 				{
-					empty: game.add.sprite(116 * 2, 60, 'icon_orb_empty'),
-					full: game.add.sprite(116 * 2, 60, 'icon_orb')
+					empty: game.add.sprite(Math.pow(this.positions, 2) * 3.2, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
+					full: game.add.sprite(Math.pow(this.positions, 2) * 3.2, Math.pow(this.positions,  2.8), 'icon_orb')
 				},
 												{
-					empty: game.add.sprite(116 * 3, 60, 'icon_orb_empty'),
-					full: game.add.sprite(116 * 3, 60, 'icon_orb')
+					empty: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 1.6, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
+					full: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 1.6, Math.pow(this.positions, 2.8), 'icon_orb')
+				},
+				{
+					empty: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 2.4, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
+					full: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 2.4, Math.pow(this.positions, 2.8), 'icon_orb')
 				}
 			]
 		};
@@ -62,8 +65,8 @@ class UI {
 			this.addControls();		
 		}
 		
+		this.setup();
 		this.followCamera();
-		this.resize();	
 
 		// Timed energy regeneration
 		game.time.events.loop(Phaser.Timer.SECOND * this.timings.regen, this.regenEnergy, this);
@@ -73,6 +76,11 @@ class UI {
 
 	update() {
 		this.updateBars();
+	}
+
+	setup() {
+		this.options.icon.anchor.setTo(.5, 0);
+		this.options.label.anchor.setTo(.5, 0);
 	}
 
 	updateBars() {
@@ -96,11 +104,9 @@ class UI {
 		this.options.icon.fixedToCamera = true;
 		this.options.label.fixedToCamera = true;	
 
-		this.health.icon.fixedToCamera = true;
 		this.health.bar.empty.fixedToCamera = true;
 		this.health.bar.full.fixedToCamera = true;	
 
-		this.energy.icon.fixedToCamera = true;
 		this.energy.bar.empty.fixedToCamera = true;
 		this.energy.bar.full.fixedToCamera = true;	
 
@@ -114,27 +120,6 @@ class UI {
 			this.controls.move.slider.fixedToCamera = true;
 			this.controls.attack.fixedToCamera = true;
 		}		
-	}
-
-	resize() {
-		// TODO: Change the constants to variables
-		this.options.icon.scale.setTo(.15);
-		this.options.label.scale.setTo(.25);
-
-		this.health.icon.scale.setTo(.15);
-
-		this.energy.icon.scale.setTo(.15);
-
-		for(var i = 0; i < this.charges.icon.length; i += 1) {
-			this.charges.icon[i].empty.scale.setTo(.1);
-			this.charges.icon[i].full.scale.setTo(.1);
-		}		
-
-		if(!Phaser.Device.desktop) {
-			this.controls.move.slider.scale.setTo(.15);
-			this.controls.attack.scale.setTo(.15);
-			this.fullscreen();
-		}
 	}
 
 	addMouse() {
@@ -157,13 +142,13 @@ class UI {
 			move: {}
 		};
 
-		this.controls.move.background = this.controls.gameObjects.create(30, game.height - 75, 'bar_empty');						
-		this.controls.move.slider = this.controls.gameObjects.create(207.5, game.height - game.cache.getImage('icon_move').height * .15, 'icon_move');
-		this.controls.attack = this.controls.gameObjects.create(game.width - 100, game.height - game.cache.getImage('icon_attack').height * .15, 'icon_attack');
+		this.controls.move.background = this.controls.gameObjects.create(Math.pow(this.positions, 2), game.height - Math.pow(this.positions, 3), 'bar_empty');						
+		this.controls.move.slider = this.controls.gameObjects.create(Math.pow(this.positions, 3) * 1.75, game.height - Math.pow(this.positions, 3) - this.positions, 'icon_move');
+		this.controls.attack = this.controls.gameObjects.create(game.width - Math.pow(this.positions, 3), game.height - Math.pow(this.positions, 3) - this.positions, 'icon_attack');
 
 		// Events		
 		this.controls.move.slider.inputEnabled = true;
-		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(40, game.height - 185, 400, 177));
+		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(Math.pow(this.positions, 2) * 2, game.height - Math.pow(this.positions, 3.5), Math.pow(this.positions, 3) * 3.2, Math.pow(this.positions, 3) * 1.69));
 		this.controls.move.slider.anchor.setTo(.5, 0);		
 
 		this.controls.move.slider.events.onInputOver.add(function(e) {
@@ -174,32 +159,28 @@ class UI {
 		}, this);		
 
 		this.controls.move.slider.events.onDragUpdate.add(function(e) {
-			if(e.cameraOffset.x > 207.5) {
+			if(e.cameraOffset.x > Math.pow(this.positions, 3) * 2.25) {
 				game.controler.move.left = false;
 				game.controler.move.right = true;
-				if(e.cameraOffset.y < game.height - game.cache.getImage('icon_move').height * .15 - 40) {
-					game.controler.jump = true;
-				} else {
-					game.controler.jump = false;
-				}
-			} else if(e.cameraOffset.x < 207.5) {
+			} else if(e.cameraOffset.x < Math.pow(this.positions, 3) * 1.25) {
 				game.controler.move.left = true;
 				game.controler.move.right = false;
-				if(e.cameraOffset.y < game.height - game.cache.getImage('icon_move').height * .15 - 40) {
-					game.controler.jump = true;
-				} else {
-					game.controler.jump = false;
-				}
 			} else {
 				game.controler.move.left = false;	
 				game.controler.move.right = false;
 				game.controler.jump = false;
 			}
+
+			if(e.cameraOffset.y < game.height - Math.pow(this.positions, 3) - this.positions * 10) {
+				game.controler.jump = true;
+			} else {
+				game.controler.jump = false;
+			}			
 		}, this);	
 
 		this.controls.move.slider.events.onDragStop.add(function(e) {			
-			e.cameraOffset.x = 207.5;
-			e.cameraOffset.y = game.height - game.cache.getImage('icon_move').height * .15;
+			e.cameraOffset.x = Math.pow(this.positions, 3) * 1.75;
+			e.cameraOffset.y = game.height - Math.pow(this.positions, 3) - this.positions;
 			game.controler.move.right = false;
 			game.controler.move.left = false;
 			game.controler.jump = false;
@@ -212,52 +193,6 @@ class UI {
 		}, this);
 		this.controls.attack.events.onInputUp.add(function() {
 			game.controler.attack = false;
-		}, this);		
-	}
-
-	showControls() {
-		game.world.bringToTop(this.controls.gameObjects);
-
-
-		game.level.platforms.gameObjects.forEach(function(item) {
-			item.scale.setTo(item.scale.x, item.scale.y * .5);
-			item.position.y += item.height;
-		});	
-		
-		game.level.buildings.gameObjects.forEach(function(item) {
-			item.scale.setTo(item.scale.x * .75, item.scale.y * .5);
-			item.position.y += item.height * 1.75;
-		});				
-
-		game.level.enemies.gameObjects.forEach(function(item) {
-			item.scale.setTo(item.scale.x * .5, item.scale.y * .5);
-			item.position.y += item.height;
-		});			
-
-		game.player.gameObject.scale.setTo(game.player.gameObject.scale.x * .5, game.player.gameObject.scale.y * .5);
-		game.player.gameObject.position.y += game.player.gameObject.height;
-
-		this.options.icon.scale.setTo(this.options.icon.scale.x * .5, this.options.icon.scale.y * .5);
-		this.options.label.scale.setTo(this.options.label.scale.x * .5, this.options.label.scale.y * .5);
-
-		this.health.icon.scale.setTo(this.health.icon.scale.x * .5, this.health.icon.scale.y * .5);
-		this.health.bar.empty.scale.setTo(this.health.bar.empty.scale.x * .5, this.health.bar.full.scale.y * .5);
-		this.health.bar.full.scale.setTo(this.health.bar.full.scale.x * .5, this.health.bar.full.scale.y * .5);
-
-		this.energy.icon.scale.setTo(this.energy.icon.scale.x * .5, this.energy.icon.scale.y * .5);
-		this.energy.bar.empty.scale.setTo(this.energy.bar.empty.scale.x * .5, this.energy.bar.full.scale.y * .5);
-		this.energy.bar.full.scale.setTo(this.energy.bar.full.scale.x * .5, this.energy.bar.full.scale.y * .5);		
-
-		for(let i = 0; i < this.charges.icon.length; i += 1) {
-			this.charges.icon[i].empty.scale.setTo(this.charges.icon[i].empty.scale.x * .5, this.charges.icon[i].empty.scale.y * .5);
-			this.charges.icon[i].full.scale.setTo(this.charges.icon[i].full.scale.x * .5, this.charges.icon[i].full.scale.y * .5);					
-		}		
-
-		this.controls.attack.scale.setTo(this.controls.attack.scale.x * .5, this.controls.attack.scale.y * .5);
-	}
-
-	fullscreen() {
-		console.warn('Going fullscreen');
-		game.scale.startFullScreen();
+		}, this);	
 	}
 }

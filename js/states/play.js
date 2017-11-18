@@ -13,7 +13,7 @@ let statePlay = {
 		game.player.init(300, 0);
 
 		if(!Phaser.Device.desktop) {
-			game.ui.showControls();
+			game.world.bringToTop(game.ui.controls.gameObjects);
 		}
 	},
 	update: function() {				
