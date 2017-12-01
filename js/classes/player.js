@@ -233,7 +233,7 @@ class Player {
 	}
 
 	checkDeath() {
-		if (this.gameObject.position.y > game.world.bottom - this.gameObject.height * 1.75) { // TODO: Why 1.75 works?
+		if (this.gameObject.position.y + this.gameObject.height > game.world.height) { // TODO: Why 1.75 works?
 			this.gameObject.kill();
 			game.log('Calling state: ', 'End');
 			game.state.start('End');

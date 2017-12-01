@@ -59,7 +59,6 @@ let statePlay = {
 		}		
 
 		game.debug.text('FPS: ' + game.time.fps, 10, 20, "#00ff00"); // Show FPS						
-		
 		/*
 		game.debug.text('DEBUG INFO', 860, 24, "#ff9800");			
 		game.debug.spriteInfo(game.player.gameObject, 768, 64);				

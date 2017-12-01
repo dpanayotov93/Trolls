@@ -16,28 +16,40 @@ class UI {
 		this.energy = {
 			label: null,
 			bar: {
-				empty: game.add.sprite(this.positions, Math.pow(this.positions, 2.25), 'bar_empty'),
-				full: game.add.sprite(this.positions, Math.pow(this.positions, 2.25), 'energybar_full')
+				empty: game.add.sprite(this.positions, Math.pow(this.positions, 2.5), 'bar_empty'),
+				full: game.add.sprite(this.positions, Math.pow(this.positions, 2.5), 'energybar_full')
 			}
 		};
 		this.charges = {
 			icon: [
 				{
-					empty: game.add.sprite(0, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
-					full: game.add.sprite(0, Math.pow(this.positions,  2.8), 'icon_orb')
+					empty: game.add.sprite(this.positions * 3 + 1, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1, Math.pow(this.positions,  3.15), 'icon_orb')
 				},
 				{
-					empty: game.add.sprite(Math.pow(this.positions, 2) * 3.2, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
-					full: game.add.sprite(Math.pow(this.positions, 2) * 3.2, Math.pow(this.positions,  2.8), 'icon_orb')
-				},
-												{
-					empty: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 1.6, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
-					full: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 1.6, Math.pow(this.positions, 2.8), 'icon_orb')
+					empty: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 1, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 1, Math.pow(this.positions,  3.15), 'icon_orb')
 				},
 				{
-					empty: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 2.4, Math.pow(this.positions,  2.8), 'icon_orb_empty'),
-					full: game.add.sprite(Math.pow(this.positions, 2) * this.positions * 2.4, Math.pow(this.positions, 2.8), 'icon_orb')
-				}
+					empty: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 2, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 2, Math.pow(this.positions, 3.15), 'icon_orb')
+				},
+				{
+					empty: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 3, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 3, Math.pow(this.positions, 3.15), 'icon_orb')
+				},
+				{
+					empty: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 4, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 4, Math.pow(this.positions, 3.15), 'icon_orb')
+				},
+				{
+					empty: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 5, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 5, Math.pow(this.positions, 3.15), 'icon_orb')
+				},
+				{
+					empty: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 6, Math.pow(this.positions,  3.15), 'icon_orb_empty'),
+					full: game.add.sprite(this.positions * 3 + 1 + Math.pow(this.positions, 2) * 3 * 6, Math.pow(this.positions, 3.15), 'icon_orb')
+				}															
 			]
 		};
 		this.controls = {
@@ -58,7 +70,8 @@ class UI {
 	}
 
 	init() {	
-		if(game.test) Phaser.Device.desktop = false;
+		if(game.test) Phaser.Device.desktop = false; // For testing
+
 		if(Phaser.Device.desktop) {
 			this.addMouse();			
 		} else {
@@ -138,18 +151,30 @@ class UI {
 	}
 
 	addControls() {
+		var bounds = null;
+		var boundsX = null;
+		var boundsY = null;
+		var boundsH = null;
+		var boundsW = null;
+
 		game.controler = {
 			move: {}
 		};
 
+		boundsX = Math.pow(this.positions, 2);
+		boundsY = game.height - Math.pow(this.positions, 3) * 2; 
+
 		this.controls.move.background = this.controls.gameObjects.create(Math.pow(this.positions, 2), game.height - Math.pow(this.positions, 3), 'bar_empty');						
-		this.controls.move.slider = this.controls.gameObjects.create(Math.pow(this.positions, 3) * 1.75, game.height - Math.pow(this.positions, 3) - this.positions, 'icon_move');
+		this.controls.move.slider = this.controls.gameObjects.create(Math.pow(this.positions, 2) + this.controls.move.background.width / 2 - this.positions * 6, game.height - Math.pow(this.positions, 3) / 1.125, 'icon_move');
 		this.controls.attack = this.controls.gameObjects.create(game.width - Math.pow(this.positions, 3), game.height - Math.pow(this.positions, 3) - this.positions, 'icon_attack');
 
+		boundsH = this.controls.move.background.height * 2 + this.controls.move.slider.height / 4;
+		boundsW = this.controls.move.background.width;
+		bounds = new Phaser.Rectangle(boundsX, boundsY, boundsW, boundsH);
+		
 		// Events		
 		this.controls.move.slider.inputEnabled = true;
-		this.controls.move.slider.input.enableDrag(false, false, false, 255, new Phaser.Rectangle(Math.pow(this.positions, 2) * 2, game.height - Math.pow(this.positions, 3.5), Math.pow(this.positions, 3) * 3.2, Math.pow(this.positions, 3) * 1.69));
-		this.controls.move.slider.anchor.setTo(.5, 0);		
+		this.controls.move.slider.input.enableDrag(false, false, false, 255, bounds);
 
 		this.controls.move.slider.events.onInputOver.add(function(e) {
 			game.canvas.style.cursor = "url(assets/ui/cursor_over.png), default";
@@ -159,10 +184,10 @@ class UI {
 		}, this);		
 
 		this.controls.move.slider.events.onDragUpdate.add(function(e) {
-			if(e.cameraOffset.x > Math.pow(this.positions, 3) * 2.25) {
+			if(e.cameraOffset.x > Math.pow(this.positions, 2) + this.controls.move.background.width / 2 - this.positions * 6 + 20) {
 				game.controler.move.left = false;
 				game.controler.move.right = true;
-			} else if(e.cameraOffset.x < Math.pow(this.positions, 3) * 1.25) {
+			} else if(e.cameraOffset.x < Math.pow(this.positions, 2) + this.controls.move.background.width / 2 - this.positions * 6 - 20) {
 				game.controler.move.left = true;
 				game.controler.move.right = false;
 			} else {
@@ -179,8 +204,8 @@ class UI {
 		}, this);	
 
 		this.controls.move.slider.events.onDragStop.add(function(e) {			
-			e.cameraOffset.x = Math.pow(this.positions, 3) * 1.75;
-			e.cameraOffset.y = game.height - Math.pow(this.positions, 3) - this.positions;
+			e.cameraOffset.x = Math.pow(this.positions, 2) + this.controls.move.background.width / 2 - this.positions * 6;
+			e.cameraOffset.y = game.height - Math.pow(this.positions, 3) / 1.125;
 			game.controler.move.right = false;
 			game.controler.move.left = false;
 			game.controler.jump = false;
