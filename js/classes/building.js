@@ -10,12 +10,24 @@ class Building {
 		this.info = {
 			health: null
 		};		
+		this.emitter = {
+			smoke: null,
+			stones: null
+		};
 	}
 
 	create() {
 		this.gameObject.name = 'Building ' + this._id;
 		this.gameObject.instance = this;
 		this.gameObject.body.immovable = true;
+
+		this.emitter.smoke = game.add.emitter(this.gameObject.x + settings.towerSize.w / 2, this.gameObject.y + settings.towerSize.h - 20, 100);
+		this.emitter.smoke.makeParticles('smoke_puff');
+		this.emitter.smoke.gravity = 500;	
+
+		this.emitter.stones = game.add.emitter(this.gameObject.x + settings.towerSize.w / 2, this.gameObject.y + settings.towerSize.h - 20, 100);
+		this.emitter.stones.makeParticles('stone');
+		this.emitter.stones.gravity = 500;			
 	}
 
 	update() {
@@ -32,6 +44,8 @@ class Building {
 	recieveDmg(dmg) {
 		if(this.health.current > 0) {
 			this.health.current -= dmg;
+			this.emitter.smoke.start(true, 1000, null, 2);
+			this.emitter.stones.start(true, 1000, null, 10);
 		}
 	}
 

@@ -2,6 +2,7 @@ class UI {
 	constructor() {
 		this.positions = 4,
 		this.background = game.add.sprite(0, 0, 'bg_village');
+		this.backgroundParallax = game.add.tileSprite(-194, game.height - 540, 5976, 540, 'bg_ridges');
 		this.options = {
 			icon: game.add.button(game.width - Math.pow(this.positions, 2.5), this.positions, 'icon_options', null, this),
 			label: game.add.bitmapText(game.width - Math.pow(this.positions, 2.5), Math.pow(this.positions, 2.125), 'yggdrasil', 'Options', 16)
@@ -70,7 +71,8 @@ class UI {
 	}
 
 	init() {	
-		// if(game.test) Phaser.Device.desktop = false; // For testing
+		// if(game.test) Phaser.Device.desktop = false; // For testing		 	
+
 		game.controler = {
 			move: {}
 		};
@@ -93,6 +95,7 @@ class UI {
 	update() {
 		this.updateBars();
 		this.updateTexts();
+		this.updateParallax();
 	}
 
 	setup() {
@@ -108,15 +111,23 @@ class UI {
 
 		this.health.bar.full.crop(cropArea.health);		
 		this.energy.bar.full.crop(cropArea.energy);				
-	}
+	};
 
 	updateTexts() {
-		var healthText = 'HEALTH  ' + game.player.health.current + '/' + game.player.health.max;
-		var energyText = 'ENERGY  ' + game.player.energy.current + '/' + game.player.energy.max;
+		let healthText = 'HEALTH  ' + game.player.health.current + '/' + game.player.health.max;
+		let energyText = 'ENERGY  ' + game.player.energy.current + '/' + game.player.energy.max;
 
 		this.health.label.text = healthText;
 		this.energy.label.text = energyText;
-	}
+	};
+
+	updateParallax() {
+			let velocity = game.player.gameObject.body.velocity.x / 600;
+			
+			if(game.player.gameObject.position.x > game.width / 2 && game.player.gameObject.position.x < game.world.width - game.width / 2) {
+				this.backgroundParallax.tilePosition.x -= velocity;
+			}
+	};
 
 	regenEnergy() {
 		if(game.player && game.player.energy.current < 100) // TODO: Change the constant to variable

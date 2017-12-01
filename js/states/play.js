@@ -2,6 +2,7 @@ let statePlay = {
 	create: function() {
 		game.test = true; // TODO: REMOVE LATER!!!
 		game.time.advancedTiming = true; // Set up FPS counter
+		game.forceSingleUpdate = true;
 
 		game.ui = new UI();
 		game.ui.init();
@@ -14,7 +15,7 @@ let statePlay = {
 
 		if(!Phaser.Device.desktop) {
 			game.world.bringToTop(game.ui.controls.gameObjects);
-		}
+		};		
 	},
 	update: function() {				
 		game.player.update();

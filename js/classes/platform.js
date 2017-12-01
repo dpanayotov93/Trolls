@@ -10,7 +10,7 @@ class Platform {
 				min: 3,
 				max: 3 // TODO: Make it a higher number when sprinting is implemented
 			}
-		}
+		};
 		this.midPiecesCount = {
 			chosen: game.rnd.integerInRange(this.constraints.pieces.min, this.constraints.pieces.max)
 		};		
@@ -21,13 +21,16 @@ class Platform {
 			start: start,
 			end: (this.midPiecesCount.chosen + 1) * settings.tileSize + start
 		};
+		this.shadowOffset = 4;
 		this.startPiece =  game.level.platforms.gameObjects.create(this.position.start, game.world.bounds.height - settings.tileSize, 'tile_bot_start');
 		this.midPieces= [];
 		this.endPiece = null;
+		this.endPieceShadow = null;
 	}
 
 	create() {		
 		this.startPiece.body.immovable = true; // Immovable from collision
+
 		for(let i = 0; i < this.midPiecesCount.chosen; i += 1) {
 			let id = i + 1;
 			let midPiecePosition = id * settings.tileSize + this.position.start;
@@ -36,7 +39,12 @@ class Platform {
 			this.midPieces[i].body.immovable = true; // Immovable from collision
 		}
 
+		this.endPieceShadow = game.level.platforms.gameObjects.create(this.position.end + this.shadowOffset, game.world.bounds.height - settings.tileSize + this.shadowOffset, 'tile_bot_end');
+		this.endPieceShadow.tint = 0x000000;
+		this.endPieceShadow.alpha = 0.6;
+
 		this.endPiece = game.level.platforms.gameObjects.create(this.position.end, game.world.bounds.height - settings.tileSize, 'tile_bot_end');
+
 		this.endPiece.body.immovable = true; // Immovable from collision
 	
 		game.level.platforms.positions[this._id] = [this.position.start, this.position.end];

@@ -26,7 +26,7 @@ let stateMenu = {
 
 		game.keyboard.spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-		game.log('Keyboard: ', 'Created', 'green');		
+		game.log('Keyboard: ', 'Created', 'green');			
 	},
 	start: function() {
 		game.log('Calling state: ', 'Play');

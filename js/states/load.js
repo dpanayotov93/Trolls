@@ -13,7 +13,9 @@ var stateLoad = {
 		
 		/* Loading of assets */
 		// Images - Bakckgrounds
-		game.load.image('bg_village', 'assets/backgrounds/village.jpg');
+		game.load.image('bg_village', 'assets/backgrounds/trolls_env1_ice.jpg');
+		game.load.image('bg_ridges', 'assets/backgrounds/snow_ridges.png');
+		game.load.image('bg_ridges_reversed', 'assets/backgrounds/snow_ridges_reversed.png');
 		// Images - UI
 		game.load.image('icon_options', 'assets/ui/icon-options.png');
 		game.load.image('bar_empty', 'assets/ui/bar-empty.png');
@@ -28,6 +30,11 @@ var stateLoad = {
 		game.load.image('icon_attack', 'assets/ui/attack.png');
 		// Images - Objects
 		game.load.image('item_dead_pig', 'assets/objects/dead_pig.png');
+		// Images - Particles
+		game.load.image('muzzle_flash', 'assets/particles/muzzle-flash.png');
+		game.load.image('smoke_puff', 'assets/particles/smoke-puff.png');
+		game.load.image('stone', 'assets/particles/stones-small.png');
+		game.load.image('blood', 'assets/particles/blood.png');
 		// Tiles - Terrain
 		game.load.image('tile_bot_start', 'assets/tilesets/tile_bot_start.png');
 		game.load.image('tile_bot_mid', 'assets/tilesets/tile_bot_mid.png');

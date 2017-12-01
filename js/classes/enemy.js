@@ -20,6 +20,7 @@ class Enemy {
 			health: null,
 			target: null
 		};
+		this.emitter = null;
 	}
 
 	create() {
@@ -41,6 +42,10 @@ class Enemy {
 		this.animations.attack.onComplete.add(function() {
 			game.player.recieveDmg(damage);	
 		});
+
+		this.emitter = game.add.emitter(0, 0, 100);
+		this.emitter.makeParticles('blood');
+		this.emitter.gravity = 500;			
 
 		game.physics.arcade.enable(this.gameObject);
 	}
@@ -151,6 +156,9 @@ class Enemy {
 		if(this.health.current > 0) {
 			this.flash();
 			this.health.current -= dmg;
+			this.emitter.position.setTo(this.gameObject.x, this.gameObject.y + settings.playerSize.h / 2);
+			console.log(this.emitter.position);
+			this.emitter.start(true, 500, null, 15);
 		}	
 	}
 
