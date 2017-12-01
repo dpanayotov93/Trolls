@@ -11,14 +11,14 @@ class UI {
 				empty: game.add.sprite(this.positions, this.positions, 'bar_empty'),
 				full: game.add.sprite(this.positions, this.positions, 'healthbar_full')
 			},
-			label: null
+			label: game.add.bitmapText(this.positions * 10, Math.pow(this.positions, 2.25), 'yggdrasil', '', 16)
 		};
 		this.energy = {
-			label: null,
 			bar: {
 				empty: game.add.sprite(this.positions, Math.pow(this.positions, 2.5), 'bar_empty'),
 				full: game.add.sprite(this.positions, Math.pow(this.positions, 2.5), 'energybar_full')
-			}
+			},
+			label: game.add.bitmapText(this.positions * 10, Math.pow(this.positions, 2.85), 'yggdrasil', '', 16)
 		};
 		this.charges = {
 			icon: [
@@ -70,7 +70,10 @@ class UI {
 	}
 
 	init() {	
-		if(game.test) Phaser.Device.desktop = false; // For testing
+		// if(game.test) Phaser.Device.desktop = false; // For testing
+		game.controler = {
+			move: {}
+		};
 
 		if(Phaser.Device.desktop) {
 			this.addMouse();			
@@ -89,6 +92,7 @@ class UI {
 
 	update() {
 		this.updateBars();
+		this.updateTexts();
 	}
 
 	setup() {
@@ -106,6 +110,14 @@ class UI {
 		this.energy.bar.full.crop(cropArea.energy);				
 	}
 
+	updateTexts() {
+		var healthText = 'HEALTH  ' + game.player.health.current + '/' + game.player.health.max;
+		var energyText = 'ENERGY  ' + game.player.energy.current + '/' + game.player.energy.max;
+
+		this.health.label.text = healthText;
+		this.energy.label.text = energyText;
+	}
+
 	regenEnergy() {
 		if(game.player && game.player.energy.current < 100) // TODO: Change the constant to variable
 		game.player.energy.current += 1;
@@ -119,9 +131,11 @@ class UI {
 
 		this.health.bar.empty.fixedToCamera = true;
 		this.health.bar.full.fixedToCamera = true;	
+		this.health.label.fixedToCamera = true;	
 
 		this.energy.bar.empty.fixedToCamera = true;
 		this.energy.bar.full.fixedToCamera = true;	
+		this.energy.label.fixedToCamera = true;	
 
 		for(var i = 0; i < this.charges.icon.length; i += 1) {
 			this.charges.icon[i].empty.fixedToCamera = true;
@@ -156,10 +170,6 @@ class UI {
 		var boundsY = null;
 		var boundsH = null;
 		var boundsW = null;
-
-		game.controler = {
-			move: {}
-		};
 
 		boundsX = Math.pow(this.positions, 2);
 		boundsY = game.height - Math.pow(this.positions, 3) * 2; 
