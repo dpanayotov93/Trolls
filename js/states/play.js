@@ -9,6 +9,7 @@ let statePlay = {
 
 		game.level = new Level();
 		game.level.init();
+		game.ui.setParallax();
 
 		game.player = new Player();
 		game.player.init(300, 0);
@@ -47,60 +48,11 @@ let statePlay = {
 		}			
 	},
 	render: function() {
-		for(let i = 0; i < game.player.targets.length; i += 1) {
-			let target = game.player.targets[i];
-			if(target.name.indexOf('Enemy') != -1) {
-				// ICON
-				if(target.instance.info.icon === null) {
-					target.instance.info.icon = game.add.graphics(0, 0);
-					target.instance.info.icon.lineStyle(0);
-					target.instance.info.icon.beginFill(0xFF0000, 0.5);
-					target.instance.info.icon.drawCircle(0, 0, 50);
-					target.instance.info.icon.endFill();
-					target.instance.info.icon.anchor.setTo(.5, 1.5);
-					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
-				} else {
-					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
-				}
+		game.ui.render();
+		this.debug();
+	},
 
-				if(target.instance.info.health === null) {
-					target.instance.info.health = game.add.bitmapText(0, 0, 'yggdrasil', target.instance.health.current, 26);			
-				} else {
-					target.instance.info.health.setText(target.instance.health.current);
-				}
-
-				target.instance.info.icon.visible = true;
-
-				// TEXT
-				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x + (target.scale.x > 0 ? 2 : 1), -38);	
-
-			} else if(target.name.indexOf('Building') != -1) {
-				// ICON
-				if(target.instance.info.icon === null) {
-					target.instance.info.icon = game.add.graphics(0, 0);
-					target.instance.info.icon.lineStyle(0);
-					target.instance.info.icon.beginFill(0x00DFFF, 0.5);
-					target.instance.info.icon.drawCircle(0, 0, 50);
-					target.instance.info.icon.endFill();
-					target.instance.info.icon.anchor.setTo(.5, 0);
-					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER);									
-				} else {
-					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER);									
-				}				
-
-				target.instance.info.icon.visible = true; 
-				
-				// TEXT
-				if(target.instance.info.health === null) {
-					target.instance.info.health = game.add.bitmapText(0, 0, 'yggdrasil', target.instance.health.current, 26);
-				} else {
-					target.instance.info.health.setText(target.instance.health.current);
-				}
-				
-				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
-			}
-		}	
-
+	debug: function() {
 		game.debug.text('FPS: ' + game.time.fps, 20, game.height - 20, "#00ff00"); // Show FPS						
 		/*
 		game.debug.text('DEBUG INFO', 860, 24, "#ff9800");			

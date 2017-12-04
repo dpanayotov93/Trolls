@@ -14,8 +14,9 @@ var stateLoad = {
 		/* Loading of assets */
 		// Images - Bakckgrounds
 		game.load.image('bg_village', 'assets/backgrounds/trolls_env1_ice.jpg');
-		game.load.image('bg_ridges', 'assets/backgrounds/snow_ridges.png');
-		game.load.image('bg_ridges_reversed', 'assets/backgrounds/snow_ridges_reversed.png');
+		game.load.image('bg_trees', 'assets/backgrounds/tree_silhouettes.png');
+		// game.load.image('bg_ridges', 'assets/backgrounds/snow_ridges.png');
+		// game.load.image('bg_ridges_reversed', 'assets/backgrounds/snow_ridges_reversed.png');
 		// Images - UI
 		game.load.image('icon_options', 'assets/ui/icon-options.png');
 		game.load.image('bar_empty', 'assets/ui/bar-empty.png');

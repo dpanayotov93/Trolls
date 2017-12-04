@@ -2,7 +2,11 @@ class UI {
 	constructor() {
 		this.positions = 4,
 		this.background = game.add.sprite(0, 0, 'bg_village');
-		// this.backgroundParallax = game.add.tileSprite(-194, game.height - 540, 5976, 540, 'bg_ridges');
+		this.backgroundParallax = [
+			game.add.group(),
+			game.add.group(),
+			game.add.group()
+		];
 		this.options = {
 			icon: game.add.button(game.width - Math.pow(this.positions, 2.5), this.positions, 'icon_options', null, this),
 			label: game.add.bitmapText(game.width - Math.pow(this.positions, 2.5), Math.pow(this.positions, 2.125), 'yggdrasil', 'Options', 16)
@@ -95,12 +99,80 @@ class UI {
 	update() {
 		this.updateBars();
 		this.updateTexts();
-		// this.updateParallax();
+		this.updateParallax();
+	}
+
+	render() {
+		for(let i = 0; i < game.player.targets.length; i += 1) {
+			let target = game.player.targets[i];
+			if(target.name.indexOf('Enemy') != -1) {
+				// ICON
+				if(target.instance.info.icon === null) {
+					target.instance.info.icon = game.add.graphics(0, 0);
+					target.instance.info.icon.lineStyle(0);
+					target.instance.info.icon.beginFill(0xFF0000, 0.5);
+					target.instance.info.icon.drawCircle(0, 0, 50);
+					target.instance.info.icon.endFill();
+					target.instance.info.icon.anchor.setTo(.5, 1.5);
+					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
+				} else {
+					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
+				}
+
+				if(target.instance.info.health === null) {
+					target.instance.info.health = game.add.bitmapText(0, 0, 'yggdrasil', target.instance.health.current, 26);			
+				} else {
+					target.instance.info.health.setText(target.instance.health.current);
+				}
+
+				target.instance.info.icon.visible = true;
+
+				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x + (target.scale.x > 0 ? 2 : 1), -38);	
+
+			} else if(target.name.indexOf('Building') != -1) {
+				if(target.instance.info.icon === null) {
+					target.instance.info.icon = game.add.graphics(0, 0);
+					target.instance.info.icon.lineStyle(0);
+					target.instance.info.icon.beginFill(0x00DFFF, 0.5);
+					target.instance.info.icon.drawCircle(0, 0, 50);
+					target.instance.info.icon.endFill();
+					target.instance.info.icon.anchor.setTo(.5, 0);
+					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER);									
+				} else {
+					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER);									
+				}				
+
+				target.instance.info.icon.visible = true; 
+
+				if(target.instance.info.health === null) {
+					target.instance.info.health = game.add.bitmapText(0, 0, 'yggdrasil', target.instance.health.current, 26);
+				} else {
+					target.instance.info.health.setText(target.instance.health.current);
+				}
+				
+				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
+			}
+		}			
 	}
 
 	setup() {
 		this.options.icon.anchor.setTo(.5, 0);
 		this.options.label.anchor.setTo(.5, 0);
+	}
+
+	setParallax() {
+		let count = Math.floor(game.world.width / 300);	
+
+		for(let i = this.backgroundParallax.length; i > 0; i -= 1) { 
+			let id = this.backgroundParallax.length - i;
+
+			for(let j = 0; j < count; j += 1) {
+				let trees = game.add.tileSprite(-50 + j * 400, game.height - 386, 600, 286, 'bg_trees');
+
+				this.backgroundParallax[id].add(trees);
+			}
+			this.backgroundParallax[id].position.y -= 100 * id;
+		}
 	}
 
 	updateBars() {
@@ -122,11 +194,17 @@ class UI {
 	};
 
 	updateParallax() {
-			let velocity = game.player.gameObject.body.velocity.x / 600;
-			
-			if(game.player.gameObject.position.x > game.width / 2 && game.player.gameObject.position.x < game.world.width - game.width / 2) {
-				this.backgroundParallax.tilePosition.x -= velocity;
+		let velocity = game.player.gameObject.body.velocity.x / 1500;
+		
+		if(game.player.gameObject.position.x > game.width / 2 && game.player.gameObject.position.x < game.world.width - game.width / 2) {
+			for(let i = this.backgroundParallax.length; i > 0; i -= 1) {
+				let id = this.backgroundParallax.length - i;
+
+				for(let j = 0; j < this.backgroundParallax[id].children.length; j += 1) {
+					this.backgroundParallax[id].children[j].tilePosition.x -= velocity * (i + 2);
+				}
 			}
+		}
 	};
 
 	regenEnergy() {

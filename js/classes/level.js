@@ -40,6 +40,11 @@ class Level {
 		}
 
 		game.world.sendToBack(this.holes.gameObjects);
+		
+		for(let i = game.ui.backgroundParallax.length; i > 0; i -= 1) {
+			game.world.sendToBack(game.ui.backgroundParallax[i - 1]);
+		}
+
 		game.world.sendToBack(game.ui.background);
 		game.world.setBounds(0, 0, this.platforms.lastPlatformPosition, game.height);
 		game.log('Platforms: ', 'Created (' + this.platforms.count + ')', 'green');
