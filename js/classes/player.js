@@ -14,7 +14,11 @@ class Player {
 		};
 		this.energy = {
 			max: 100,
-			current: 100
+			current: 100,
+			loss: {
+				jump: 5,
+				attack: 10
+			}
 		};		
 		this.animations = {
 			attack: null
@@ -47,8 +51,15 @@ class Player {
 		// Events
 		this.animations.attack = this.gameObject.animations.add('attack', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, false); // Create the attacl animation  
 		this.animations.attack.onComplete.add(function() {
+			let value = game.player.energy.loss.attack;			
+
 			game.player.attack();
-			game.player.energy.current -= 10;
+
+			if(game.player.energy.current - value < 0) {
+				value = game.player.energy.current;
+			}
+
+			game.player.energy.current -= value;
 		});
 		this.gameObject.body.onMoveComplete = new Phaser.Signal();
 		this.gameObject.body.onMoveComplete.add(function(e) {
@@ -61,7 +72,9 @@ class Player {
 			game.player.attacking = false;
 		});
 		game.keyboard.spacebar.onDown.add(function() {
-			game.player.attacking = true;
+			if(game.player.energy.current >= game.player.energy.loss.attack) {
+				game.player.attacking = true;
+			}
 		});
 
 		// Create a canera that follow the player;
@@ -81,12 +94,6 @@ class Player {
 		this.gameObject.body.velocity.x = 0; // Reset the player velocity    		
 
 		if ((this.attacking  || game.controler.attack) && this.energy.current > 0) {
-			// if (this.gameObject.scale.x > 0) {
-			// 	this.gameObject.scale.x = 1;
-			// } else {
-			// 	this.gameObject.scale.x = -1;
-			// }
-
 			if (this.gameObject.key !== 'troll_first_attack') {
 				this.gameObject.loadTexture('troll_first_attack');
 			}
@@ -125,22 +132,23 @@ class Player {
 				this.gameObject.animations.play('test');
 			}
 
-			if ((game.keyboard.up.isDown || game.controler.jump) && this.gameObject.body.touching.down && this.touchingPlatforms) {
+			if ((game.keyboard.up.isDown || game.controler.jump) && this.gameObject.body.touching.down && this.touchingPlatforms && this.energy.current >= this.energy.loss.jump) {
 				//  Allow the player to jump if they are touching the ground.   
+				let value = this.energy.loss.jump;
+				 
 				this.gameObject.body.moveTo(1000, 750, -90);
-
-				// Flip the sprite horizontally if it's looking in the wrong direction
-				// if (this.gameObject.scale.x > 0) {
-				// 	this.gameObject.scale.x = 1;
-				// } else {
-				// 	this.gameObject.scale.x = -1;
-				// }
 
 				if (this.gameObject.key !== 'troll_first_jump') {
 					this.gameObject.loadTexture('troll_first_jump');
 				}
 
 				this.gameObject.animations.play('test');
+
+				if(this.energy.current - value < 0) {
+					value = this.energy.current;
+				}
+
+				this.energy.current -= value;
 			}
 		}
 	}
@@ -218,6 +226,10 @@ class Player {
 						let index = this.targets.indexOf(enemy);
 						this.targets.splice(enemy);
 					}
+				}
+			} else {
+				if(enemy.instance.info.health !== null) {
+					enemy.instance.info.health.setText('');
 				}
 			}
 		}
