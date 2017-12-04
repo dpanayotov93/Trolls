@@ -18,7 +18,7 @@ class Enemy {
 		};
 		this.info = {
 			health: null,
-			target: null
+			icon: null
 		};
 		this.emitter = null;
 	}
@@ -52,10 +52,6 @@ class Enemy {
 
 	update() {
 		let newDirectionToPlayer = 0;
-
-		if(this.info.health !== null) {
-			this.info.health.position.x = this.info.target - 17;	
-		}
 
 		if(this.health.current <= 0) {
 			this.kill();
@@ -171,7 +167,13 @@ class Enemy {
 		index = game.player.targets.indexOf(this.gameObject);		
 		game.player.targets.splice(index, 1);
 
+		index = game.player.targetsQueue.indexOf(this.gameObject);		
+		game.player.targetsQueue.splice(index, 1);		
+
+		game.level.enemies.gameObjects.remove(this.gameObject);		
+
 		this.info.health.destroy();
+		this.info.icon.destroy();
 		this.gameObject.destroy();
 		game.player.score.enemies += 1;			
 	}

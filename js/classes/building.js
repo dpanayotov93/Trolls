@@ -8,7 +8,8 @@ class Building {
 			current: 100
 		};
 		this.info = {
-			health: null
+			health: null,
+			icon: null
 		};		
 		this.emitter = {
 			smoke: null,
@@ -58,7 +59,13 @@ class Building {
 		index = game.player.targets.indexOf(this.gameObject);		
 		game.player.targets.splice(index, 1);	
 
+		index = game.player.targetsQueue.indexOf(this.gameObject);		
+		game.player.targetsQueue.splice(index, 1);		
+
+		game.level.buildings.gameObjects.remove(this.gameObject);				
+
 		this.info.health.destroy();
+		this.info.icon.destroy();
 		this.gameObject.destroy();		
 		game.player.score.buildings += 1;					
 	}
