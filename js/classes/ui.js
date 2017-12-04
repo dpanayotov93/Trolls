@@ -2,7 +2,7 @@ class UI {
 	constructor() {
 		this.positions = 4,
 		this.background = game.add.sprite(0, 0, 'bg_village');
-		this.backgroundParallax = game.add.tileSprite(-194, game.height - 540, 5976, 540, 'bg_ridges');
+		// this.backgroundParallax = game.add.tileSprite(-194, game.height - 540, 5976, 540, 'bg_ridges');
 		this.options = {
 			icon: game.add.button(game.width - Math.pow(this.positions, 2.5), this.positions, 'icon_options', null, this),
 			label: game.add.bitmapText(game.width - Math.pow(this.positions, 2.5), Math.pow(this.positions, 2.125), 'yggdrasil', 'Options', 16)
@@ -95,7 +95,7 @@ class UI {
 	update() {
 		this.updateBars();
 		this.updateTexts();
-		this.updateParallax();
+		// this.updateParallax();
 	}
 
 	setup() {

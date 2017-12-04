@@ -7,6 +7,9 @@ class Level {
 			list: [],
 			gameObjects: game.add.group()
 		};
+		this.holes = {
+			gameObjects: game.add.group()
+		};
 		this.buildings = {
 			count: [0], // Initial 0 as the starting platform will be empty
 			list: [],
@@ -34,6 +37,8 @@ class Level {
 			this.platforms.list.push(platform);
 		}
 
+		game.world.sendToBack(this.holes.gameObjects);
+		game.world.sendToBack(game.ui.background);
 		game.world.setBounds(0, 0, this.platforms.lastPlatformPosition, game.height);
 		game.log('Platforms: ', 'Created (' + this.platforms.count + ')', 'green');
 	}

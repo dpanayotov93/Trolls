@@ -21,6 +21,22 @@ let statePlay = {
 		game.player.update();
 		game.level.update();
 		game.ui.update();
+
+		for(let i = 0; i < game.level.buildings.list.length - 1; i += 1) {
+			let building = game.level.buildings.list[i];
+
+			if(!game.player.targets.contains(building.gameObject) && building.info.health !== null) {
+				building.info.health.setText('');
+			}
+		}
+
+		for(let i = 0; i < game.level.enemies.list.length - 1; i += 1) {
+			let enemy = game.level.enemies.list[i];
+
+			if(!game.player.targets.contains(enemy.gameObject) && enemy.info.health !== null) {
+				enemy.info.health.setText('');
+			}
+		}			
 	},
 	render: function() {
 		for(let i = 0; i < game.player.targets.length; i += 1) {
@@ -41,25 +57,9 @@ let statePlay = {
 					target.instance.info.health.setText(target.instance.health.current);
 				}
 			}
-		}
+		}	
 
-		for(let i = 0; i < game.level.buildings.list.length - 1; i += 1) {
-			let building = game.level.buildings.list[i];
-
-			if(!game.player.targets.contains(building.gameObject) && building.info.health !== null) {
-				building.info.health.setText('');
-			}
-		}
-
-		for(let i = 0; i < game.level.enemies.list.length - 1; i += 1) {
-			let enemy = game.level.enemies.list[i];
-
-			if(!game.player.targets.contains(enemy.gameObject) && enemy.info.health !== null) {
-				enemy.info.health.setText('');
-			}
-		}		
-
-		game.debug.text('FPS: ' + game.time.fps, 10, 20, "#00ff00"); // Show FPS						
+		game.debug.text('FPS: ' + game.time.fps, 20, game.height - 20, "#00ff00"); // Show FPS						
 		/*
 		game.debug.text('DEBUG INFO', 860, 24, "#ff9800");			
 		game.debug.spriteInfo(game.player.gameObject, 768, 64);				

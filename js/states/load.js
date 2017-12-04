@@ -57,6 +57,7 @@ var stateLoad = {
 		game.load.spritesheet('enemy_first_attack', 'assets/sprites/enemy_test/sprite_attack_small.png', settings.playerSize.h, settings.playerSize.w);		
 		// Sprites - Objects
 		game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
+		game.load.spritesheet('waterfall', 'assets/sprites/waterfall.png', settings.tileSize, settings.tileSize);
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
