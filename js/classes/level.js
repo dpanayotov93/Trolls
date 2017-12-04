@@ -20,12 +20,14 @@ class Level {
 			list: [],
 			gameObjects: game.add.group()
 		};
+		this.emitter = game.add.emitter(game.world.centerX, 0, 200)
 	}
 
 	init() {
 		this.addPlatforms();
 		this.addBuildings();
 		this.addEnemies();
+		this.addWeather();
 	}
 
 	addPlatforms() {
@@ -84,6 +86,20 @@ class Level {
 
 			game.log('Buildings: ', 'Created (' + this.enemies.gameObjects.length + ')', 'green');
 		}
+	}
+
+	addWeather() {
+	    this.emitter.width = game.world.width;
+
+	    this.emitter.makeParticles('snowflake');
+	    
+	    this.emitter.minParticleScale = .01;
+	    this.emitter.maxParticleScale = .05;
+
+	    this.emitter.setYSpeed(50, 200);
+	    this.emitter.setXSpeed(-30, 30);
+
+	    this.emitter.start(false, 3500, 30);		
 	}
 
 	update() {

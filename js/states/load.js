@@ -35,6 +35,7 @@ var stateLoad = {
 		game.load.image('smoke_puff', 'assets/particles/smoke-puff.png');
 		game.load.image('stone', 'assets/particles/stones-small.png');
 		game.load.image('blood', 'assets/particles/blood.png');
+		game.load.image('snowflake', 'assets/particles/snowflake.png');
 		// Tiles - Terrain
 		game.load.image('tile_bot_start', 'assets/tilesets/tile_bot_start.png');
 		game.load.image('tile_bot_mid', 'assets/tilesets/tile_bot_mid.png');
