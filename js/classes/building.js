@@ -2,7 +2,6 @@ class Building {
 	constructor(id, position) {
 		this._id = id;		
 		this.position = position;
-		this.shadow = game.level.buildings.gameObjects.create(this.position + 10, game.world.height - settings.towerSize.h * 1.825 - 5, 'tower_first');
 		this.gameObject = game.level.buildings.gameObjects.create(this.position, game.world.height - settings.towerSize.h * 1.825, 'tower_first');
 		this.health = {
 			max: 100,
@@ -20,14 +19,9 @@ class Building {
 
 	create() {
 		this.gameObject.name = 'Building ' + this._id;
-		this.shadow.name = 'Building ' + this._id + ' shadow';
 		this.gameObject.instance = this;
-		this.shadow.instance = this;
 		this.gameObject.body.immovable = true;
-		this.shadow.body.immovable = true;
-
-		this.shadow.tint = 0x000000;
-		this.shadow.alpha = 0.3;
+		// this.shadow.body.immovable = true;
 
 		this.emitter.smoke = game.add.emitter(this.gameObject.x + settings.towerSize.w / 2, this.gameObject.y + settings.towerSize.h - 20, 100);
 		this.emitter.smoke.makeParticles('smoke_puff');

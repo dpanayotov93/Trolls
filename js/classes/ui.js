@@ -116,7 +116,7 @@ class UI {
 					target.instance.info.icon.endFill();
 					target.instance.info.icon.anchor.setTo(.5, 1.5);
 					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
-				} else {
+				} else if(target.instance.info.icon.alive) {
 					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
 				}
 
@@ -128,7 +128,9 @@ class UI {
 
 				target.instance.info.icon.visible = true;
 
-				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x + (target.scale.x > 0 ? 2 : 1), -38);	
+				if(target.instance.info.health.alive) {
+					target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x + (target.scale.x > 0 ? 2 : 1), -38);	
+				}
 
 			} else if(target.name.indexOf('Building') != -1) {
 				if(target.instance.info.icon === null) {
@@ -139,7 +141,7 @@ class UI {
 					target.instance.info.icon.endFill();
 					target.instance.info.icon.anchor.setTo(.5, 0);
 					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER);									
-				} else {
+				} else if(target.instance.info.icon.alive) {				
 					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER);									
 				}				
 
@@ -151,7 +153,9 @@ class UI {
 					target.instance.info.health.setText(target.instance.health.current);
 				}
 				
-				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
+				if(target.instance.info.health.alive) {
+					target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
+				}
 			}
 		}			
 	};
