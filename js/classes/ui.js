@@ -166,7 +166,7 @@ class UI {
 
 		for(let i = this.backgroundParallax.length; i > 0; i -= 1) { 
 			let id = this.backgroundParallax.length - i;
-			console.log(i - 1, id);
+
 			for(let j = 0; j < count; j += 1) {
 				this.backgroundParallax[id].create(-20 + (j * width - j * 50), game.height - 300, 'bg_trees_' + (i - 1));
 				this.backgroundParallax[id].create(-20 + (j * width - j * 50), game.height - 300, 'bg_trees_' + (i - 1));

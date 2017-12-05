@@ -16,7 +16,8 @@ class Player {
 			max: 100,
 			current: 100,
 			loss: {
-				jump: 5,
+				sprint: 2.5,
+				jump: 5,				
 				attack: 10
 			}
 		};		
@@ -101,7 +102,20 @@ class Player {
 			this.gameObject.animations.play('attack');
 		} else {
 			if (game.keyboard.left.isDown || game.controler.move.left) { // Left arrow key
-				this.gameObject.body.moveTo(1000, 500, 180);
+				if(game.keyboard.left.shiftKey && game.player.energy.current >= game.player.energy.loss.sprint) { // TODO: Imeplemnt controler 					
+					let value = game.player.energy.loss.sprint;			
+
+					this.gameObject.body.moveTo(300, 500, 180);
+
+					if(game.player.energy.current - value < 0) {
+						value = game.player.energy.current;
+					}
+
+					game.player.energy.current -= value;					
+				} else {
+					this.gameObject.body.moveTo(1000, 500, 180);
+				}
+
 				this.gameObject.scale.x = Math.abs(this.gameObject.scale.x) * -1; // Flip the sprite horizontally 
 
 				if (this.touchingPlatforms) {
@@ -113,7 +127,20 @@ class Player {
 					this.gameObject.animations.play('test');
 				}
 			} else if (game.keyboard.right.isDown || game.controler.move.right) { // Right arrow key      
-				this.gameObject.body.moveTo(1000, 500, 0);
+				if(game.keyboard.right.shiftKey && game.player.energy.current >= game.player.energy.loss.sprint) { // TODO: Imeplemnt controler 
+					let value = game.player.energy.loss.sprint;			
+
+					this.gameObject.body.moveTo(300, 500, 0);
+
+					if(game.player.energy.current - value < 0) {
+						value = game.player.energy.current;
+					}
+
+					game.player.energy.current -= value;		
+				} else {
+					this.gameObject.body.moveTo(1000, 500, 0);
+				}
+
 				this.gameObject.scale.x = Math.abs(this.gameObject.scale.x);
 
 				if (this.touchingPlatforms) {
