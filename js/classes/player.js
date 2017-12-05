@@ -5,6 +5,7 @@ class Player {
 		this.moving = false;
 		this.attacking = false;
 		this.touchingPlatforms = false;
+		this.hoveringAnItem = false;
 		this.damage = 20;
 		this.targetsQueue = [];
 		this.targets = [];		
@@ -87,7 +88,7 @@ class Player {
 		});
 
 		game.input.onDown.add(function(pointer) {
-			if(game.player.skills.lightning.element === null && game.player.charges > 0) {
+			if(game.player.skills.lightning.element === null && game.player.charges > 0 && !game.player.hoveringAnItem) {
 				let x = pointer.positionDown.x + 15; // TODO: Fix that damn constant
 				let y = pointer.positionDown.y;
 

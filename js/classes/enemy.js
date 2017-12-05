@@ -182,9 +182,11 @@ class Enemy {
 
 			drop.events.onInputOver.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
+				game.player.hoveringAnItem = true;
 			}, this);
 			drop.events.onInputOut.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
+				game.player.hoveringAnItem = false;
 			}, this);			
 			drop.events.onInputDown.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png, auto";
@@ -200,7 +202,7 @@ class Enemy {
 		if(this.info.icon !== null) {
 			this.info.icon.destroy();
 		}
-		
+
 		this.gameObject.destroy();
 
 		game.player.score.enemies += 1;	

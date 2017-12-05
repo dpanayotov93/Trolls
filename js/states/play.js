@@ -33,7 +33,6 @@ let statePlay = {
 				game.player.energy.current = 999999999999;
 				game.player.health.current = 999999999999;
 				game.player.damage = 999999999999;
-				game.player.charges = game.ui.charges.icon.length;
 			}
 		});		
 	},
