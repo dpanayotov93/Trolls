@@ -33,7 +33,7 @@ class Building {
 	}
 
 	update() {
-		let nextFrame = (this.health.max - this.health.current) / game.player.damage;
+		let nextFrame = Math.floor((this.health.max - this.health.current) / game.player.damage);
 
 		if(this.health.current <= 0) {
 			this.kill();
@@ -65,8 +65,14 @@ class Building {
 
 		game.level.buildings.gameObjects.remove(this.gameObject);				
 
-		this.info.health.destroy();
-		this.info.icon.destroy();
+		if(this.info.health !== null) {
+			this.info.health.destroy();
+		}
+
+		if(this.info.icon !== null) {
+			this.info.icon.destroy();
+		}
+
 		this.gameObject.destroy();		
 		game.player.score.buildings += 1;					
 	}

@@ -64,6 +64,7 @@ var stateLoad = {
 		// Sprites - Objects
 		game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
 		game.load.spritesheet('waterfall', 'assets/sprites/waterfall.png', settings.tileSize, settings.tileSize);
+		game.load.spritesheet('lightning_bolt', 'assets/sprites/lightning_bolt.png', 200, 350); //TODO: Remove the contants
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');

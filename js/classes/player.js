@@ -7,7 +7,15 @@ class Player {
 		this.touchingPlatforms = false;
 		this.damage = 20;
 		this.targetsQueue = [];
-		this.targets = [];				
+		this.targets = [];		
+		this.charges = game.ui.charges.icon.length;	
+		this.skills = {
+			lightning: {
+				element: null,
+				animation: null,
+				damage: 50
+			}
+		};
 		this.health = {
 			max: 100,
 			current: 100
@@ -77,6 +85,51 @@ class Player {
 				game.player.attacking = true;
 			}
 		});
+
+		game.input.onDown.add(function(pointer) {
+			if(game.player.skills.lightning.element === null && game.player.charges > 0) {
+				let x = pointer.positionDown.x + 15; // TODO: Fix that damn constant
+				let y = pointer.positionDown.y;
+
+				game.player.skills.lightning.element = game.add.sprite(x, y, 'lightning_bolt');
+				let animation = null;
+
+				game.player.skills.lightning.element.anchor.x = .5;
+				game.player.skills.lightning.element.anchor.y = 0;
+				game.player.skills.lightning.animation = game.player.skills.lightning.element.animations.add('strike', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], 64, false);
+				game.player.skills.lightning.animation.enableUpdate = true;
+				game.player.skills.lightning.animation.onComplete.add(function() {
+					let centerPoint = new Phaser.Point(game.player.skills.lightning.element.position.x, game.player.skills.lightning.element.position.y + game.player.skills.lightning.element.height);
+					let triggerRadius = 250;
+
+					game.level.enemies.gameObjects.forEachAlive(function(enemy) {  
+						if(Phaser.Math.distance(enemy.x, enemy.y, centerPoint.x, centerPoint.y) <= triggerRadius) {   
+							enemy.instance.recieveDmg(game.player.skills.lightning.damage);
+						}
+					});
+					game.level.buildings.gameObjects.forEachAlive(function(building) {  
+						if(Phaser.Math.distance(building.x, building.y, centerPoint.x, centerPoint.y) <= triggerRadius) {   
+							building.instance.recieveDmg(game.player.skills.lightning.damage);
+						}
+					});					
+
+					game.player.skills.lightning.element.destroy();
+					game.player.skills.lightning.element = null;
+					game.player.skills.lightning.animation = null;
+				});
+				game.player.skills.lightning.animation.onUpdate.addOnce(function() {
+					if(game.player.skills.lightning.element !== null && game.player.skills.lightning.element.alive) {
+						game.player.skills.lightning.element.position.y += 20;
+						game.player.charges -= 1;
+						if(game.ui.charges.icon[game.player.charges].full.alive) {				
+							game.ui.charges.icon[game.player.charges].full.destroy();
+						}
+					}
+				});
+				
+				game.player.skills.lightning.element.animations.play('strike');
+			}
+		}, this);
 
 		// Create a canera that follow the player;
 		game.camera.follow(this.gameObject, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);

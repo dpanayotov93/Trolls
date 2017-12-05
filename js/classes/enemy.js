@@ -193,8 +193,14 @@ class Enemy {
 			}, this);					
 		}
 
-		this.info.health.destroy();
-		this.info.icon.destroy();
+		if(this.info.health !== null) {
+			this.info.health.destroy();
+		}
+
+		if(this.info.icon !== null) {
+			this.info.icon.destroy();
+		}
+		
 		this.gameObject.destroy();
 
 		game.player.score.enemies += 1;	
