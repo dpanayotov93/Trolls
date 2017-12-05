@@ -49,7 +49,7 @@ class Platform {
 
 		this.endPieceShadow = game.level.platforms.gameObjects.create(this.position.end + this.shadowOffset, game.world.bounds.height - settings.tileSize + this.shadowOffset, 'tile_bot_end');
 		this.endPieceShadow.tint = 0x000000;
-		this.endPieceShadow.alpha = 0.6;
+		this.endPieceShadow.alpha = 0.3;
 
 		this.endPiece = game.level.platforms.gameObjects.create(this.position.end, game.world.bounds.height - settings.tileSize, 'tile_bot_end');
 

@@ -89,6 +89,7 @@ class Player {
 		this.checkDeath();
 		this.checkCollisions();
 		this.updateControls();
+		this.updateTargets();
 	}
 
 	updateControls() {
@@ -178,6 +179,32 @@ class Player {
 				this.energy.current -= value;
 			}
 		}
+	}
+
+	updateTargets() {
+		for(let i = 0; i < game.level.buildings.list.length - 1; i += 1) {
+			let building = game.level.buildings.list[i];
+
+			if(!this.targets.contains(building.gameObject) && building.info.health !== null) {
+				building.info.health.setText('');
+
+				if(building.info.icon !== null) {
+					building.info.icon.visible = false;
+				}				
+			}
+		}
+
+		for(let i = 0; i < game.level.enemies.list.length - 1; i += 1) {
+			let enemy = game.level.enemies.list[i];
+
+			if(!this.targets.contains(enemy.gameObject) && enemy.info.health !== null) {
+				enemy.info.health.setText('');
+
+				if(enemy.info.icon !== null) {
+					enemy.info.icon.visible = false;
+				}
+			}
+		}			
 	}
 
 	attack() {

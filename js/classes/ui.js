@@ -89,6 +89,7 @@ class UI {
 		
 		this.setup();
 		this.followCamera();
+		this.setParallax();
 
 		// Timed energy regeneration
 		game.time.events.loop(Phaser.Timer.SECOND * this.timings.regen, this.regenEnergy, this);
@@ -172,7 +173,7 @@ class UI {
 				this.backgroundParallax[id].create(-20 + (j * width - j * 50), game.height - 300, 'bg_trees_' + (i - 1));
 			}
 
-			this.backgroundParallax[id].position.y -= 50 * id + id * id * 10;
+			this.backgroundParallax[id].position.y -= 30 * id + id * 20;
 		}
 	}
 
