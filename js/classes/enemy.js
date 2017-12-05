@@ -8,7 +8,8 @@ class Enemy {
 		this.directionToPlayer = 0;			
 		this.touchingPlatforms = false;
 		this.nextToHole = false; // Used for AI movement algorythm
-		this.isInPlayerRange = false;						
+		this.isInPlayerRange = false;			
+		this.hasDrop = game.rnd.integerInRange(1, 4) === 1 ? true : false;
 		this.health = {
 			max: 100,
 			current: 100
@@ -171,10 +172,32 @@ class Enemy {
 
 		game.level.enemies.gameObjects.remove(this.gameObject);		
 
+
+		if(this.hasDrop) {
+			let drop = game.add.button(this.gameObject.x, game.height - settings.tileSize + game.cache.getImage('item_dead_pig').height / 4, 'item_dead_pig');
+			drop.width *= .5;
+			drop.height *= .5;
+			drop.anchor.x = 1;
+			drop.anchor.y = 1;
+
+			drop.events.onInputOver.add(function(){
+				game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
+			}, this);
+			drop.events.onInputOut.add(function(){
+				game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
+			}, this);			
+			drop.events.onInputDown.add(function(){
+				game.canvas.style.cursor = "url(assets/ui/cursor_over.png, auto";
+				game.player.health.current += game.rnd.integerInRange(10, 40); // TODO: Remove the constant
+				drop.destroy();
+			}, this);					
+		}
+
 		this.info.health.destroy();
 		this.info.icon.destroy();
 		this.gameObject.destroy();
-		game.player.score.enemies += 1;			
+
+		game.player.score.enemies += 1;	
 	}
 
 	flash() {
