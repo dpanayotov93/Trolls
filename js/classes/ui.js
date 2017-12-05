@@ -161,17 +161,18 @@ class UI {
 	}
 
 	setParallax() {
-		let count = Math.floor(game.world.width / 300);	
+		let width = game.cache.getImage('bg_trees_0').width;
+		let count = Math.floor(game.width / width) * 2;
 
 		for(let i = this.backgroundParallax.length; i > 0; i -= 1) { 
 			let id = this.backgroundParallax.length - i;
-
+			console.log(i - 1, id);
 			for(let j = 0; j < count; j += 1) {
-				let trees = game.add.tileSprite(-50 + j * 400, game.height - 386, 600, 286, 'bg_trees');
-
-				this.backgroundParallax[id].add(trees);
+				this.backgroundParallax[id].create(-20 + (j * width - j * 50), game.height - 300, 'bg_trees_' + (i - 1));
+				this.backgroundParallax[id].create(-20 + (j * width - j * 50), game.height - 300, 'bg_trees_' + (i - 1));
 			}
-			this.backgroundParallax[id].position.y -= 100 * id;
+
+			this.backgroundParallax[id].position.y -= 50 * id + id * id * 10;
 		}
 	}
 
@@ -194,17 +195,39 @@ class UI {
 	};
 
 	updateParallax() {
-		let velocity = game.player.gameObject.body.velocity.x / 1500;
+		let firstImage = game.ui.backgroundParallax[0].getFirst();
+		let width = firstImage.width;;
+		let velocity = game.player.gameObject.body.velocity.x / 2000;
 		
 		if(game.player.gameObject.position.x > game.width / 2 && game.player.gameObject.position.x < game.world.width - game.width / 2) {
 			for(let i = this.backgroundParallax.length; i > 0; i -= 1) {
 				let id = this.backgroundParallax.length - i;
+				let group = this.backgroundParallax[id];
 
-				for(let j = 0; j < this.backgroundParallax[id].children.length; j += 1) {
-					this.backgroundParallax[id].children[j].tilePosition.x -= velocity * (i + 2);
-				}
+				for(let j = 0; j < group.length; j += 1) {
+					group.getChildAt(j).position.x -= velocity * (i * 2);
+				}				
 			}
 		}
+
+		for(let i = 0; i < this.backgroundParallax.length; i += 1) {
+			let group = this.backgroundParallax[i];
+			let firstImage = group.getChildAt(0);
+			let lastImage = group.getChildAt(group.length - 1);
+
+			if(game.player.gameObject.scale.x > 0) {
+				if(firstImage.position.x < Math.abs(game.world.x) - width) {
+					firstImage.position.x = lastImage.position.x + lastImage.width - 20;
+					group.sort('x', Phaser.Group.SORT_ASCENDING);
+				}
+			} else {
+				if(firstImage.position.x > Math.abs(game.world.x)) {
+					lastImage.position.x = firstImage.position.x - width + 20;
+					group.sort('x', Phaser.Group.SORT_ASCENDING);
+				}				
+			}
+		}
+		
 	};
 
 	regenEnergy() {

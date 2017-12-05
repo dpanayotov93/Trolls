@@ -42,7 +42,7 @@ class Level {
 		game.world.sendToBack(this.holes.gameObjects);
 		
 		for(let i = game.ui.backgroundParallax.length; i > 0; i -= 1) {
-			game.world.sendToBack(game.ui.backgroundParallax[i - 1]);
+			game.world.sendToBack(game.ui.backgroundParallax[game.ui.backgroundParallax.length - i]);
 		}
 
 		game.world.sendToBack(game.ui.background);

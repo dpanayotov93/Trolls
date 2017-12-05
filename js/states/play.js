@@ -49,6 +49,8 @@ let statePlay = {
 	},
 	render: function() {
 		game.ui.render();
+
+
 		this.debug();
 	},
 
