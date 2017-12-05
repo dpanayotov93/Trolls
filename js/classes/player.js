@@ -87,9 +87,10 @@ class Player {
 			}
 		});
 
-		game.input.onDown.add(function(pointer) {
+		game.input.onDown.add(function(pointer) {			
 			if(game.player.skills.lightning.element === null && game.player.charges > 0 && !game.player.hoveringAnItem) {
-				let x = pointer.positionDown.x + 15; // TODO: Fix that damn constant
+				console.log(pointer);
+				let x = pointer.positionDown.x + game.camera.x + 15; // TODO: Fix that damn constant
 				let y = pointer.positionDown.y;
 
 				game.player.skills.lightning.element = game.add.sprite(x, y, 'lightning_bolt');
