@@ -72,7 +72,7 @@ class UI {
 		this.timings = {
 			regen: .5
 		};		
-	}
+	};
 
 	init() {	
 		// if(game.test) Phaser.Device.desktop = false; // For testing		 	
@@ -95,13 +95,13 @@ class UI {
 		game.time.events.loop(Phaser.Timer.SECOND * this.timings.regen, this.regenEnergy, this);
 
 		game.log('UI: ', 'Created', 'green');
-	}
+	};
 
 	update() {
 		this.updateBars();
 		this.updateTexts();
 		this.updateParallax();
-	}
+	};
 
 	render() {
 		for(let i = 0; i < game.player.targets.length; i += 1) {
@@ -154,12 +154,12 @@ class UI {
 				target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
 			}
 		}			
-	}
+	};
 
 	setup() {
 		this.options.icon.anchor.setTo(.5, 0);
 		this.options.label.anchor.setTo(.5, 0);
-	}
+	};
 
 	setParallax() {
 		let width = game.cache.getImage('bg_trees_0').width;
@@ -175,7 +175,7 @@ class UI {
 
 			this.backgroundParallax[id].position.y -= 30 * id + id * 20;
 		}
-	}
+	};
 
 	updateBars() {
 		let cropArea = {
@@ -198,7 +198,7 @@ class UI {
 	updateParallax() {
 		let firstImage = game.ui.backgroundParallax[0].getFirst();
 		let width = firstImage.width;;
-		let velocity = game.player.gameObject.body.velocity.x / 2000;
+		let velocity = game.player.gameObject.body.velocity.x / 3000;
 		
 		if(game.player.gameObject.position.x > game.width / 2 && game.player.gameObject.position.x < game.world.width - game.width / 2) {
 			for(let i = this.backgroundParallax.length; i > 0; i -= 1) {

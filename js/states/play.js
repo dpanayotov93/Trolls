@@ -9,7 +9,7 @@ let statePlay = {
 
 		game.level = new Level();
 		game.level.init();
-		game.ui.setParallax();
+		// game.ui.setParallax();
 
 		game.player = new Player();
 		game.player.init(300, 0);
