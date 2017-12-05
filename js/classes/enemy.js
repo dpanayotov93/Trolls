@@ -174,7 +174,7 @@ class Enemy {
 
 
 		if(this.hasDrop) {
-			let drop = game.add.button(this.gameObject.x, game.height - settings.tileSize + game.cache.getImage('item_dead_pig').height / 4, 'item_dead_pig');
+			let drop = game.add.button(this.gameObject.x, game.height - settings.tileSize , 'potion_health');
 			drop.width *= .5;
 			drop.height *= .5;
 			drop.anchor.x = 1;

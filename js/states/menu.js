@@ -25,6 +25,7 @@ let stateMenu = {
 		game.keyboard = game.input.keyboard.createCursorKeys();	
 
 		game.keyboard.spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		game.keyboard.q = game.input.keyboard.addKey(Phaser.Keyboard.Q);
 
 		game.log('Keyboard: ', 'Created', 'green');			
 	},

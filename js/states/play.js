@@ -17,6 +17,21 @@ let statePlay = {
 		if(!Phaser.Device.desktop) {
 			game.world.bringToTop(game.ui.controls.gameObjects);
 		};		
+
+		// TODO: REMOVE - for testing only
+		game.keyboard.q.onUp.add(function() {			
+			if(game.player.energy.current > game.player.energy.max) {
+				console.info('--- GODMODE OFF ---');
+				game.player.energy.current = game.player.energy.max;
+				game.player.health.current = game.player.health.max;
+				game.player.damage = 20;
+			} else {
+				console.info('--- GODMODE ON ---');
+				game.player.energy.current = 999999999999;
+				game.player.health.current = 999999999999;
+				game.player.damage = 999999999999;
+			}
+		});		
 	},
 	update: function() {				
 		game.player.update();

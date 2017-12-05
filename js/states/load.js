@@ -32,7 +32,8 @@ var stateLoad = {
 		game.load.image('icon_jump', 'assets/ui/jump.png');
 		game.load.image('icon_attack', 'assets/ui/attack.png');
 		// Images - Objects
-		game.load.image('item_dead_pig', 'assets/objects/dead_pig.png');
+		// game.load.image('item_dead_pig', 'assets/objects/dead_pig.png');
+		game.load.image('potion_health', 'assets/objects/potion_health.png');
 		// Images - Particles
 		game.load.image('muzzle_flash', 'assets/particles/muzzle-flash.png');
 		game.load.image('smoke_puff', 'assets/particles/smoke-puff.png');
