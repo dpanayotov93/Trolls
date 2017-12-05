@@ -153,7 +153,6 @@ class Enemy {
 			this.flash();
 			this.health.current -= dmg;
 			this.emitter.position.setTo(this.gameObject.x, this.gameObject.y + settings.playerSize.h / 2);
-			console.log(this.emitter.position);
 			this.emitter.start(true, 500, null, 15);
 		}	
 	}

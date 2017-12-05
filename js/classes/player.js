@@ -182,11 +182,13 @@ class Player {
 	}
 
 	updateTargets() {
-		for(let i = 0; i < game.level.buildings.list.length - 1; i += 1) {
+		for(let i = 0; i < game.level.buildings.list.length; i += 1) {
 			let building = game.level.buildings.list[i];
 
-			if(!this.targets.contains(building.gameObject) && building.info.health !== null) {
-				building.info.health.setText('');
+			if(!this.targets.contains(building.gameObject)) {
+				if(building.info.health !== null) {
+					building.info.health.setText('');
+				}
 
 				if(building.info.icon !== null) {
 					building.info.icon.visible = false;
@@ -194,11 +196,13 @@ class Player {
 			}
 		}
 
-		for(let i = 0; i < game.level.enemies.list.length - 1; i += 1) {
+		for(let i = 0; i < game.level.enemies.list.length; i += 1) {
 			let enemy = game.level.enemies.list[i];
 
-			if(!this.targets.contains(enemy.gameObject) && enemy.info.health !== null) {
-				enemy.info.health.setText('');
+			if(!this.targets.contains(enemy.gameObject)) {
+				if(enemy.info.health !== null) {
+					enemy.info.health.setText('');
+				}
 
 				if(enemy.info.icon !== null) {
 					enemy.info.icon.visible = false;
