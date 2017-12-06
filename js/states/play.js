@@ -11,8 +11,7 @@ let statePlay = {
 		game.level.init();
 		// game.ui.setParallax();
 
-		game.player = new Player();
-		game.player.init(300, 0);
+		game.player = new Player('Player', 'troll_first_iddle', new Phaser.Point(300, 0), 50, 100, 100, game.ui.charges.icon.length);
 
 		if(!Phaser.Device.desktop) {
 			game.world.bringToTop(game.ui.controls.gameObjects);
@@ -62,6 +61,16 @@ let statePlay = {
 		game.debug.text('Y: ' + Math.floor(game.player.gameObject.y), 950, 88, "#ffffff", 'text-align:right');			
 		game.debug.text('Width: ' + Math.floor(game.player.gameObject.width), 950, 106, "#ffffff", 'text-align:right');			
 		game.debug.text('Height: ' + Math.floor(game.player.gameObject.height), 950, 124, "#ffffff", 'text-align:right');		
+
+		game.debug.text('____________________________', 785, 128, '#ffffff');
+		game.debug.text('PLAYER STATES', 860, 146, "#ffa500");
+		game.debug.text('____________________________', 785, 148, '#ffffff');
+		game.debug.text('Iddle: ' + game.player.states.iddle, 770, 164, '#ffffff');
+		game.debug.text('Moving: ' + game.player.states.moving, 770, 182, '#ffffff');
+		game.debug.text('Jumping: ' + game.player.states.jumping, 770, 200, '#ffffff');		
+		game.debug.text('Attacking: ' + game.player.states.attacking, 920, 164, '#ffffff');
+		game.debug.text('Grounded: ' + game.player.states.grounded, 920, 182, '#ffffff');
+		game.debug.text('Interacting: ' + game.player.states.interacting, 920, 200, '#ffffff');
 
 		/*
 		game.debug.spriteInfo(game.player.gameObject, 768, 64);				

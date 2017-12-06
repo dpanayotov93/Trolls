@@ -151,6 +151,7 @@ class Enemy {
 
 	recieveDmg(dmg) {
 		if(this.health.current > 0) {
+			console.warn(dmg);
 			this.flash();
 			this.health.current -= dmg;
 			this.emitter.position.setTo(this.gameObject.x, this.gameObject.y + settings.playerSize.h / 2);
@@ -182,11 +183,10 @@ class Enemy {
 
 			drop.events.onInputOver.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
-				game.player.hoveringAnItem = true;
+				game.player.setState('interacting');
 			}, this);
 			drop.events.onInputOut.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
-				game.player.hoveringAnItem = false;
 			}, this);			
 			drop.events.onInputDown.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png, auto";
@@ -202,10 +202,9 @@ class Enemy {
 		if(this.info.icon !== null) {
 			this.info.icon.destroy();
 		}
+		game.player.score.enemies += 1;	
 
 		this.gameObject.destroy();
-
-		game.player.score.enemies += 1;	
 	}
 
 	flash() {
