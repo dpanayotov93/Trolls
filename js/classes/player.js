@@ -132,8 +132,8 @@ class Player extends Unit {
 	}
 
 	updateControls() {
-		// Reset the player velocity
-		this.gameObject.body.velocity.x = 0;     		
+		// Reset the player horizontal velocity
+		this.gameObject.body.velocity.x = 0;
 
 		// ATTACK
 		if((this.states.attacking || game.controler.attack) && this.energy.current > 0) {

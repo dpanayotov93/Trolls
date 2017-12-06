@@ -12,7 +12,10 @@
 ----------
 
 
-![Main menu screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/menu_screenshot.JPG)
-![Gameplay screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/play_screenshot.JPG)	
-![Gameplay mobile screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/play_mobile_screenshot.jpg)
-![Endscreen screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/end_screenshot.jpg)	
+![Main menu screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_main_menu.JPG)
+![Gameplay screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_gameplay.JPG)	
+![Gameplay screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_gameplay_2.JPG)	
+![Dropped Item](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_dropped_item.JPG)
+![Lightning](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_skill_lightning.JPG)	
+![Dropped Item](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_dropped_item.jpg)
+![Fight](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_fight.jpg)	
