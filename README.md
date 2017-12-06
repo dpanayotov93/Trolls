@@ -17,5 +17,5 @@
 ![Gameplay screenshot](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_gameplay_2.JPG)	
 ![Dropped Item](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_dropped_item.JPG)
 ![Lightning](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_skill_lightning.JPG)	
-![Dropped Item](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_dropped_item.jpg)
-![Fight](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_fight.jpg)	
+![Dropped Item](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_dropped_item.JPG)
+![Fight](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/scr_fight.JPG)	
