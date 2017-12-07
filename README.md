@@ -12,4 +12,4 @@
 ----------
 
 
-![Screenshots](https://raw.githubusercontent.com/dpanayotov93/Trolls/refactoring/assets/trolls_screenshots.jpg)
+![Screenshots](https://raw.githubusercontent.com/dpanayotov93/Trolls/master/assets/trolls_screenshots.jpg)
