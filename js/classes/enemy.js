@@ -145,13 +145,11 @@ class Enemy {
 			this.gameObject.loadTexture('enemy_first_attack');
 		}
 
-		// this.animations.attack = 
 		this.gameObject.animations.play('attack');		
 	}
 
 	recieveDmg(dmg) {
 		if(this.health.current > 0) {
-			console.warn(dmg);
 			this.flash();
 			this.health.current -= dmg;
 			this.emitter.position.setTo(this.gameObject.x, this.gameObject.y + settings.playerSize.h / 2);
@@ -165,11 +163,11 @@ class Enemy {
 		game.level.enemies.gameObjects.remove(this.gameObject);
 		game.level.enemies.list.splice(index, 1);
 			
-		index = game.player.targets.indexOf(this.gameObject);		
-		game.player.targets.splice(index, 1);
+		// index = game.player.targets.indexOf(this.gameObject);		
+		// game.player.targets.splice(index, 1);
 
-		index = game.player.targetsQueue.indexOf(this.gameObject);		
-		game.player.targetsQueue.splice(index, 1);		
+		// index = game.player.targetsQueue.indexOf(this.gameObject);		
+		game.player.targets.delete(this.gameObject);		
 
 		game.level.enemies.gameObjects.remove(this.gameObject);		
 

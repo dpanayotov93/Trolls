@@ -57,11 +57,11 @@ class Building {
 		game.level.buildings.gameObjects.remove(this.gameObject);
 		game.level.buildings.list.splice(index, 1);
 			
-		index = game.player.targets.indexOf(this.gameObject);		
-		game.player.targets.splice(index, 1);	
+		// index = game.player.targets.indexOf(this.gameObject);		
+		// game.player.targets.splice(index, 1);	
 
-		index = game.player.targetsQueue.indexOf(this.gameObject);		
-		game.player.targetsQueue.splice(index, 1);		
+		// index = game.player.targetsQueue.indexOf(this.gameObject);		
+		game.player.targets.delete(this.gameObject);		
 
 		game.level.buildings.gameObjects.remove(this.gameObject);				
 

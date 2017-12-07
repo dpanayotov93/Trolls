@@ -1,12 +1,18 @@
 'use strict';
 
 class Unit {
-	constructor(name, model, position, damage, health, energy) {
+	constructor(name, models, position, damage, speed, health, energy) {
 		this.gameObject = null;
 		this.position = position || new Phaser.Point();
-		this.name = name || 'John Doe';
-		this.model = model || '';
+		this.name = name || 'Troll Doe';
+		this.models = {
+			iddle: models.iddle || 'enemy_first_iddle',
+			moving: models.moving || 'enemy_first_walk',
+			jumping: models.jumping || 'enemy_first_jump',
+			attacking: models.attacking || 'enemy_first_attack'
+		};
 		this.damage = damage || 1;
+		this.speed = speed || 1;
 		this.health = {
 			max: health || 100,
 			current: health || 100
@@ -19,8 +25,10 @@ class Unit {
 				attacking: 10
 			}
 		};
+		this.direction = 0;
+		this.targets = new Set();		
 		this.states = {
-			iddle: false, // Maybe initialize with true
+			iddle: false,
 			moving: false,
 			jumping: false,
 			attacking: false,
@@ -39,9 +47,31 @@ class Unit {
 
 	create() {
 		// Create the sprite
-		this.gameObject = game.add.sprite(this.position.x, this.position.y, this.model);
+		this.gameObject = game.add.sprite(this.position.x, this.position.y, this.models.iddle);
 		this.setState('iddle');
 	}
+
+	configureSprite() {
+		// Enable physics for the unit	
+		game.physics.arcade.enable(this.gameObject);	
+
+		// Sprite settings
+		this.gameObject.body.bounce.y = 0; // Vertical bounce force
+		this.gameObject.body.gravity.y = 2500; // Gravity force
+		this.gameObject.body.collideWorldBounds = true; // Enable collision with the world boundaries	    
+		this.gameObject.outOfBoundsKill = true; // A switch for just in case to kill the unit if it goes out of bounds
+		this.gameObject.anchor.x = 0.5; // Set the X anchor point to the center of the body
+		this.gameObject.body.stopVelocityOnCollide = false; // Resets the velocity to 0 when colliding with anything
+		this.gameObject.animations.add('current', null, 15, true); // Create the iddle animation  				
+	}
+
+	configureEvents() {
+		this.animations.attack = this.gameObject.animations.add('attack', null, 10, false);
+		this.animations.attack.onComplete.add(function() {
+			this.attack(game.player.targets);
+			this.loseEnergy(game.player.energy.costs.attacking);
+		}, this);	
+	}	
 
 	update() {
 
@@ -54,7 +84,7 @@ class Unit {
 
 		if(this.info.icon !== null) {
 			this.info.icon.visible = false;
-		}			
+		}
 	}
 
 	overlaps(object) {
@@ -66,10 +96,8 @@ class Unit {
 	}
 
 	attack(targets) {
-		if (targets.length > 0) {
-			for(const target of targets) {
-				target.instance.recieveDmg(this.damage);
-			}
+		for(let target of targets) {
+			target.instance.recieveDmg(this.damage);
 		}
 	}
 

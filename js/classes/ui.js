@@ -100,12 +100,13 @@ class UI {
 	update() {
 		this.updateBars();
 		this.updateTexts();
+		this.updateCharges();
 		this.updateParallax();
 	};
 
 	render() {
-		for(let i = 0; i < game.player.targets.length; i += 1) {
-			let target = game.player.targets[i];
+		game.player.targets.forEach(function(target) {
+			// let target = game.player.targets[i];
 			if(target.name.indexOf('Enemy') != -1) {
 				// ICON
 				if(target.instance.info.icon === null) {
@@ -157,7 +158,7 @@ class UI {
 					target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
 				}
 			}
-		}			
+		});
 	};
 
 	setup() {
@@ -198,6 +199,23 @@ class UI {
 		this.health.label.text = healthText;
 		this.energy.label.text = energyText;
 	};
+
+	updateCharges() {
+		for(let i = game.player.charges; i < this.charges.icon.length; i += 1) {
+			if(this.charges.icon[i].full.alive) {				
+				this.charges.icon[i].full.kill();
+			}
+		}
+
+		for(let i = 0; i < game.player.charges; i += 1) {
+			if(i >= this.charges.icon.length) {
+				break;
+			}
+			if(!this.charges.icon[i].full.alive) {				
+				this.charges.icon[i].full.reset();
+			}			
+		}
+	}
 
 	updateParallax() {
 		let firstImage = game.ui.backgroundParallax[0].getFirst();
