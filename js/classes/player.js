@@ -23,18 +23,13 @@ class Player extends Unit {
 
 	create() {
 		super.create();
-		this.configureSprite(); 
+		this.configureSprite();
 		this.configureEvents();
 		this.setSkills();
 
 		this.direction = 1;
 		this.gameObject.tint = -13027015;
 		game.camera.follow(this.gameObject, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-	}
-
-	configureSprite() {
-		super.configureSprite();
-		this.gameObject.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body    			    
 	}
 
 	setSkills() {
@@ -72,10 +67,6 @@ class Player extends Unit {
 						this.charges -= 1;
 						this.charges = this.charges < game.ui.charges.icon.length ? this.charges : game.ui.charges.icon.length - 1;
 						this.charges = this.charges >= 0 ? this.charges : 0;
-
-						// if(game.ui.charges.icon[this.charges].full.alive) {				
-						// 	game.ui.charges.icon[this.charges].full.destroy();
-						// }
 					}
 				}, this);
 				
@@ -85,7 +76,7 @@ class Player extends Unit {
 	}
 
 	update() {
-		this.checkDeath();
+		super.update();
 		this.checkCollisions();
 		this.updateControls();
 		this.updateTargets();
@@ -170,16 +161,18 @@ class Player extends Unit {
 	}
 
 	kill() {
-		super.kill();
+		this.gameObject.kill();
 		game.state.start('End');
 	}
 
 	checkOverlapWithGroup(group) {
-		for (const item of group) {
-			if (this.overlaps(item)) {
+		for (const item of group) {			
+			if (this.overlaps(item)) {						
 				let hitArea = this.gameObject.position.x + (this.gameObject.getBounds().width / 2 * this.gameObject.scale.x);
 				let isOnTheRight = this.gameObject.scale.x > 0 && this.gameObject.position.x < item.position.x && hitArea > item.position.x;
 				let isOnTheLeft = this.gameObject.position.x > item.position.x && hitArea < item.position.x + settings.towerSize.w;
+
+				if(item.name.indexOf('Building') < 0) console.log(isOnTheLeft);	
 
 				if((isOnTheRight || isOnTheLeft) && !this.targets.has(item)) {
 					this.targets.add(item);
@@ -195,7 +188,7 @@ class Player extends Unit {
 	}
 
 	checkCollisions() {
-		this.states.grounded = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects); 
+		super.checkCollisions();
 		this.checkOverlapWithGroup(game.level.buildings.gameObjects.children);
 		this.checkOverlapWithGroup(game.level.enemies.gameObjects.children);
 	}

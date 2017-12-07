@@ -49,6 +49,7 @@ class Unit {
 		// Create the sprite
 		this.gameObject = game.add.sprite(this.position.x, this.position.y, this.models.iddle);
 		this.setState('iddle');
+		this.gameObject.instance = this;	
 	}
 
 	configureSprite() {
@@ -63,6 +64,7 @@ class Unit {
 		this.gameObject.anchor.x = 0.5; // Set the X anchor point to the center of the body
 		this.gameObject.body.stopVelocityOnCollide = false; // Resets the velocity to 0 when colliding with anything
 		this.gameObject.animations.add('current', null, 15, true); // Create the iddle animation  				
+		this.gameObject.body.setSize(settings.playerSize.w - 64, settings.playerSize.h * 2 / 3, 15, 0); // Update the sprite bounds to match the actual physical body    			    
 	}
 
 	configureEvents() {
@@ -74,7 +76,7 @@ class Unit {
 	}	
 
 	update() {
-
+		this.checkDeath();
 	}
 
 	updateGUI() {
@@ -105,6 +107,8 @@ class Unit {
 		if(this.health.current > 0) {
 			this.flash();
 			this.health.current -= dmg;
+		} else {
+			return;
 		}
 	}
 
@@ -114,8 +118,8 @@ class Unit {
 		}
 	}	
 
-	kill() {
-		this.gameObject.kill();
+	checkCollisions() {
+		this.states.grounded = game.physics.arcade.collide(this.gameObject, game.level.platforms.gameObjects);
 	}
 
 	loseEnergy(value) {

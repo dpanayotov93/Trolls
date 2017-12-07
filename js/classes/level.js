@@ -84,9 +84,16 @@ class Level {
 
 			for(let j = 0; j < this.enemies.count[id]; j += 1) {
 				let position = game.rnd.integerInRange(minCurPossiblePos, maxCurPossiblePos);
-				let enemy = new Enemy(j, position);
-				enemy.create();
+				let enemy = new Enemy('Enemy ' + j, {
+						iddle: 'enemy_first_iddle',
+						moving: 'enemy_first_walk',
+						jumping: 'enemy_first_jump',
+						attacking: 'enemy_first_attack'
+					}, new Phaser.Point(position, 0), 5, 8, 100, 100
+				);
+
 				this.enemies.list.push(enemy);
+				this.enemies.gameObjects.add(enemy.gameObject);
 			}
 
 			game.log('Buildings: ', 'Created (' + this.enemies.gameObjects.length + ')', 'green');
