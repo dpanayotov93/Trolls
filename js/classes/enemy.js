@@ -170,8 +170,14 @@ class Enemy extends Unit {
 				game.player.states['interacting'] = false;
 			}, this);			
 			drop.events.onInputDown.add(function(){
+				let value = game.rnd.integerInRange(10, 40);
+
+				if(game.player.health.current + value > 100) {
+					value = 100 - game.player.health.current;
+				}
+
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png, auto";
-				game.player.health.current += game.rnd.integerInRange(10, 40); // TODO: Remove the constant
+				game.player.health.current += value; // TODO: Remove the constant
 				game.player.states['interacting'] = false;
 				drop.destroy();
 			}, this);					

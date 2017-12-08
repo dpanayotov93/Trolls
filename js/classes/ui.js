@@ -70,7 +70,7 @@ class UI {
 			attack: null
 		};
 		this.timings = {
-			regen: 2
+			regen: .25
 		};		
 	};
 
