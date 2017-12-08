@@ -21,8 +21,8 @@ class Unit {
 			max: energy || 100,
 			current: energy || 100,
 			costs: {
-				jumping: 5,				
-				attacking: 10
+				attacking: 5,
+				jumping: 10			
 			}
 		};
 		this.direction = 0;
@@ -70,13 +70,39 @@ class Unit {
 	configureEvents() {
 		this.animations.attack = this.gameObject.animations.add('attack', null, 10, false);
 		this.animations.attack.onComplete.add(function() {
-			this.attack(game.player.targets);
-			this.loseEnergy(game.player.energy.costs.attacking);
+			this.attack(this.targets);
+			this.loseEnergy(this.energy.costs.attacking);
 		}, this);	
 	}	
 
 	update() {
 		this.checkDeath();
+	}
+
+	renderGUI() {
+		if(this.info.icon === null) {
+			this.info.icon = game.add.graphics(0, 0);
+			this.info.icon.lineStyle(0);
+			this.info.icon.beginFill(0xFF0000, 0.5);
+			this.info.icon.drawCircle(0, 0, 50);
+			this.info.icon.endFill();
+			this.info.icon.anchor.setTo(.5, 1.5);
+			this.info.icon.alignTo(this.gameObject, Phaser.TOP_CENTER, -52.5 * this.gameObject.scale.x, 0);									
+		} else if(this.info.icon.alive) {
+			this.info.icon.alignTo(this.gameObject, Phaser.TOP_CENTER, -52.5 * this.gameObject.scale.x, 0);									
+		}
+
+		if(this.info.health === null) {
+			this.info.health = game.add.bitmapText(0, 0, 'yggdrasil', this.health.current, 26);			
+		} else {
+			this.info.health.setText(this.health.current);
+		}
+
+		this.info.icon.visible = true;
+
+		if(this.info.health.alive) {
+			this.info.health.alignTo(this.gameObject, Phaser.TOP_CENTER, -52.5 * this.gameObject.scale.x + (this.gameObject.scale.x > 0 ? 2 : 1), -38);	
+		}		
 	}
 
 	updateGUI() {
@@ -149,7 +175,9 @@ class Unit {
 						this.states[key] = false;
 					}					
 				} else {
-					this.states[key] = false;
+					if(key !== 'interacting') {
+						this.states[key] = false;
+					}
 				}
 			}
 		}
@@ -168,8 +196,8 @@ class Unit {
 
 		// Run the interpolateColor function every time the tween updates, feeding it the updated value of our tween each time, and set the result as our tint    		
 		colorTween.onUpdateCallback(function() {
-			game.player.gameObject.tint = Phaser.Color.interpolateColor(startColor, endColor, 100, colorBlend.step);
-		}); 
+			this.gameObject.tint = Phaser.Color.interpolateColor(startColor, endColor, 100, colorBlend.step);
+		}, this); 
 		
 		this.gameObject.tint = startColor;
 		colorTween.start();
@@ -184,8 +212,8 @@ class Unit {
 		}, 500);
 
 		colorTween.onUpdateCallback(function() {
-			game.player.gameObject.tint = Phaser.Color.interpolateColor(endColor, startColor, 100, colorBlend.step);
-		}); 
+			this.gameObject.tint = Phaser.Color.interpolateColor(endColor, startColor, 100, colorBlend.step);
+		}, this); 
 		
 		this.gameObject.tint = endColor;
 		colorTween.start();				

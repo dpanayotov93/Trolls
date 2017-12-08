@@ -148,14 +148,7 @@ class Player extends Unit {
 
 		for(const enemy of game.level.enemies.list) {
 			if(!this.targets.has(enemy.gameObject)) {
-				// enemy.updateGUI();
-				if(enemy.info.health !== null) {
-					enemy.info.health.setText('');
-				}
-
-				if(enemy.info.icon !== null) {
-					enemy.info.icon.visible = false;
-				}
+				enemy.updateGUI();
 			}
 		}			
 	}
@@ -171,8 +164,6 @@ class Player extends Unit {
 				let hitArea = this.gameObject.position.x + (this.gameObject.getBounds().width / 2 * this.gameObject.scale.x);
 				let isOnTheRight = this.gameObject.scale.x > 0 && this.gameObject.position.x < item.position.x && hitArea > item.position.x;
 				let isOnTheLeft = this.gameObject.position.x > item.position.x && hitArea < item.position.x + settings.towerSize.w;
-
-				if(item.name.indexOf('Building') < 0) console.log(isOnTheLeft);	
 
 				if((isOnTheRight || isOnTheLeft) && !this.targets.has(item)) {
 					this.targets.add(item);

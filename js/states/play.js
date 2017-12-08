@@ -1,8 +1,9 @@
 let statePlay = {
 	create: function() {
-		game.test = true; // TODO: REMOVE LATER!!!
+		game.test = false; // TODO: REMOVE LATER!!!
 		game.time.advancedTiming = true; // Set up FPS counter
 		game.forceSingleUpdate = true;
+		game.totalTime = Math.floor(game.time.totalElapsedSeconds()) + 60;		
 
 		game.ui = new UI();
 		game.ui.init();
@@ -20,7 +21,10 @@ let statePlay = {
 
 		if(!Phaser.Device.desktop) {
 			game.world.bringToTop(game.ui.controls.gameObjects);
-		};		
+		};			
+
+		game.timer = game.add.bitmapText(game.width / 2, 64, 'yggdrasil', game.totalTime, 36);
+		game.timer.fixedToCamera = true;
 
 		// TODO: REMOVE - for testing only
 		window.godmode = false;
@@ -42,6 +46,10 @@ let statePlay = {
 		game.level.update();
 		game.ui.update();
 
+		if(parseInt(game.timer.text) <= 0) {
+			game.state.start('End');
+		};
+
 		// TODO: REMOVE - for testing only
 		if(window.godmode) {
 			game.player.energy.current = 999999999999;
@@ -53,6 +61,7 @@ let statePlay = {
 		}
 	},
 	render: function() {
+		game.timer.text = game.totalTime -  Math.floor(game.time.totalElapsedSeconds());
 		game.ui.render();
 
 		if(game.test) {

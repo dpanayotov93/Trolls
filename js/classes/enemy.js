@@ -2,16 +2,16 @@ class Enemy extends Unit {
 	constructor(name, models, position, damage, speed, health, energy, charges) {
 		super(name, models, position, damage, speed, health, energy);
 		/* EXTENDED PROPERTIES */
-		this.updateTime = 0;
-		this.directionToPlayer = 0;			
+		this.timings.reaction = 0;
+		this.directionToPlayer = 0; // Used for AI movement algorythm			
 		this.nextToHole = false; // Used for AI movement algorythm
 		this.isInPlayerRange = false;			
 		this.hasDrop = game.rnd.integerInRange(1, 4) === 1 ? true : false;
+		this.emitter = null;
 		this.info = {
 			health: null,
 			icon: null
 		};
-		this.emitter = null;
 
 		this.create();
 	}
@@ -35,85 +35,93 @@ class Enemy extends Unit {
 
 		this.gameObject.scale.x = Math.abs(this.gameObject.scale.x) * this.direction; 
 
-		let newDirectionToPlayer = 0;
+		if(this.gameObject.alive) {
+			this.updateAI();
+		}
+	}
 
-		// Check if the player is located to the left or to the right of the enemy
-		if (this.gameObject.position.x - game.player.gameObject.position.x > 0) {
-			newDirectionToPlayer = 0; // If enemy's X is higher than the player then the player is to the left
-			this.direction = -1;
+	updateAI() {
+		this.directionToPlayer = this.getDirectionToPlayer(); // Set the direction of the enemy towards the player
+		this.isInPlayerRange = this.checkRangeToPlayer();
+		this.direction = this.getDirection();
+
+
+		if(this.isInPlayerRange) {
+			this.gameObject.body.velocity.setTo(0, 0); // If the enemy collides with the player set the enemy's X and Y velocity to 0				
+			this.targets.add(game.player.gameObject);
+			this.setState('attacking');
+			this.swapModel('enemy_first_attack');				
+			this.gameObject.animations.play('attack');
 		} else {
-			newDirectionToPlayer = 1; // If enemy's X is lower than the player then the player is to the right
-			this.direction = 1;
-		}
-
-		if (this.directionToPlayer !== newDirectionToPlayer) {
-			this.nextToHole = false; // If the player changes direction  then set the enemy to be no longer locked to "next to a hole" state
-		}
-
-		this.directionToPlayer = newDirectionToPlayer; // Set the direction of the enemy towards the player
-		this.checkRangeToPlayer();
-
-		if (!this.isInPlayerRange) {
 			this.chase();
+		}
+	}
+
+	getDirectionToPlayer() {
+		if (this.gameObject.position.x - game.player.gameObject.position.x < 0) {
+			return 1; 
+		} else {
+			return 0;
+		}
+	}
+
+	getDirection() {
+		if(this.directionToPlayer === 1 ) {
+			return 1;
+		} else {
+			return -1;
 		}
 	}
 
 	checkRangeToPlayer() {
 		if (Math.abs(this.gameObject.position.x - game.player.gameObject.position.x) < 150) {
-			this.isInPlayerRange = true;
+			return true;
 		} else {
-			this.isInPlayerRange = false;
-		}
-
-		if (this.isInPlayerRange) {
-			this.gameObject.body.velocity.setTo(0, 0); // If the enemy collides with the player set the enemy's X and Y velocity to 0
-			this.attack();
+			return false;
 		}
 	}
 
-	chase() {
-		// Move towards the player if not next to a hole between them		
-		for (var i = 0; i < game.level.platforms.positions.length; i += 1) {
-			var distanceToHole; // Used to determine the distance between the sprite nad the hole depending on the direction
+	// TODO: Rework that - it sucks now
+	checkRangeToHole() {
+		let nextToHole = false;
+
+		for(const position of game.level.platforms.positions) {
+			let distanceToHole = 15;
 
 			if (this.directionToPlayer === 0) {
-				distanceToHole = 120;
-			} else {
-				distanceToHole = 5;
+				distanceToHole = 100;
 			}
 
-			if (Math.abs(this.gameObject.position.x - game.level.platforms.positions[i][this.directionToPlayer]) < distanceToHole) {
-				this.nextToHole = true; // If the enemy is 5 pixels away from the hole lock him into a "next to a hole" state
+			if (Math.abs(this.gameObject.position.x - position[this.directionToPlayer]) < distanceToHole) {
+				nextToHole = true; 
 			}
 		}
 
+		return nextToHole;
+	}
+
+	chase() {
+		this.nextToHole = this.checkRangeToHole();
+
 		// Move the enemy towards the player if not next to a hole and if standing on the ground
-		if (!this.nextToHole && this.gameObject.body.touching.down) {
-			if (game.time.now > this.updateTime) {
-				this.updateTime = game.time.now + 500; // Leave a threshold time for the reaction
-				
+		if (!this.nextToHole) {
+			if (game.time.now > this.timings.reaction  && this.gameObject.body.touching.down) {
+				this.timings.reaction = game.time.now + 500; // Leave a threshold time for the reaction
+				this.setState('moving');
 				this.swapModel('enemy_first_walk');
 				this.gameObject.animations.play('current');
-
-
-				game.physics.arcade.moveToObject(this.gameObject, game.player.gameObject, 500);
+				game.physics.arcade.moveToObject(this.gameObject, game.player.gameObject, 65 * this.speed);
 			}
 		} else {
 			if (this.gameObject.body.touching.down) {
 				this.gameObject.body.velocity.setTo(0, 0); // If next to a hole and touching the ground set the enemy's X and Y velocity to 0
-
+				this.setState('iddle');
 				this.swapModel('enemy_first_iddle');
 				this.gameObject.animations.play('current');
 			} else {
 				this.gameObject.body.velocity.setTo(0, this.gameObject.body.velocity.y); // If next to a hole and not touching the ground set the enemy's X velocity to 0
 			}
 		}
-	}
-
-	attack() {
-		super.attack([game.player.gameObject]);
-		this.swapModel('enemy_first_attack');
-		this.gameObject.animations.play('attack');		
 	}
 
 	recieveDmg(dmg) {
@@ -141,7 +149,7 @@ class Enemy extends Unit {
 
 		game.player.score.enemies += 1;	
 
-		this.dropItem();
+		this.dropItem();	
 		this.gameObject.destroy();
 	}
 
@@ -155,14 +163,16 @@ class Enemy extends Unit {
 
 			drop.events.onInputOver.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png), auto";
-				game.player.setState('interacting');
+				game.player.states['interacting'] = true;
 			}, this);
 			drop.events.onInputOut.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor.png), auto";
+				game.player.states['interacting'] = false;
 			}, this);			
 			drop.events.onInputDown.add(function(){
 				game.canvas.style.cursor = "url(assets/ui/cursor_over.png, auto";
 				game.player.health.current += game.rnd.integerInRange(10, 40); // TODO: Remove the constant
+				game.player.states['interacting'] = false;
 				drop.destroy();
 			}, this);					
 		}
