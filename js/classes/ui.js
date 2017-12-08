@@ -70,7 +70,7 @@ class UI {
 			attack: null
 		};
 		this.timings = {
-			regen: .5
+			regen: .25
 		};		
 	};
 
@@ -100,39 +100,18 @@ class UI {
 	update() {
 		this.updateBars();
 		this.updateTexts();
+		this.updateCharges();
 		this.updateParallax();
 	};
 
 	render() {
-		for(let i = 0; i < game.player.targets.length; i += 1) {
-			let target = game.player.targets[i];
-			if(target.name.indexOf('Enemy') != -1) {
-				// ICON
-				if(target.instance.info.icon === null) {
-					target.instance.info.icon = game.add.graphics(0, 0);
-					target.instance.info.icon.lineStyle(0);
-					target.instance.info.icon.beginFill(0xFF0000, 0.5);
-					target.instance.info.icon.drawCircle(0, 0, 50);
-					target.instance.info.icon.endFill();
-					target.instance.info.icon.anchor.setTo(.5, 1.5);
-					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
-				} else if(target.instance.info.icon.alive) {
-					target.instance.info.icon.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x, 0);									
-				}
-
-				if(target.instance.info.health === null) {
-					target.instance.info.health = game.add.bitmapText(0, 0, 'yggdrasil', target.instance.health.current, 26);			
-				} else {
-					target.instance.info.health.setText(target.instance.health.current);
-				}
-
-				target.instance.info.icon.visible = true;
-
-				if(target.instance.info.health.alive) {
-					target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, -52.5 * target.scale.x + (target.scale.x > 0 ? 2 : 1), -38);	
-				}
-
-			} else if(target.name.indexOf('Building') != -1) {
+		game.player.targets.forEach(function(target) {
+			if(target.instance.name == undefined) target.instance.name = 'Building'; // TODO: Remove when building inherits from unit
+			// target.instance.renderGUI();
+			// TODO: Uncomment the line above and remove the two if-else blocks when building inherits from Unit
+			if(target.instance.name.indexOf('Enemy') != -1) {
+				target.instance.renderGUI();
+			} else if(target.instance.name.indexOf('Building') != -1) {
 				if(target.instance.info.icon === null) {
 					target.instance.info.icon = game.add.graphics(0, 0);
 					target.instance.info.icon.lineStyle(0);
@@ -157,7 +136,7 @@ class UI {
 					target.instance.info.health.alignTo(target, Phaser.TOP_CENTER, 2, 38);							
 				}
 			}
-		}			
+		});
 	};
 
 	setup() {
@@ -198,6 +177,23 @@ class UI {
 		this.health.label.text = healthText;
 		this.energy.label.text = energyText;
 	};
+
+	updateCharges() {
+		for(let i = game.player.charges; i < this.charges.icon.length; i += 1) {
+			if(this.charges.icon[i].full.alive) {				
+				this.charges.icon[i].full.kill();
+			}
+		}
+
+		for(let i = 0; i < game.player.charges; i += 1) {
+			if(i >= this.charges.icon.length) {
+				break;
+			}
+			if(!this.charges.icon[i].full.alive) {				
+				this.charges.icon[i].full.reset();
+			}			
+		}
+	}
 
 	updateParallax() {
 		let firstImage = game.ui.backgroundParallax[0].getFirst();
