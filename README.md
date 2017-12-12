@@ -8,7 +8,7 @@
 
 
 ----------
-###**Instalation**
+###**Installation**
 1. git clone [https://github.com/dpanayotov93/Trolls.git](https://github.com/dpanayotov93/Trolls.git) && cd Trolls
 2. npm install http-server -g
 3. http-server -o   
