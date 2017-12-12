@@ -15,7 +15,8 @@ class Player extends Unit {
 		this.charges = charges;	
 		this.score = {
 			buildings: 0,
-			enemies: 0
+			enemies: 0,
+			total: 0
 		};
 		/* INITIALIZATION METHOD */
 		this.create(); 
@@ -155,6 +156,7 @@ class Player extends Unit {
 
 	kill() {
 		this.gameObject.kill();
+		game.player.score.total = Math.floor((game.player.score.buildings + game.player.score.enemies) / 2);
 		game.state.start('End');
 	}
 

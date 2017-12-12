@@ -1,6 +1,6 @@
 let statePlay = {
 	create: function() {
-		game.test = false; // TODO: REMOVE LATER!!!
+		game.test = true; // TODO: REMOVE LATER!!!
 		game.time.advancedTiming = true; // Set up FPS counter
 		game.forceSingleUpdate = true;
 		game.totalTime = Math.floor(game.time.totalElapsedSeconds()) + 60;		
@@ -41,14 +41,22 @@ let statePlay = {
 			}
 		});			
 	},
-	update: function() {				
+	update: function() {
+		if(game.level.enemies.list.length === 0 && game.level.buildings.list.length === 0) {
+			game.player.score.total = game.player.score.buildings + game.player.score.enemies;
+			game.time.events.add(Phaser.Timer.SECOND, function() {
+				game.state.start('Win');
+			}, this);			
+		};
+
+		if(parseInt(game.timer.text) <= 0) {
+			game.player.score.total = Math.floor((game.player.score.buildings + game.player.score.enemies) / 2);
+			game.state.start('End');
+		};		
+
 		game.player.update();
 		game.level.update();
 		game.ui.update();
-
-		if(parseInt(game.timer.text) <= 0) {
-			game.state.start('End');
-		};
 
 		// TODO: REMOVE - for testing only
 		if(window.godmode) {

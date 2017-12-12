@@ -132,6 +132,7 @@ game.state.add('Menu', stateMenu);
 game.state.add('Controls', stateControls);
 game.state.add('Play', statePlay);
 game.state.add('End', stateEnd);
+game.state.add('Win', stateWin);
 
 // Initiate from the boot state
 game.log('Calling state:', 'Boot');

@@ -1,7 +1,7 @@
-let stateEnd = {
+let stateWin = {
 	create: function() {
 		let background = game.add.sprite(0, 0, 'bg_village'); // Add the background
-		let endLabel = game.add.bitmapText(settings.width / 2 - 384, 96, 'yggdrasil', 'You have died', 128);
+		let endLabel = game.add.bitmapText(settings.width / 2 - 384, 96, 'yggdrasil', 'You have won', 128);
 		let buildingsDestroyedLabel = game.add.bitmapText(settings.width / 2 - 250, 256, 'yggdrasil', 'Destroyred buildings: ' + game.player.score.buildings, 48);
 		let enemiesDestroyedLabel = game.add.bitmapText(settings.width / 2 - 250, 320, 'yggdrasil', 'Destroyred enemies: ' + game.player.score.enemies, 48);
 		let scoreLabel = game.add.bitmapText(settings.width / 2 - 110, 400, 'yggdrasil', 'Score: ' + game.player.score.total, 48);
