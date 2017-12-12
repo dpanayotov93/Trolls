@@ -14,7 +14,7 @@
 2. npm install http-server -g
 3. http-server -o   
 
-----------
+
 **Screenshots**
 ---------------------
 
