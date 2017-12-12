@@ -6,6 +6,11 @@ let stateMenu = {
 		let startLabel = game.add.bitmapText(settings.width / 2 - 64, 256, 'yggdrasil', 'Start', 46);
 		let controlsButton = game.add.button(settings.width / 2 - settings.buttonSize.w / 2, 350, 'button', this.showControls, this, 0, 1, 2);		
 		let controlsLabel = game.add.bitmapText(settings.width / 2 - 96, 356, 'yggdrasil', 'Controls', 46);		
+		
+		let facebookIcon = game.add.sprite(settings.width / 2 - 250, 600, 'facebook');		
+		let twitterIcon = game.add.sprite(settings.width / 2 - 100, 600, 'twitter');		
+		let googlePlusIcon = game.add.sprite(settings.width / 2 + 50, 600, 'googlePlus');		
+		let googlePlayIcon = game.add.sprite(settings.width / 2 + 200, 600, 'googlePlay');		
 
 		// Change the mouse when over a button
 		startButton.events.onInputOver.add(function(){

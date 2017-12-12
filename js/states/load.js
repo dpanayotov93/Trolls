@@ -40,6 +40,11 @@ var stateLoad = {
 		game.load.image('stone', 'assets/particles/stones-small.png');
 		game.load.image('blood', 'assets/particles/blood.png');
 		game.load.image('snowflake', 'assets/particles/snowflake.png');
+		// Images - Icons
+		game.load.image('facebook', 'assets/icons/facebook.png');
+		game.load.image('twitter', 'assets/icons/twitter.png');
+		game.load.image('googlePlus', 'assets/icons/google-plus.png');
+		game.load.image('googlePlay', 'assets/icons/google-play.png');
 		// game.load.image('mist', 'assets/particles/mist.png');
 		// Tiles - Terrain
 		game.load.image('tile_bot_start', 'assets/tilesets/tile_bot_start.png');
@@ -65,7 +70,7 @@ var stateLoad = {
 		game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
 		game.load.spritesheet('waterfall', 'assets/sprites/waterfall.png', settings.tileSize, settings.tileSize);
 		game.load.spritesheet('lightning_bolt', 'assets/sprites/lightning_bolt.png', 200, 350); //TODO: Remove the contants
-		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);
+		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);		
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
 
