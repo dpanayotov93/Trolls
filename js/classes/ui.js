@@ -204,7 +204,7 @@ class UI {
 				let group = this.backgroundParallax[id];
 
 				for(let j = 0; j < group.length; j += 1) {
-					group.getChildAt(j).position.x -= velocity * (i * 2);
+					group.getChildAt(j).position.x -= velocity * (i * .5);
 				}				
 			}
 		}

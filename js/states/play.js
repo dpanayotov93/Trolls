@@ -60,6 +60,7 @@ let statePlay = {
 	render: function() {
 		game.timer.text = game.totalTime -  Math.floor(game.time.totalElapsedSeconds());
 		game.ui.render();
+		game.debug.text('FPS: ' + game.time.fps, 30, 150, "#00ffff"); // Show FPS	
 
 		if(game.test) {
 			this.debug();
@@ -67,7 +68,7 @@ let statePlay = {
 	},
 	debug: function() {
 		game.debug.text('DEBUG INFO', 860, 12, "#ffa500");			
-		game.debug.text('FPS: ' + game.time.fps, 880, 30, "#00ffff"); // Show FPS			
+				
 		game.debug.text('(Q) GODMODE ' + (window.godmode ? 'ON' : 'OFF'), (window.godmode ? 840 : 835), 48, (window.godmode ? "#00ff00" : "#ff0000")); // Show FPS			
 
 		game.debug.text('____________________________', 785, 52, '#ffffff');
