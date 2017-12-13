@@ -16,7 +16,7 @@ let statePlay = {
 				moving: 'troll_first_walk',
 				jumping: 'troll_first_jump',
 				attacking: 'troll_first_attack'
-			},  new Phaser.Point(300, 0), 50, 700, 100, 100, game.ui.charges.icon.length
+			},  new Phaser.Point(300, 0), 20, 700, 100, 100, game.ui.charges.icon.length
 		);
 
 		if(!Phaser.Device.desktop) {
