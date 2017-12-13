@@ -84,6 +84,8 @@ class Player extends Unit {
 	}
 
 	updateControls() {
+		this.gameObject.body.velocity.x = 0;
+		
 		if((game.keyboard.spacebar.isDown || game.controler.attack) && this.energy.current >= this.energy.costs.attacking) {
 			this.setState('attacking');
 			this.swapModel(this.models.attacking);			
@@ -97,8 +99,7 @@ class Player extends Unit {
 				let isSprinting = game.keyboard.right.shiftKey;
 				this.direction = 1;
 				this.move(isSprinting);
-			} else if (this.states.grounded) {
-				this.gameObject.body.velocity.x = 0;
+			} else if (this.states.grounded) {				
 				this.setState('iddle');
 				this.swapModel(this.models.iddle);
 			}
@@ -118,10 +119,10 @@ class Player extends Unit {
 		isSprinting = isSprinting || false;
 
 		if(isSprinting && this.energy.current >= this.energy.costs.sprinting) { // TODO: Imeplemnt controler 					
-			this.gameObject.body.x += this.speed * 3 * this.direction;
+			this.gameObject.body.velocity.x = this.speed * 3 * this.direction;
 			this.loseEnergy(this.energy.costs.sprinting);				
 		} else {
-			this.gameObject.body.x += this.speed * this.direction;
+			this.gameObject.body.velocity.x = this.speed * this.direction;
 		}
 
 		this.setState('moving');

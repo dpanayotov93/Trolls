@@ -235,7 +235,7 @@ class UI {
 	}
 
 	followCamera() {
-		this.background.fixedToCamera = true;
+		// this.background.fixedToCamera = true;
 
 		this.options.icon.fixedToCamera = true;
 		this.options.label.fixedToCamera = true;	
