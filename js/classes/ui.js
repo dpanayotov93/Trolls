@@ -93,8 +93,6 @@ class UI {
 
 		// Timed energy regeneration
 		game.time.events.loop(Phaser.Timer.SECOND * this.timings.regen, this.regenEnergy, this);
-
-		game.log('UI: ', 'Created', 'green');
 	};
 
 	update() {

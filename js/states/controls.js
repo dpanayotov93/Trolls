@@ -19,7 +19,6 @@ let stateControls = {
 		}, this);
 	},
 	back: function() {
-		game.log('Calling state: ', 'Menu');
 		game.state.start('Menu');
 	},
 }

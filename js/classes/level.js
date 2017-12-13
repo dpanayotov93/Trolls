@@ -50,9 +50,8 @@ class Level {
 			let platform = new Platform(i, this.platforms.lastPlatformPosition);
 			platform.create();
 			this.platforms.list.push(platform);
-			this.addClutter(platform.position.start, platform.position.end - settings.tileSize, platform.midPiecesCount.chosen);
+			this.addClutter(platform);
 		}
-		game.log('Platforms: ', 'Created (' + this.platforms.count + ')', 'green');
 	}
 
 	addBuildings() {
@@ -72,8 +71,6 @@ class Level {
 				this.buildings.list.push(building);
 			}		
 		}
-
-		game.log('Buildings: ', 'Created (' + this.buildings.gameObjects.length + ')', 'green');
 	}
 
 	addEnemies() {
@@ -100,8 +97,6 @@ class Level {
 				this.enemies.list.push(enemy);
 				this.enemies.gameObjects.add(enemy.gameObject);
 			}
-
-			game.log('Buildings: ', 'Created (' + this.enemies.gameObjects.length + ')', 'green');
 		}
 	}
 
@@ -132,21 +127,27 @@ class Level {
 		}
 	}
 
-	addClutter(start, end, max) {
-		let numberOfItems = game.rnd.integerInRange(0, max / 2);
+	addClutter(platform) {
+		let min = platform.midPiecesCount.chosen / 2;
+		let max = platform.midPiecesCount.chosen;
+		let numberOfItems = game.rnd.integerInRange(min, max);
 		let clutterList = null;
 
 		this.clutter.list.push(game.add.group());
 		clutterList = this.clutter.list[this.clutter.list.length - 1];
 
 		for(let i = 0; i < numberOfItems; i += 1) {
+			console.log(platform.midPieces[i].position.x);
+			let start = platform.midPieces[i].position.x;
+			let end = platform.midPieces[i].position.x + platform.midPieces[i].width;
+
 			let itemIndex = game.rnd.integerInRange(0, this.clutter.items.length - 1);
 			let selecteItem = this.clutter.items[itemIndex];
-			let x = game.rnd.integerInRange(start, end / (numberOfItems - i));
-			let y = game.height - settings.tileSize - game.cache.getImage(selecteItem).height;
-			
-			start = x;
-			clutterList.create(x, y, selecteItem);
+			let x = game.rnd.integerInRange(start, end);
+			let y = game.height - settings.tileSize / 2 - game.cache.getImage(selecteItem).height;
+			let item = clutterList.create(x, y, selecteItem)
+
+			item.anchor.x = .5;
 		}
 	}
 

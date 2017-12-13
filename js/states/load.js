@@ -17,8 +17,6 @@ var stateLoad = {
 		game.load.image('bg_trees_0', 'assets/backgrounds/tree_silhouettes_0.png');
 		game.load.image('bg_trees_1', 'assets/backgrounds/tree_silhouettes_1.png');
 		game.load.image('bg_trees_2', 'assets/backgrounds/tree_silhouettes_2.png');
-		// game.load.image('bg_ridges', 'assets/backgrounds/snow_ridges.png');
-		// game.load.image('bg_ridges_reversed', 'assets/backgrounds/snow_ridges_reversed.png');
 		// Images - UI
 		game.load.image('icon_options', 'assets/ui/icon-options.png');
 		game.load.image('bar_empty', 'assets/ui/bar-empty.png');
@@ -78,12 +76,9 @@ var stateLoad = {
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);		
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
-
-		game.log('Assets: ', 'Loaded', 'green');		
 	},
 	create: function() {
 		// Call the menu state		
-		game.log('Calling state:', 'Menu');
 		game.state.start('Menu');
 	}
 }

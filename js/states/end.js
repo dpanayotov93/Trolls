@@ -25,11 +25,9 @@ let stateEnd = {
 		}, this);							
 	},
 	menu: function() {
-		game.log('Calling state: ', 'Menu');
 		game.state.start('Menu');
 	},
 	restart: function() {
-		game.log('Calling state: ', 'Play');
 		game.state.start('Play');
 	}
 }
