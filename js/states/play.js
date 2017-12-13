@@ -1,6 +1,6 @@
 let statePlay = {
 	create: function() {
-		game.test = true; // TODO: REMOVE LATER!!!
+		game.test = false; // TODO: REMOVE LATER!!!
 		game.time.advancedTiming = true; // Set up FPS counter
 		game.forceSingleUpdate = true;
 		game.totalTime = Math.floor(game.time.totalElapsedSeconds()) + 60;		
@@ -42,17 +42,8 @@ let statePlay = {
 		});			
 	},
 	update: function() {
-		if(game.level.enemies.list.length === 0 && game.level.buildings.list.length === 0) {
-			game.player.score.total = game.player.score.buildings + game.player.score.enemies;
-			game.time.events.add(Phaser.Timer.SECOND, function() {
-				game.state.start('Win');
-			}, this);			
-		};
-
-		if(parseInt(game.timer.text) <= 0) {
-			game.player.score.total = Math.floor((game.player.score.buildings + game.player.score.enemies) / 2);
-			game.state.start('End');
-		};		
+		this.checkWin();
+		// this.checkLoss();
 
 		game.player.update();
 		game.level.update();
@@ -64,8 +55,6 @@ let statePlay = {
 			game.player.health.current = 999999999999;
 			game.player.damage = 999999999999;
 			game.player.charges = 999999999999;			
-		} else {
-
 		}
 	},
 	render: function() {
@@ -76,7 +65,6 @@ let statePlay = {
 			this.debug();
 		}
 	},
-
 	debug: function() {
 		game.debug.text('DEBUG INFO', 860, 12, "#ffa500");			
 		game.debug.text('FPS: ' + game.time.fps, 880, 30, "#00ffff"); // Show FPS			
@@ -103,5 +91,19 @@ let statePlay = {
 		game.debug.text('Attacking: ' + game.player.states.attacking, 920, 164, '#ffffff');
 		game.debug.text('Grounded: ' + game.player.states.grounded, 920, 182, '#ffffff');
 		game.debug.text('Interacting: ' + game.player.states.interacting, 920, 200, '#ffffff');
+	},
+	checkWin: function() {
+		if(game.level.enemies.list.length === 0 && game.level.buildings.list.length === 0) {
+			game.player.score.total = game.player.score.buildings + game.player.score.enemies;
+			game.time.events.add(Phaser.Timer.SECOND, function() {
+				game.state.start('Win');
+			}, this);			
+		};
+	},
+	checkLoss: function() {
+		if(parseInt(game.timer.text) <= 0) {
+			game.player.score.total = Math.floor((game.player.score.buildings + game.player.score.enemies) / 2);
+			game.state.start('End');
+		};	
 	}
 }

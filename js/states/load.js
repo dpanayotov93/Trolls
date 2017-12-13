@@ -33,7 +33,12 @@ var stateLoad = {
 		game.load.image('icon_attack', 'assets/ui/attack.png');
 		// Images - Objects
 		// game.load.image('item_dead_pig', 'assets/objects/dead_pig.png');
+		game.load.image('cloud_storm', 'assets/objects/cloud_storm.png');
 		game.load.image('potion_health', 'assets/objects/potion_health.png');
+		game.load.image('pine_1', 'assets/objects/pine_1.png');
+		game.load.image('pine_2', 'assets/objects/pine_2.png');
+		game.load.image('tree_1', 'assets/objects/tree_1.png');
+		game.load.image('tree_2', 'assets/objects/tree_2.png');
 		// Images - Particles
 		game.load.image('muzzle_flash', 'assets/particles/muzzle-flash.png');
 		game.load.image('smoke_puff', 'assets/particles/smoke-puff.png');
@@ -45,7 +50,6 @@ var stateLoad = {
 		game.load.image('twitter', 'assets/icons/twitter.png');
 		game.load.image('googlePlus', 'assets/icons/google-plus.png');
 		game.load.image('googlePlay', 'assets/icons/google-play.png');
-		// game.load.image('mist', 'assets/particles/mist.png');
 		// Tiles - Terrain
 		game.load.image('tile_bot_start', 'assets/tilesets/tile_bot_start.png');
 		game.load.image('tile_bot_mid', 'assets/tilesets/tile_bot_mid.png');
@@ -70,6 +74,7 @@ var stateLoad = {
 		game.load.spritesheet('tower_first', 'assets/sprites/tower_first/sprite.png', settings.towerSize.h, settings.towerSize.w);
 		game.load.spritesheet('waterfall', 'assets/sprites/waterfall.png', settings.tileSize, settings.tileSize);
 		game.load.spritesheet('lightning_bolt', 'assets/sprites/lightning_bolt.png', 200, 350); //TODO: Remove the contants
+		game.load.spritesheet('lightning_cloud', 'assets/sprites/lightning_cloud.png', 549, 309); //TODO: Remove the contants
 		game.load.spritesheet('button', 'assets/sprites/button.png', settings.buttonSize.w, settings.buttonSize.h);		
 		// Fonts
 		game.load.bitmapFont('yggdrasil', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
